@@ -12,7 +12,7 @@ import ForgotPasswordSubmit from "../components/user/ForgotPasswordSubmit.vue";
 import store from "@/store/index";
 import { nextTick } from "vue";
 
-const APP_TITLE = "Information Model Auth";
+const APP_TITLE = "IMAuth";
 
 const routes: Array<RouteRecordRaw> = [
   {
