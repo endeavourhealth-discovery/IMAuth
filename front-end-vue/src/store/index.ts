@@ -1,5 +1,4 @@
 import { createStore } from "vuex";
-import { HistoryItem } from "../models/HistoryItem";
 import { User } from "../models/user/User";
 import AuthService from "@/services/AuthService";
 import { avatars } from "@/models/user/Avatars";
@@ -9,19 +8,12 @@ import { CustomAlert } from "@/models/user/CustomAlert";
 export default createStore({
   // update stateType.ts when adding new state!
   state: {
-    history: [] as HistoryItem[],
     currentUser: {} as User,
     registeredUsername: "" as string,
     isLoggedIn: false as boolean,
-    historyCount: 0 as number
+    previousAppUrl: localStorage.getItem("imPreviousAppUrl") as string
   },
   mutations: {
-    updateHistory(state, historyItem) {
-      state.history = state.history.filter(function(el) {
-        return el.conceptName !== historyItem.conceptName;
-      });
-      state.history.splice(0, 0, historyItem);
-    },
     updateCurrentUser(state, user) {
       state.currentUser = user;
     },
@@ -30,9 +22,6 @@ export default createStore({
     },
     updateIsLoggedIn(state, status) {
       state.isLoggedIn = status;
-    },
-    updateHistoryCount(state, count) {
-      state.historyCount = count;
     }
   },
   actions: {

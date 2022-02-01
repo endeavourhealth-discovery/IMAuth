@@ -1,7 +1,7 @@
 <template>
   <div class="p-d-flex p-flex-row p-jc-start">
     <Button class="back-button" label="Back" icon="pi pi-arrow-circle-left" iconPos="left" v-on:click.prevent="clickedBack" />
-    <Button class="home-button" icon="pi pi-home" v-on:click.prevent="$router.push({ name: 'Home' })" />
+    <Button class="home-button" icon="pi pi-home" v-on:click.prevent="homeClicked" />
   </div>
 </template>
 
@@ -11,14 +11,14 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ButtonBar",
-  computed: mapState(["snomedLicenseAccepted"]),
+  computed: mapState(["snomedLicenseAccepted", "previousAppUrl"]),
   methods: {
     clickedBack(): void {
-      if (this.$store.state.historyCount === window.history.length) {
-        this.$router.push({ name: "Dashboard" });
-      } else {
-        this.$router.go(-1);
-      }
+      this.$router.back();
+    },
+
+    homeClicked(): void {
+      window.location.href = "http://endhealth.info";
     }
   }
 });

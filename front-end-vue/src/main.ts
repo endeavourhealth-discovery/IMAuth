@@ -33,6 +33,7 @@ import ProgressSpinner from "primevue/progressspinner";
 import ToastService from "primevue/toastservice";
 import Toast from "primevue/toast";
 import InlineMessage from "primevue/inlinemessage";
+import SelectButton from "primevue/selectbutton";
 
 import { Amplify, Auth } from "aws-amplify";
 import awsconfig from "./aws-exports";
@@ -54,7 +55,8 @@ const app = createApp(App)
   .component("OverlayPanel", OverlayPanel)
   .component("font-awesome-icon", FontAwesomeIcon)
   .component("Toast", Toast)
-  .component("InlineMessage", InlineMessage);
+  .component("InlineMessage", InlineMessage)
+  .component("SelectButton", SelectButton);
 
 const vm = app.mount("#app");
 
