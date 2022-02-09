@@ -11,14 +11,15 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ButtonBar",
-  computed: mapState(["snomedLicenseAccepted", "previousAppUrl"]),
+  computed: mapState(["previousAppUrl"]),
   methods: {
     clickedBack(): void {
       this.$router.back();
     },
 
     homeClicked(): void {
-      window.location.href = "http://endhealth.info";
+      const href = this.previousAppUrl ? this.previousAppUrl : process.env.VUE_APP_DIRECTORY;
+      window.location.assign(href);
     }
   }
 });

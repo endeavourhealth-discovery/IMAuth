@@ -22,22 +22,22 @@ const routes: Array<RouteRecordRaw> = [
     redirect: { name: "Login" },
     children: [
       {
-        path: "login",
+        path: "login:returnUrl?",
         name: "Login",
         component: Login
       },
       {
-        path: "confirm-code",
+        path: "confirm-code:returnUrl?",
         name: "ConfirmCode",
         component: ConfirmCode
       },
       {
-        path: "register",
+        path: "register:returnUrl?",
         name: "Register",
         component: Register
       },
       {
-        path: "my-account",
+        path: "my-account:returnUrl?",
         name: "UserDetails",
         component: UserDetails,
         meta: {
@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "my-account/edit",
+        path: "my-account/edit:returnUrl?",
         name: "UserEdit",
         component: UserEdit,
         meta: {
@@ -53,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "my-account/password-edit",
+        path: "my-account/password-edit:returnUrl?",
         name: "PasswordEdit",
         component: PasswordEdit,
         meta: {
@@ -61,17 +61,17 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "logout",
+        path: "logout:returnUrl?",
         name: "Logout",
         component: Logout
       },
       {
-        path: "password-recovery",
+        path: "password-recovery:returnUrl?",
         name: "ForgotPassword",
         component: ForgotPassword
       },
       {
-        path: "password-recovery/submit",
+        path: "password-recovery/submit:returnUrl?",
         name: "ForgotPasswordSubmit",
         component: ForgotPasswordSubmit
       }
@@ -85,13 +85,16 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  if (to.query.returnUrl) {
+    store.commit("updatePreviousAppUrl", process.env[to.query.returnUrl.toString()]);
+  }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     store.dispatch("authenticateCurrentUser").then(res => {
       console.log("auth guard user authenticated:" + res.authenticated);
       if (!res.authenticated) {
         console.log("redirecting to login");
         next({
-          path: "/user/login"
+          path: "/login"
         });
       } else {
         next();

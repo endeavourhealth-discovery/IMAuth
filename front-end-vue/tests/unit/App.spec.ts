@@ -10,8 +10,6 @@ describe("App.vue", () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockStore = {
-      state: { historyCount: 1 },
-      commit: jest.fn(),
       dispatch: jest.fn()
     };
     wrapper = shallowMount(App, {
@@ -25,9 +23,7 @@ describe("App.vue", () => {
 
   it("should check auth and update store history count on mount", async () => {
     await flushPromises();
-    expect(mockStore.dispatch).toHaveBeenCalledTimes(2);
+    expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
     expect(mockStore.dispatch).toHaveBeenCalledWith("authenticateCurrentUser");
-    expect(mockStore.dispatch).toHaveBeenCalledWith("fetchBlockedIris");
-    expect(mockStore.commit).toBeCalledTimes(1);
   });
 });

@@ -22,6 +22,9 @@ export default createStore({
     },
     updateIsLoggedIn(state, status) {
       state.isLoggedIn = status;
+    },
+    updatePreviousAppUrl(state, url) {
+      state.previousAppUrl = url;
     }
   },
   actions: {
