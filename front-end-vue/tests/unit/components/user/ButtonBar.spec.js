@@ -20,7 +20,7 @@ describe("ButtonBar.vue ___ previousAppUrl", () => {
     mockRouter = {
       back: jest.fn()
     };
-    mockLocation = { assign: jest.fn() };
+    mockLocation = { href: "" };
     location = window.location;
     delete window.location;
     window.location = mockLocation;
@@ -39,7 +39,7 @@ describe("ButtonBar.vue ___ previousAppUrl", () => {
     const homeButton = wrapper.find(".home-button");
     homeButton.trigger("click");
     await wrapper.vm.$nextTick();
-    expect(window.location.assign).toHaveBeenCalledWith("testUrl");
+    expect(window.location.href).toBe("testUrl");
   });
 
   it("should go back on back button click", async () => {
@@ -68,7 +68,7 @@ describe("ButtonBar.vue ___ no previousAppUrl", () => {
     mockRouter = {
       back: jest.fn()
     };
-    mockLocation = { assign: jest.fn() };
+    mockLocation = { href: "" };
     location = window.location;
     delete window.location;
     window.location = mockLocation;
@@ -87,6 +87,6 @@ describe("ButtonBar.vue ___ no previousAppUrl", () => {
     const homeButton = wrapper.find(".home-button");
     homeButton.trigger("click");
     await wrapper.vm.$nextTick();
-    expect(window.location.assign).toHaveBeenCalledWith(process.env.VUE_APP_DIRECTORY);
+    expect(window.location.href).toBe(process.env.VUE_APP_DIRECTORY);
   });
 });
