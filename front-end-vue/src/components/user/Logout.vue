@@ -47,7 +47,7 @@ import { CustomAlert } from "@/models/user/CustomAlert";
 
 export default defineComponent({
   name: "Logout",
-  computed: mapState(["currentUser", "isLoggedIn"]),
+  computed: mapState(["currentUser", "isLoggedIn", "previousAppUrl"]),
   methods: {
     handleSubmit(): void {
       Swal.fire({
@@ -66,7 +66,11 @@ export default defineComponent({
                 title: "Success",
                 text: res.message
               }).then(() => {
-                this.$router.push({ name: "Home" });
+                if (this.previousAppUrl) {
+                  window.location.href = this.previousAppUrl;
+                } else {
+                  this.$router.push({ name: "Login" });
+                }
               });
             } else {
               Swal.fire({

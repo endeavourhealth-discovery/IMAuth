@@ -73,7 +73,7 @@ import AuthService from "@/services/AuthService";
 export default defineComponent({
   name: "PasswordEdit",
   components: {},
-  computed: mapState(["currentUser"]),
+  computed: mapState(["currentUser", "previousAppUrl"]),
   watch: {
     passwordOld(newValue) {
       this.passwordStrengthOld = checkPasswordStrength(newValue);
@@ -115,7 +115,11 @@ export default defineComponent({
               title: "Success",
               text: "Password successfully updated"
             }).then(() => {
-              this.$router.push({ name: "Home" });
+              if (this.previousAppUrl) {
+                window.location.href = this.previousAppUrl;
+              } else {
+                this.$router.push({ name: "UserDetails" });
+              }
             });
           } else {
             Swal.fire({

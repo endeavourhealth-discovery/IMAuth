@@ -50,7 +50,7 @@ import { avatars } from "@/models/user/Avatars";
 
 export default defineComponent({
   name: "Login",
-  computed: mapState(["registeredUsername"]),
+  computed: mapState(["registeredUsername", "previousAppUrl"]),
   data() {
     return {
       username: "",
@@ -81,7 +81,11 @@ export default defineComponent({
               title: "Success",
               text: "Login successful"
             }).then(() => {
-              this.$router.push({ name: "Home" });
+              if (this.previousAppUrl) {
+                window.location.href = this.previousAppUrl;
+              } else {
+                this.$router.push({ name: "UserDetails" });
+              }
             });
           } else if (res.status === 401) {
             Swal.fire({
