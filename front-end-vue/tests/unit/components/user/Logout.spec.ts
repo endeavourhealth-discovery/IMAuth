@@ -16,27 +16,20 @@ describe("Logout.vue", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    user = new User(
-      "testUser",
-      "John",
-      "Doe",
-      "john.doe@ergosoft.co.uk",
-      "",
-      avatars[0]
-    );
+    user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", avatars[0]);
 
     AuthService.signOut = jest.fn().mockResolvedValue({ status: 200, message: "Logout successful" });
 
     Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
     mockStore = {
-      state: {currentUser: user, isLoggedIn: true},
+      state: { currentUser: user, isLoggedIn: true },
       commit: jest.fn(),
-      dispatch: jest.fn().mockResolvedValue( new CustomAlert(200, "logout success"))
-    }
+      dispatch: jest.fn().mockResolvedValue(new CustomAlert(200, "logout success"))
+    };
     mockRouter = {
       push: jest.fn(),
       go: jest.fn()
-    }
+    };
     wrapper = mount(Logout, {
       global: {
         components: { Card, Button },
@@ -56,13 +49,13 @@ describe("Logout.vue", () => {
 
   it("returns the correct image url", async () => {
     jest.mock("@/assets/avatars/colour/013-woman.png", () => {
-      return "/img/013-woman.7f32b854.png"
-    })
+      return "/img/013-woman.7f32b854.png";
+    });
     const url = wrapper.vm.getUrl("colour/013-woman.png");
     expect(url).toBe("/img/013-woman.7f32b854.png");
   });
 
-  it("fires swal on handleSubmit", async() => {
+  it("fires swal on handleSubmit", async () => {
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     expect(Swal.fire).toBeCalledTimes(1);
@@ -76,7 +69,7 @@ describe("Logout.vue", () => {
     });
   });
 
-  it("does nothing on swal cancel", async() => {
+  it("does nothing on swal cancel", async () => {
     Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: false }));
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
@@ -84,7 +77,7 @@ describe("Logout.vue", () => {
     expect(mockStore.dispatch).toBeCalledTimes(0);
   });
 
-  it("dispatches to store on swal confirm", async() => {
+  it("dispatches to store on swal confirm", async () => {
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     expect(Swal.fire).toBeCalledTimes(1);
@@ -92,7 +85,7 @@ describe("Logout.vue", () => {
     expect(mockStore.dispatch).toBeCalledWith("logoutCurrentUser");
   });
 
-  it("fires swal on successful store logout", async() => {
+  it("fires swal on successful store logout", async () => {
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
@@ -105,18 +98,18 @@ describe("Logout.vue", () => {
     });
   });
 
-  it("reroutes after logout", async() => {
+  it("reroutes after logout", async () => {
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
     expect(Swal.fire).toBeCalledTimes(2);
     expect(mockStore.dispatch).toBeCalledTimes(1);
     expect(mockRouter.push).toBeCalledTimes(1);
-    expect(mockRouter.push).toBeCalledWith({ name: "Home" });
+    expect(mockRouter.push).toBeCalledWith({ name: "Login" });
   });
 
-  it("fires swal on unsuccessful store logout", async() => {
-    mockStore.dispatch = jest.fn().mockResolvedValue( new CustomAlert(400, "logout failed"))
+  it("fires swal on unsuccessful store logout", async () => {
+    mockStore.dispatch = jest.fn().mockResolvedValue(new CustomAlert(400, "logout failed"));
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();

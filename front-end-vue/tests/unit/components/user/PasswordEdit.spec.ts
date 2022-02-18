@@ -153,7 +153,7 @@ describe("PasswordEdit.vue with registeredUser", () => {
     await wrapper.vm.$nextTick();
     await flushPromises();
     expect(mockRouter.push).toBeCalledTimes(1);
-    expect(mockRouter.push).toBeCalledWith({ name: "Home" });
+    expect(mockRouter.push).toBeCalledWith({ name: "UserDetails" });
   });
 
   it("opens swal if auth fail ___ not 200", async () => {

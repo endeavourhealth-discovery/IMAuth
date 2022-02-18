@@ -152,7 +152,7 @@ describe("login.vue with registeredUser", () => {
     await wrapper.vm.$nextTick();
     await flushPromises();
     expect(mockRouter.push).toBeCalledTimes(1);
-    expect(mockRouter.push).toBeCalledWith({ name: "Home" });
+    expect(mockRouter.push).toBeCalledWith({ name: "UserDetails" });
   });
 
   it("fires swal on auth error ___ 401", async () => {
