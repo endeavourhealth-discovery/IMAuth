@@ -1,7 +1,7 @@
-import { User } from "../models/user/User";
+import { Models } from "im-library";
 
 export interface State {
-  currentUser: User;
+  currentUser: Models.User;
   registeredUsername: string;
   isLoggedIn: boolean;
 }

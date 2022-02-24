@@ -7,12 +7,13 @@ import Button from "primevue/button";
 import SelectButton from "primevue/selectbutton";
 import OverlayPanel from "primevue/overlaypanel";
 import AvatarWithSelector from "@/components/user/AvatarWithSelector.vue";
-import { User } from "@/models/user/User";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
 import AuthService from "@/services/AuthService";
 import Swal from "sweetalert2";
+import { Models, Enums } from "im-library";
+const { User } = Models;
+const { PasswordStrength } = Enums;
 
-let testUser: User;
+let testUser: Models.User;
 
 describe("userEdit.vue ___ user", () => {
   let wrapper: any;

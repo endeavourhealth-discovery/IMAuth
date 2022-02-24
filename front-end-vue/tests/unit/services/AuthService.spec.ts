@@ -1,8 +1,8 @@
 import { flushPromises } from "@vue/test-utils";
 import { Auth } from "aws-amplify";
 import AuthService from "@/services/AuthService";
-import { User } from "@/models/user/User";
-import { CustomAlert } from "@/models/user/CustomAlert";
+import { Models } from "im-library";
+const { User, CustomAlert } = Models;
 
 const testUser = new User("devtest", "John", "Doe", "john.doe@ergosoft.co.uk", "12345678", "colour/002-man.png");
 

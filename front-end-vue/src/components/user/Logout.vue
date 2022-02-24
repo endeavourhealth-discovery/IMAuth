@@ -1,6 +1,6 @@
 <template>
-  <div class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center logout-card">
+  <div class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center logout-card">
       <template #header>
         <i class="fa fa-fw fa-sign-out-alt icon-header" aria-hidden="true" />
       </template>
@@ -9,11 +9,11 @@
       </template>
       <template #content>
         <div class="p-fluid logout-form">
-          <div class="p-field">
+          <div class="field">
             <div class="p-text-left">Current User:</div>
           </div>
-          <div class="p-field">
-            <div v-if="isLoggedIn" class="p-d-flex p-flex-row p-ai-center p-text-capitalize">
+          <div class="field">
+            <div v-if="isLoggedIn" class="flex flex-row align-items-center p-text-capitalize">
               <img
                 v-if="isLoggedIn"
                 id="user-icon"
@@ -30,7 +30,7 @@
               Guest
             </div>
           </div>
-          <div class="p-d-flex p-flex-row p-jc-center">
+          <div class="flex flex-row justify-content-center">
             <Button class="user-submit" type="submit" label="Logout" v-on:click.prevent="handleSubmit" />
           </div>
         </div>
@@ -43,7 +43,7 @@
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import Swal from "sweetalert2";
-import { CustomAlert } from "@/models/user/CustomAlert";
+import { Models } from "im-library";
 
 export default defineComponent({
   name: "Logout",
@@ -59,7 +59,7 @@ export default defineComponent({
         reverseButtons: true
       }).then(result => {
         if (result.isConfirmed) {
-          this.$store.dispatch("logoutCurrentUser").then((res: CustomAlert) => {
+          this.$store.dispatch("logoutCurrentUser").then((res: Models.CustomAlert) => {
             if (res.status === 200) {
               Swal.fire({
                 icon: "success",

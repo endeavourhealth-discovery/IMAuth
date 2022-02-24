@@ -1,9 +1,9 @@
-import { User } from "@/models/user/User";
 import store from "@/store/index";
 import { flushPromises } from "@vue/test-utils";
 import LoggerService from "@/services/LoggerService";
 import AuthService from "@/services/AuthService";
-import { CustomAlert } from "@/models/user/CustomAlert";
+import { Models } from "im-library";
+const { User, CustomAlert } = Models;
 
 describe("state", () => {
   beforeEach(() => {

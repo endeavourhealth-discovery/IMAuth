@@ -1,6 +1,6 @@
 <template>
-  <div v-if="isLoggedIn" class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center user-edit-card">
+  <div v-if="isLoggedIn" class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center user-edit-card">
       <template #header>
         <avatar-with-selector :selectedAvatar="selectedAvatar" @avatarSelected="updateAvatar" />
       </template>
@@ -8,46 +8,46 @@
         Edit my account
       </template>
       <template #content>
-        <div class="p-fluid p-d-flex p-flex-column p-jc-start user-edit-form">
-          <div class="p-field">
+        <div class="p-fluid flex flex-column justify-content-start user-edit-form">
+          <div class="field">
             <label for="username">Username</label>
             <InputText id="username" type="text" v-model="username" disabled />
             <small id="user-help">Username cannot currently be changed.</small>
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="firstName">First name</label>
             <InputText id="firstName" type="text" v-model="firstName" v-on:blur="setShowFirstNameNotice" />
             <InlineMessage v-if="showFirstNameNotice" severity="error">
               First name contains unexpected characters. A-Z and hyphens only allowed e.g."Mary-Anne".
             </InlineMessage>
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="lastName">Last name</label>
             <InputText id="lastName" type="text" v-model="lastName" v-on:blur="setShowLastNameNotice" />
             <InlineMessage v-if="showLastNameNotice" severity="error">
               Last name contains unexpected characters. A-Z, apostropies and hyphens only allowed e.g."O'Keith-Smith".
             </InlineMessage>
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="email1">Email address</label>
-            <div class="p-d-flex p-flex-row p-ai-center">
+            <div class="flex flex-row align-items-center">
               <InputText id="email1" type="text" v-model="email1" v-on:focus="setShowEmail1Notice(true)" v-on:blur="setShowEmail1Notice(false)" />
               <i v-if="showEmail1Notice && email1Verified" class="pi pi-check-circle email-check" aria-hidden="true" />
               <i v-if="showEmail1Notice && !email1Verified" class="pi pi-times-circle email-times" aria-hidden="true" />
             </div>
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="email2">Confirm email address</label>
             <InputText id="email2" type="text" v-model="email2" v-on:blur="setShowEmail2Notice()" />
             <InlineMessage v-if="showEmail2Notice" severity="error">
               Email addresses do not match!
             </InlineMessage>
           </div>
-          <div v-if="showPasswordEdit" class="p-field">
+          <div v-if="showPasswordEdit" class="field">
             <label for="passwordOld">Current password</label>
             <InputText id="passwordOld" type="password" v-model="passwordOld" />
           </div>
-          <div v-if="showPasswordEdit" class="p-field">
+          <div v-if="showPasswordEdit" class="field">
             <label for="passwordNew1">New password</label>
             <InputText id="passwordNew1" type="password" v-model="passwordNew1" />
             <InlineMessage v-if="passwordStrength === 'strong'" severity="success">
@@ -67,14 +67,14 @@
               characters [!@#$%^&*].
             </small>
           </div>
-          <div v-if="showPasswordEdit" class="p-field">
+          <div v-if="showPasswordEdit" class="field">
             <label for="passwordNew2">Confirm new password</label>
             <InputText id="passwordNew2" type="password" v-model="passwordNew2" v-on:blur="setShowPassword2Notice" />
             <InlineMessage v-if="showPassword2Notice" severity="error">
               New passwords do not match
             </InlineMessage>
           </div>
-          <div class="p-d-flex p-flex-row p-jc-between p-ai-center">
+          <div class="flex flex-row justify-content-between align-items-center">
             <Button
               v-if="!showPasswordEdit"
               class="password-edit p-button-secondary"
@@ -102,13 +102,16 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
-import { User } from "@/models/user/User";
 import Swal, { SweetAlertIcon } from "sweetalert2";
-import { verifyIsEmail, verifyPasswordsMatch, verifyEmailsMatch, verifyIsName, checkPasswordStrength } from "@/helpers/UserMethods";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
 import AuthService from "@/services/AuthService";
-import { avatars } from "@/models/user/Avatars";
 import AvatarWithSelector from "./AvatarWithSelector.vue";
+import { Models, Helpers, Enums, Constants } from "im-library";
+const { User } = Models;
+const {
+  UserMethods: { verifyEmailsMatch, verifyIsEmail, verifyIsName, verifyPasswordsMatch, checkPasswordStrength }
+} = Helpers;
+const { PasswordStrength } = Enums;
+const { Avatars } = Constants;
 
 export default defineComponent({
   name: "UserEdit",
@@ -155,15 +158,15 @@ export default defineComponent({
       passwordOld: "",
       passwordNew1: "",
       passwordNew2: "",
-      passwordStrength: PasswordStrength.fail as PasswordStrength,
-      passwordStrengthOld: PasswordStrength.fail as PasswordStrength,
+      passwordStrength: PasswordStrength.fail as Enums.PasswordStrength,
+      passwordStrengthOld: PasswordStrength.fail as Enums.PasswordStrength,
       showPasswordEdit: false,
       passwordsMatch: false,
       showPassword2Notice: false,
       showFirstNameNotice: false,
       showLastNameNotice: false,
-      selectedAvatar: avatars[0],
-      avatarOptions: avatars
+      selectedAvatar: Avatars[0],
+      avatarOptions: Avatars
     };
   },
   mounted() {

@@ -2,7 +2,7 @@ module.exports = {
   root: true,
 
   env: {
-    node: true
+    es2021: true
   },
 
   extends: [
@@ -17,11 +17,6 @@ module.exports = {
 
   plugins: ["prettier"],
 
-  parserOptions: {
-    ecmaVersion: 2020,
-    parser: "@typescript-eslint/parser"
-  },
-
   ignorePatterns: ["src/discovery-syntax/*", "tests/*"],
 
   rules: {
@@ -30,6 +25,7 @@ module.exports = {
     "no-use-before-define": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "@typescript-eslint/no-var-requires": 0,
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "vue/multi-word-component-names": "off"
   }
 };

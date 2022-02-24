@@ -2,21 +2,21 @@ import Card from "primevue/card";
 import Button from "primevue/button";
 import { flushPromises, mount } from "@vue/test-utils";
 import Logout from "@/components/user/Logout.vue";
-import { User } from "@/models/user/User";
-import { avatars } from "@/models/user/Avatars";
 import AuthService from "@/services/AuthService";
 import Swal from "sweetalert2";
-import { CustomAlert } from "@/models/user/CustomAlert";
+import { Models, Constants } from "im-library";
+const { User, CustomAlert } = Models;
+const { Avatars } = Constants;
 
 describe("Logout.vue", () => {
   let wrapper: any;
   let mockStore: any;
   let mockRouter: any;
-  let user: User;
+  let user: Models.User;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", avatars[0]);
+    user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", Avatars[0]);
 
     AuthService.signOut = jest.fn().mockResolvedValue({ status: 200, message: "Logout successful" });
 

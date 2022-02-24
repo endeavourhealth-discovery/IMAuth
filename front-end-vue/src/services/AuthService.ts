@@ -1,9 +1,9 @@
 import { Auth } from "aws-amplify";
-import { User } from "@/models/user/User";
-import { CustomAlert } from "@/models/user/CustomAlert";
+import { Models } from "im-library";
+const { User, CustomAlert } = Models;
 
 export default {
-  async register(userToRegister: User): Promise<CustomAlert> {
+  async register(userToRegister: Models.User): Promise<Models.CustomAlert> {
     try {
       await Auth.signUp({
         username: userToRegister.username,
@@ -25,7 +25,7 @@ export default {
     }
   },
 
-  async confirmRegister(username: string, code: string): Promise<CustomAlert> {
+  async confirmRegister(username: string, code: string): Promise<Models.CustomAlert> {
     try {
       await Auth.confirmSignUp(username, code);
       return new CustomAlert(200, "Register confirmation successful");
@@ -34,7 +34,7 @@ export default {
     }
   },
 
-  async signIn(username: string, password: string): Promise<CustomAlert> {
+  async signIn(username: string, password: string): Promise<Models.CustomAlert> {
     try {
       const user = await Auth.signIn(username, password);
       const signedInUser = new User(
@@ -55,7 +55,7 @@ export default {
     }
   },
 
-  async resendConfirmationCode(username: string): Promise<CustomAlert> {
+  async resendConfirmationCode(username: string): Promise<Models.CustomAlert> {
     try {
       await Auth.resendSignUp(username);
       return new CustomAlert(200, "Code resent successfully");
@@ -64,7 +64,7 @@ export default {
     }
   },
 
-  async signOut(): Promise<CustomAlert> {
+  async signOut(): Promise<Models.CustomAlert> {
     try {
       await Auth.signOut({ global: true });
       return new CustomAlert(200, "Logged out successfully");
@@ -73,7 +73,7 @@ export default {
     }
   },
 
-  async updateUser(userToUpdate: User): Promise<CustomAlert> {
+  async updateUser(userToUpdate: Models.User): Promise<Models.CustomAlert> {
     try {
       const user = await Auth.currentAuthenticatedUser();
       if (user.attributes.sub === userToUpdate.id) {
@@ -108,7 +108,7 @@ export default {
     }
   },
 
-  async changePassword(oldPassword: string, newPassword: string): Promise<CustomAlert> {
+  async changePassword(oldPassword: string, newPassword: string): Promise<Models.CustomAlert> {
     try {
       const user = await Auth.currentAuthenticatedUser();
       await Auth.changePassword(user, oldPassword, newPassword);
@@ -118,7 +118,7 @@ export default {
     }
   },
 
-  async forgotPassword(username: string): Promise<CustomAlert> {
+  async forgotPassword(username: string): Promise<Models.CustomAlert> {
     try {
       await Auth.forgotPassword(username);
       return new CustomAlert(200, "Password reset request sent to server");
@@ -127,7 +127,7 @@ export default {
     }
   },
 
-  async forgotPasswordSubmit(username: string, code: string, newPassword: string): Promise<CustomAlert> {
+  async forgotPasswordSubmit(username: string, code: string, newPassword: string): Promise<Models.CustomAlert> {
     try {
       await Auth.forgotPasswordSubmit(username, code, newPassword);
       return new CustomAlert(200, "Password reset successfully");
@@ -139,7 +139,7 @@ export default {
     }
   },
 
-  async forgotUsername(email: string): Promise<CustomAlert> {
+  async forgotUsername(email: string): Promise<Models.CustomAlert> {
     try {
       await Auth.verifyCurrentUserAttribute(email);
       return new CustomAlert(200, "Account recovery code sent");
@@ -148,7 +148,7 @@ export default {
     }
   },
 
-  async getCurrentAuthenticatedUser(): Promise<CustomAlert> {
+  async getCurrentAuthenticatedUser(): Promise<Models.CustomAlert> {
     try {
       const cognitoUser = await Auth.currentAuthenticatedUser();
       const authenticatedUser = new User(

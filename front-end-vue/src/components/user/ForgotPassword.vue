@@ -1,17 +1,17 @@
 <template>
-  <div class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center recovery-card">
+  <div class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center recovery-card">
       <template #header>
         <i class="pi pi-fw pi-user icon-header" aria-hidden="true" />
       </template>
       <template #title> Account Recovery: <br /><br />Password Reset </template>
       <template #content>
         <div class="p-fluid recovery-form">
-          <div class="p-field">
+          <div class="field">
             <label for="fieldUsername">Username</label>
             <InputText id="fieldUsername" type="text" v-model="username" />
           </div>
-          <div class="p-d-flex p-flex-row p-jc-center">
+          <div class="flex flex-row justify-content-center">
             <Button class="user-submit" type="submit" label="Request Reset Code" v-on:click.prevent="handleSubmit" />
           </div>
         </div>

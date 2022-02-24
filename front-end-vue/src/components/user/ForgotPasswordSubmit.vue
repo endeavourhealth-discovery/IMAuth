@@ -1,26 +1,26 @@
 <template>
-  <div class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center recovery-card">
+  <div class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center recovery-card">
       <template #header>
         <i class="pi pi-fw pi-user icon-header" aria-hidden="true" />
       </template>
       <template #title> Account Recovery: <br /><br />Submit Password Reset Code </template>
       <template #content>
         <div class="p-fluid recovery-form">
-          <div class="p-field">
+          <div class="field">
             <label for="fieldUsername">Username</label>
             <InputText id="fieldUsername" type="text" v-model="username" :placeholder="registeredUsername" />
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="fieldCode">Confirmation code</label>
-            <div class="p-d-flex p-flex-row p-ai-center">
+            <div class="flex flex-row align-items-center">
               <InputText id="fieldCode" type="password" v-model="code" />
               <i v-if="codeVerified" class="pi pi-check-circle" style="color: #439446; font-size: 2em" aria-hidden="true" />
               <i v-if="!codeVerified && code !== ''" class="pi pi-times-circle" style="color: #e60017; font-size: 2em" aria-hidden="true" />
             </div>
             <small id="code-help">Your 6-digit code should arrive by email from<br />no-reply@verificationemail.com</small>
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="fieldPassword1">New Password</label>
             <InputText id="fieldPassword1" type="password" aria-describedby="password-help" v-model="newPassword1" />
             <InlineMessage v-if="passwordStrength === 'strong'" severity="success">Password Strength: Strong</InlineMessage>
@@ -32,12 +32,12 @@
               [!@#$%^&*].</small
             >
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="fieldPassword2">Confirm New Password</label>
             <InputText id="fieldPassword2" type="password" v-model="newPassword2" v-on:blur="setShowPassword2Notice" />
             <InlineMessage v-if="showPassword2Notice" severity="error">Passwords do not match!</InlineMessage>
           </div>
-          <div class="p-d-flex p-flex-row p-jc-center">
+          <div class="flex flex-row justify-content-center">
             <Button class="user-submit" type="submit" label="Reset Password" v-on:click.prevent="handleSubmit" />
           </div>
         </div>
@@ -56,8 +56,11 @@
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import AuthService from "@/services/AuthService";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
-import { verifyPasswordsMatch, checkPasswordStrength } from "@/helpers/UserMethods";
+import { Helpers, Enums } from "im-library";
+const {
+  UserMethods: { verifyPasswordsMatch, checkPasswordStrength }
+} = Helpers;
+const { PasswordStrength } = Enums;
 import Swal from "sweetalert2";
 
 export default defineComponent({
@@ -81,7 +84,7 @@ export default defineComponent({
       username: "",
       newPassword1: "",
       newPassword2: "",
-      passwordStrength: PasswordStrength.fail as PasswordStrength,
+      passwordStrength: PasswordStrength.fail as Enums.PasswordStrength,
       passwordsMatch: false,
       showPassword2Notice: false
     };

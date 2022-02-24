@@ -5,7 +5,8 @@ import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import AuthService from "@/services/AuthService";
 import Swal from "sweetalert2";
-import { User } from "@/models/user/User";
+import { Models } from "im-library";
+const { User } = Models;
 
 describe("login.vue no registeredUser", () => {
   let wrapper: any;
@@ -44,7 +45,7 @@ describe("login.vue with registeredUser", () => {
   let wrapper: any;
   let mockStore: any;
   let mockRouter: any;
-  let testUser: User;
+  let testUser: Models.User;
 
   beforeEach(() => {
     jest.clearAllMocks();

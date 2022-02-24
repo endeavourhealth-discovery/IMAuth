@@ -7,17 +7,18 @@ import Button from "primevue/button";
 import SelectButton from "primevue/selectbutton";
 import OverlayPanel from "primevue/overlaypanel";
 import AvatarWithSelector from "@/components/user/AvatarWithSelector.vue";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
-import { avatars } from "@/models/user/Avatars";
 import AuthService from "@/services/AuthService";
 import Swal from "sweetalert2";
-import { User } from "@/models/user/User";
+import { Models, Constants, Enums } from "im-library";
+const { User } = Models;
+const { Avatars } = Constants;
+const { PasswordStrength } = Enums;
 
 describe("register.vue empty", () => {
   let wrapper: any;
   let mockStore: any;
   let mockRouter: any;
-  let testUser: User;
+  let testUser: Models.User;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -25,7 +26,7 @@ describe("register.vue empty", () => {
 
     Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
 
-    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", avatars[0]);
+    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", Avatars[0]);
     mockStore = {
       commit: jest.fn()
     };
@@ -60,7 +61,7 @@ describe("register.vue prefilled", () => {
   let wrapper: any;
   let mockStore: any;
   let mockRouter: any;
-  let testUser: User;
+  let testUser: Models.User;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -68,7 +69,7 @@ describe("register.vue prefilled", () => {
 
     Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
 
-    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", avatars[0]);
+    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", Avatars[0]);
     mockStore = {
       commit: jest.fn()
     };
@@ -89,7 +90,7 @@ describe("register.vue prefilled", () => {
     wrapper.vm.password2 = "12345678";
     wrapper.vm.firstName = "John";
     wrapper.vm.lastName = "Doe";
-    wrapper.vm.selectedAvatar = avatars[0];
+    wrapper.vm.selectedAvatar = Avatars[0];
   });
 
   it("should render data to form", async () => {
@@ -357,7 +358,7 @@ describe("register.vue prefilled", () => {
   });
 
   it("should updateAvatar", async () => {
-    expect(wrapper.vm.selectedAvatar).toStrictEqual(avatars[0]);
+    expect(wrapper.vm.selectedAvatar).toStrictEqual(Avatars[0]);
     wrapper.vm.updateAvatar("colour/003-man.png");
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.selectedAvatar).toStrictEqual("colour/003-man.png");
@@ -560,7 +561,7 @@ describe("AuthService fail", () => {
   let wrapper: any;
   let mockStore: any;
   let mockRouter: any;
-  let testUser: User;
+  let testUser: Models.User;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -569,7 +570,7 @@ describe("AuthService fail", () => {
 
     Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
 
-    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", avatars[0]);
+    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", Avatars[0]);
     mockStore = {
       commit: jest.fn()
     };
@@ -590,7 +591,7 @@ describe("AuthService fail", () => {
     wrapper.vm.password2 = "12345678";
     wrapper.vm.firstName = "John";
     wrapper.vm.lastName = "Doe";
-    wrapper.vm.selectedAvatar = avatars[0];
+    wrapper.vm.selectedAvatar = Avatars[0];
   });
   it("logs AuthService error to console", async () => {
     wrapper.vm.handleSubmit();

@@ -1,7 +1,7 @@
 <template>
   <div class="layout-wrapper layout-static">
     <Toast />
-    <div v-if="loading" class="p-d-flex p-flex-row p-jc-center p-ai-center loading-container">
+    <div v-if="loading" class="flex flex-row justify-content-center align-items-center loading-container">
       <ProgressSpinner />
     </div>
     <router-view v-else />

@@ -4,9 +4,10 @@ import InlineMessage from "primevue/inlinemessage";
 import { flushPromises, mount } from "@vue/test-utils";
 import ForgotPasswordSubmit from "@/components/user/ForgotPasswordSubmit.vue";
 import InputText from "primevue/inputtext";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
 import AuthService from "@/services/AuthService";
 import Swal from "sweetalert2";
+import { Enums } from "im-library";
+const { PasswordStrength } = Enums;
 
 describe("ForgotPasswordSubmit.vue no registeredUser", () => {
   let wrapper: any;
@@ -19,13 +20,13 @@ describe("ForgotPasswordSubmit.vue no registeredUser", () => {
 
     Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
     mockStore = {
-      state: {registeredUsername: null},
+      state: { registeredUsername: null },
       commit: jest.fn()
-    }
+    };
     mockRouter = {
       push: jest.fn(),
       go: jest.fn()
-    }
+    };
     wrapper = mount(ForgotPasswordSubmit, {
       global: {
         components: { Card, Button, InputText, InlineMessage },
@@ -55,13 +56,13 @@ describe("ForgotPasswordSubmit.vue with registeredUser", () => {
 
     Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
     mockStore = {
-      state: {registeredUsername: "testUser"},
+      state: { registeredUsername: "testUser" },
       commit: jest.fn()
-    }
+    };
     mockRouter = {
       push: jest.fn(),
       go: jest.fn()
-    }
+    };
     wrapper = mount(ForgotPasswordSubmit, {
       global: {
         components: { Card, Button, InputText, InlineMessage },
@@ -144,7 +145,7 @@ describe("ForgotPasswordSubmit.vue with registeredUser", () => {
     expect(wrapper.vm.passwordsMatch).toBe(true);
   });
 
-  it("can set showpassword2notice ___ true", async() => {
+  it("can set showpassword2notice ___ true", async () => {
     wrapper.vm.newPassword1 = "12345678";
     wrapper.vm.newPassword2 = "12345679";
     await wrapper.vm.$nextTick();
@@ -154,7 +155,7 @@ describe("ForgotPasswordSubmit.vue with registeredUser", () => {
     expect(wrapper.vm.showPassword2Notice).toBeTruthy();
   });
 
-  it("can set showpassword2notice ___ false", async() => {
+  it("can set showpassword2notice ___ false", async () => {
     wrapper.vm.newPassword1 = "12345678";
     wrapper.vm.newPassword2 = "12345678";
     await wrapper.vm.$nextTick();
@@ -219,7 +220,13 @@ describe("ForgotPasswordSubmit.vue with registeredUser", () => {
     await wrapper.vm.$nextTick();
     await flushPromises();
     expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Code Expired", text: "Password reset code has expired. Please request a new code", showCancelButton: true, confirmButtonText: "Request new code" });
+    expect(Swal.fire).toBeCalledWith({
+      icon: "error",
+      title: "Code Expired",
+      text: "Password reset code has expired. Please request a new code",
+      showCancelButton: true,
+      confirmButtonText: "Request new code"
+    });
   });
 
   it("reroutes on auth 403", async () => {

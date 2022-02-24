@@ -1,6 +1,6 @@
 <template>
-  <div class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center login-card">
+  <div class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center login-card">
       <template #header>
         <i class="fa fa-fw fa-users icon-header" aria-hidden="true" />
       </template>
@@ -9,15 +9,15 @@
       </template>
       <template #content>
         <div class="p-fluid login-form">
-          <div class="p-field">
+          <div class="field">
             <label for="fieldUsername">Username</label>
             <InputText id="fieldUsername" type="text" v-model="username" :placeholder="username" />
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="fieldPassword">Password</label>
             <InputText id="fieldPassword" type="password" v-model="password" @keyup="checkKey" />
           </div>
-          <div class="p-d-flex p-flex-row p-jc-center">
+          <div class="flex flex-row justify-content-center">
             <Button class="user-submit" type="submit" label="Login" v-on:click.prevent="handleSubmit" />
           </div>
         </div>
@@ -46,7 +46,8 @@ import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import Swal from "sweetalert2";
 import AuthService from "@/services/AuthService";
-import { avatars } from "@/models/user/Avatars";
+import { Constants } from "im-library";
+const { Avatars } = Constants;
 
 export default defineComponent({
   name: "Login",
@@ -69,9 +70,9 @@ export default defineComponent({
           if (res.status === 200 && res.user) {
             const loggedInUser = res.user;
             // check if avatar exists and replace lagacy images with default avatar on signin
-            const result = avatars.find(avatar => avatar === loggedInUser.avatar);
+            const result = Avatars.find((avatar: string) => avatar === loggedInUser.avatar);
             if (!result) {
-              loggedInUser.avatar = avatars[0];
+              loggedInUser.avatar = Avatars[0];
             }
             this.$store.commit("updateCurrentUser", loggedInUser);
             this.$store.commit("updateRegisteredUsername", null);

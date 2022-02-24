@@ -1,6 +1,6 @@
 <template>
-  <div v-if="currentUser" class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center password-edit-card">
+  <div v-if="currentUser" class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center password-edit-card">
       <template #header>
         <img
           id="user-icon"
@@ -16,16 +16,16 @@
         Change password
       </template>
       <template #content>
-        <div class="p-fluid p-d-flex p-flex-column p-jc-start password-edit-form">
-          <div v-if="currentUser.username" class="p-field">
+        <div class="p-fluid flex flex-column justify-content-start password-edit-form">
+          <div v-if="currentUser.username" class="field">
             <label for="userName">Username</label>
             <InputText class="p-text-capitalize" id="username" type="text" :value="currentUser.username" disabled />
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="passwordOld">Current password</label>
             <InputText id="passwordOld" type="password" v-model="passwordOld" />
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="passwordNew1">New password</label>
             <InputText id="passwordNew1" type="password" v-model="passwordNew1" />
             <InlineMessage v-if="passwordStrength === 'strong'" severity="success">
@@ -45,14 +45,14 @@
               characters [!@#$%^&*].
             </small>
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="passwordNew2">Confirm new password</label>
             <InputText id="passwordNew2" type="password" v-model="passwordNew2" v-on:blur="setShowPassword2Message" @keyup="checkKey" />
             <InlineMessage v-if="showPassword2Message" severity="error">
               New passwords do not match!
             </InlineMessage>
           </div>
-          <div class="p-d-flex p-flex-row p-jc-center">
+          <div class="flex flex-row justify-content-center">
             <Button v-if="setButtonDisabled()" class="user-edit" type="submit" label="Change password" disabled v-on:click.prevent="handleEditSubmit" />
             <Button v-else class="user-edit" type="submit" label="Change password" v-on:click.prevent="handleEditSubmit" />
           </div>
@@ -64,11 +64,14 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { verifyPasswordsMatch, checkPasswordStrength } from "@/helpers/UserMethods";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
 import { mapState } from "vuex";
 import Swal from "sweetalert2";
 import AuthService from "@/services/AuthService";
+import { Helpers, Enums } from "im-library";
+const {
+  UserMethods: { verifyPasswordsMatch, checkPasswordStrength }
+} = Helpers;
+const { PasswordStrength } = Enums;
 
 export default defineComponent({
   name: "PasswordEdit",
@@ -91,8 +94,8 @@ export default defineComponent({
       passwordNew1: "",
       passwordNew2: "",
       passwordsMatch: false,
-      passwordStrength: PasswordStrength.fail as PasswordStrength,
-      passwordStrengthOld: PasswordStrength.fail as PasswordStrength,
+      passwordStrength: PasswordStrength.fail as Enums.PasswordStrength,
+      passwordStrengthOld: PasswordStrength.fail as Enums.PasswordStrength,
       showPassword2Message: false
     };
   },

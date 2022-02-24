@@ -3,8 +3,9 @@ import UserDetails from "@/components/user/UserDetails.vue";
 import Card from "primevue/card";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
-import { User } from "@/models/user/User";
-import { avatars } from "@/models/user/Avatars";
+import { Models, Constants } from "im-library";
+const { User } = Models;
+const { Avatars } = Constants;
 
 describe("userDetails.vue", () => {
   let wrapper: any;
@@ -12,23 +13,16 @@ describe("userDetails.vue", () => {
   let mockRouter: any;
 
   beforeEach(() => {
-    const user = new User(
-      "testUser",
-      "John",
-      "Doe",
-      "john.doe@ergosoft.co.uk",
-      "",
-      avatars[0]
-    );
+    const user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", Avatars[0]);
     jest.clearAllMocks();
     mockStore = {
-      state: {"currentUser": user, "isLoggedIn": true},
-      commit: jest.fn(),
-    }
+      state: { currentUser: user, isLoggedIn: true },
+      commit: jest.fn()
+    };
     mockRouter = {
       push: jest.fn(),
       go: jest.fn()
-    }
+    };
     wrapper = mount(UserDetails, {
       global: {
         components: { Card, Button, InputText },
@@ -61,7 +55,7 @@ describe("userDetails.vue", () => {
     expect(emailInput.value).toBe("john.doe@ergosoft.co.uk");
   });
 
-  it("rerouted on handleEditClicked", async() => {
+  it("rerouted on handleEditClicked", async () => {
     wrapper.vm.handleEditClicked();
     await wrapper.vm.$nextTick();
     expect(mockRouter.push).toBeCalledTimes(1);
@@ -70,8 +64,8 @@ describe("userDetails.vue", () => {
 
   it("returns the correct image url", async () => {
     jest.mock("@/assets/avatars/colour/013-woman.png", () => {
-      return "/img/013-woman.7f32b854.png"
-    })
+      return "/img/013-woman.7f32b854.png";
+    });
     const url = wrapper.vm.getUrl("colour/013-woman.png");
     expect(url).toBe("/img/013-woman.7f32b854.png");
   });

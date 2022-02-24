@@ -1,6 +1,6 @@
 <template>
-  <div class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center user-details-card">
+  <div class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center user-details-card">
       <template #header>
         <img id="selected-avatar" :src="getUrl(currentUser.avatar)" alt="avatar icon" />
       </template>
@@ -8,24 +8,24 @@
         My account details
       </template>
       <template #content>
-        <div v-if="isLoggedIn" class="p-fluid p-d-flex p-flex-column p-jc-start user-details-form">
-          <div class="p-field">
+        <div v-if="isLoggedIn" class="p-fluid flex flex-column justify-content-start user-details-form">
+          <div class="field">
             <label for="username">Username</label>
             <InputText id="username" type="text" :value="currentUser.username" disabled />
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="firstName">First name</label>
             <InputText id="firstName" type="text" :value="currentUser.firstName" disabled />
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="lastName">Last name</label>
             <InputText id="lastName" type="text" :value="currentUser.lastName" disabled />
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="email">Email address</label>
             <InputText id="email" type="text" :value="currentUser.email" disabled />
           </div>
-          <div class="p-d-flex p-flex-row p-jc-center">
+          <div class="flex flex-row justify-content-center">
             <Button class="user-edit" type="submit" label="Edit" v-on:click.prevent="handleEditClicked" />
           </div>
         </div>

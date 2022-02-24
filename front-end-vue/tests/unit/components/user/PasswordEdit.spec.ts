@@ -4,18 +4,18 @@ import InlineMessage from "primevue/inlinemessage";
 import { flushPromises, mount } from "@vue/test-utils";
 import PasswordEdit from "@/components/user/PasswordEdit.vue";
 import InputText from "primevue/inputtext";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
-import { User } from "@/models/user/User";
-import { avatars } from "@/models/user/Avatars";
 import AuthService from "@/services/AuthService";
 import Swal from "sweetalert2";
-import { CustomAlert } from "@/models/user/CustomAlert";
+import { Models, Enums, Constants } from "im-library";
+const { User, CustomAlert } = Models;
+const { PasswordStrength } = Enums;
+const { Avatars } = Constants;
 
 describe("PasswordEdit.vue with registeredUser", () => {
   let wrapper: any;
   let mockStore: any;
   let mockRouter: any;
-  const user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", avatars[0]);
+  const user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", Avatars[0]);
 
   beforeEach(() => {
     jest.clearAllMocks();
