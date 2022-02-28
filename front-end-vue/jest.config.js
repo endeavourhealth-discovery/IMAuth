@@ -1,8 +1,8 @@
 module.exports = {
-  preset: "@vue/cli-plugin-unit-jest/presets/typescript-and-babel",
-  globals: {},
+  preset: "ts-jest",
+  moduleFileExtensions: ["js", "ts", "vue"],
   transform: {
-    "^.+\\.vue$": "vue-jest"
+    "^.+\\.vue$": "vue3-jest"
   },
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!primevue|d3|d3-array|internmap|delaunator|robust-predicates)"],
   collectCoverage: true,
@@ -14,5 +14,8 @@ module.exports = {
     "!**/discovery-syntax/**",
     "!**/typings/**"
   ],
-  setupFiles: ["<rootDir>/.jest/setEnvVars.js"]
+  globals: { "vue3-jest": { babelConfig: true } },
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1"
+  }
 };
