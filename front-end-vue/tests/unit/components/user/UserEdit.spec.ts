@@ -8,13 +8,9 @@ import SelectButton from "primevue/selectbutton";
 import OverlayPanel from "primevue/overlaypanel";
 import AvatarWithSelector from "@/components/user/AvatarWithSelector.vue";
 import AuthService from "@/services/AuthService";
-import Swal from "sweetalert2";
 import { Models, Enums } from "im-library";
-import {vi} from 'vitest';
 const { User } = Models;
 const { PasswordStrength } = Enums;
-
-const jest=vi
 
 let testUser: Models.User;
 
@@ -22,31 +18,34 @@ describe("userEdit.vue ___ user", () => {
   let wrapper: any;
   let mockStore: any;
   let mockRouter: any;
+  let mockSwal: any;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     testUser = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", "colour/003-man.png");
 
     testUser.setId("9gkej864-l39k-9u87-4lau-w7777b3m5g09");
 
-    AuthService.changePassword = jest.fn().mockResolvedValue({ status: 200, message: "Password change successful" });
+    AuthService.changePassword = vi.fn().mockResolvedValue({ status: 200, message: "Password change successful" });
 
-    AuthService.updateUser = jest.fn().mockResolvedValue({ status: 200, message: "User Update successful", user: testUser });
+    AuthService.updateUser = vi.fn().mockResolvedValue({ status: 200, message: "User Update successful", user: testUser });
 
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
     mockStore = {
       state: { currentUser: testUser, isLoggedIn: true },
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
+    };
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
     };
     wrapper = mount(UserEdit, {
       global: {
         components: { Card, Button, InputText, InlineMessage, SelectButton, OverlayPanel, AvatarWithSelector },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
   });
@@ -287,8 +286,8 @@ describe("userEdit.vue ___ user", () => {
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "success",
       title: "Success",
       text: "Account details updated successfully."
@@ -300,20 +299,20 @@ describe("userEdit.vue ___ user", () => {
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
     await flushPromises();
-    expect(mockStore.commit).toBeCalledTimes(1);
-    expect(mockStore.commit).toBeCalledWith("updateCurrentUser", testUser);
-    expect(mockRouter.push).toBeCalledTimes(1);
-    expect(mockRouter.push).toBeCalledWith({ name: "UserDetails" });
+    expect(wrapper.vm.$store.commit).toBeCalledTimes(1);
+    expect(wrapper.vm.$store.commit).toBeCalledWith("updateCurrentUser", testUser);
+    expect(wrapper.vm.$router.push).toBeCalledTimes(1);
+    expect(wrapper.vm.$router.push).toBeCalledWith({ name: "UserDetails" });
   });
 
   it("fires swal if all verified _ no password __ not 200", async () => {
-    AuthService.updateUser = jest.fn().mockResolvedValue({ status: 403, message: "User update failed" });
+    AuthService.updateUser = vi.fn().mockResolvedValue({ status: 403, message: "User update failed" });
     wrapper.vm.firstName = "Johnny";
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "User update failed"
@@ -321,14 +320,14 @@ describe("userEdit.vue ___ user", () => {
   });
 
   it("fires swal if not verified", async () => {
-    AuthService.updateUser = jest.fn().mockResolvedValue({ status: 403, message: "User update failed" });
+    AuthService.updateUser = vi.fn().mockResolvedValue({ status: 403, message: "User update failed" });
     testUser.firstName = "Johnny";
     wrapper.vm.firstName = "John(y";
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "Error with user form"
@@ -376,8 +375,8 @@ describe("userEdit.vue ___ user", () => {
     wrapper.vm.handleEditSubmit();
     await flushPromises();
     expect(AuthService.changePassword).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "success",
       title: "Success",
       text: "User details and password successfully updated."
@@ -402,7 +401,7 @@ describe("userEdit.vue ___ user", () => {
   });
 
   it("fires swal if password !200 received ___ password edit", async () => {
-    AuthService.changePassword = jest.fn().mockResolvedValue({ status: 403, message: "Password change failed" });
+    AuthService.changePassword = vi.fn().mockResolvedValue({ status: 403, message: "Password change failed" });
     wrapper.vm.showPasswordEdit = true;
     wrapper.vm.passwordOld = "12345678";
     wrapper.vm.passwordNew1 = "87654321";
@@ -414,8 +413,8 @@ describe("userEdit.vue ___ user", () => {
     wrapper.vm.handleEditSubmit();
     await flushPromises();
     expect(AuthService.changePassword).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "Password update failed, but user details updated successfully. " + "Password change failed"
@@ -423,7 +422,7 @@ describe("userEdit.vue ___ user", () => {
   });
 
   it("fires swal if authservice user !200 received ___ password edit", async () => {
-    AuthService.updateUser = jest.fn().mockResolvedValue({ status: 403, message: "User update failed" });
+    AuthService.updateUser = vi.fn().mockResolvedValue({ status: 403, message: "User update failed" });
     wrapper.vm.showPasswordEdit = true;
     wrapper.vm.passwordOld = "12345678";
     wrapper.vm.passwordNew1 = "87654321";
@@ -435,8 +434,8 @@ describe("userEdit.vue ___ user", () => {
     wrapper.vm.handleEditSubmit();
     await flushPromises();
     expect(AuthService.updateUser).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "User update failed"
@@ -454,8 +453,8 @@ describe("userEdit.vue ___ user", () => {
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "Authentication failed. Please check your current password."
@@ -466,8 +465,8 @@ describe("userEdit.vue ___ user", () => {
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "warning",
       title: "Nothing to update",
       text: "Your account details have not been updated."
@@ -523,6 +522,7 @@ describe("userEdit.vue ___ user", () => {
     wrapper.vm.selectedAvatar = "colour/004-man.png";
     await wrapper.vm.$nextTick();
     wrapper.vm.resetForm();
+    await flushPromises();
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.firstName).toBe("John");
     expect(wrapper.vm.lastName).toBe("Doe");
@@ -541,7 +541,7 @@ describe("userEdit.vue ___ user", () => {
   });
 
   it("does nothing on reset form Swal cancelled", async () => {
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: false }));
+    wrapper.vm.$swal.fire = vi.fn().mockImplementation(() => Promise.resolve({ isConfirmed: false }));
     wrapper.vm.showPasswordEdit = true;
     wrapper.vm.passwordOld = "12345678";
     wrapper.vm.passwordNew1 = "87654321";
@@ -639,8 +639,8 @@ describe("userEdit.vue ___ user", () => {
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
     await flushPromises();
-    expect(Swal.fire).toHaveBeenCalledTimes(1);
-    expect(Swal.fire).toHaveBeenCalledWith({
+    expect(wrapper.vm.$swal.fire).toHaveBeenCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toHaveBeenCalledWith({
       icon: "error",
       title: "Error",
       text: "New password can not be the same as the current password."
@@ -654,15 +654,15 @@ describe("userEdit.vue ___ no user", () => {
   let mockRouter: any;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     mockStore = {
       state: { currentUser: undefined, isLoggedIn: false },
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
     };
     wrapper = mount(UserEdit, {
       global: {

@@ -6,7 +6,7 @@
     "dev": "vite --port 8082",
     "serve": "vite preview --port 8082",
     "build": "vite build",
-    "test:unit": "jest --env=jsdom --config=jest.config.js tests/unit",
+    "test:unit": "vitest tests/unit/components/user",
     "test:unit:ci": "vue-cli-service test:unit > testResult.txt 2>&1",
     "test:e2e": "cross-env VITE_API=http://localhost:8082/ vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",

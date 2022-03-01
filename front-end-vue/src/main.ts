@@ -42,6 +42,7 @@ import axios from "axios";
 // IMLibrary imports
 import "im-library/dist/style.css";
 import { Helpers } from "im-library";
+import Swal from 'sweetalert2';
 const {
   DataTypeCheckers: { isObjectHasKeys }
 } = Helpers;
@@ -63,6 +64,8 @@ const app = createApp(App)
   .component("Toast", Toast)
   .component("InlineMessage", InlineMessage)
   .component("SelectButton", SelectButton);
+
+app.config.globalProperties.$swal = Swal;
 
 const vm = app.mount("#app");
 
