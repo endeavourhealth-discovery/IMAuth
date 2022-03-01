@@ -77,7 +77,7 @@ export default defineComponent({
             this.$store.commit("updateCurrentUser", loggedInUser);
             this.$store.commit("updateRegisteredUsername", null);
             this.$store.commit("updateIsLoggedIn", true);
-            Swal.fire({
+            this.$swal.fire({
               icon: "success",
               title: "Success",
               text: "Login successful"
@@ -89,7 +89,7 @@ export default defineComponent({
               }
             });
           } else if (res.status === 401) {
-            Swal.fire({
+            this.$swal.fire({
               icon: "warning",
               title: "User Unconfirmed",
               text: "Account has not been confirmed. Please confirm account to continue.",
@@ -103,7 +103,7 @@ export default defineComponent({
               }
             });
           } else {
-            Swal.fire({
+            this.$swal.fire({
               icon: "error",
               title: "Error",
               text: res.message,
@@ -113,7 +113,7 @@ export default defineComponent({
         })
         .catch(err => {
           console.error(err);
-          Swal.fire({
+          this.$swal.fire({
             icon: "error",
             title: "Error",
             text: "Authentication error",
