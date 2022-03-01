@@ -14,14 +14,14 @@ describe("userDetails.vue", () => {
 
   beforeEach(() => {
     const user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", Avatars[0]);
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockStore = {
       state: { currentUser: user, isLoggedIn: true },
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
     };
     wrapper = mount(UserDetails, {
       global: {
@@ -63,10 +63,8 @@ describe("userDetails.vue", () => {
   });
 
   it("returns the correct image url", async () => {
-    jest.mock("@/assets/avatars/colour/013-woman.png", () => {
-      return "/img/013-woman.7f32b854.png";
-    });
+    const testUrl = "file://" + __dirname + "colour/013-woman.png";
     const url = wrapper.vm.getUrl("colour/013-woman.png");
-    expect(url).toBe("/img/013-woman.7f32b854.png");
+    expect(url).toBe(testUrl);
   });
 });

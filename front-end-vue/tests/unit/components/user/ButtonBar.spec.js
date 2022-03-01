@@ -9,16 +9,16 @@ describe("ButtonBar.vue ___ previousAppUrl", () => {
   let location;
   let mockLocation;
   beforeAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     mockStore = {
       state: { previousAppUrl: "testUrl" },
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      back: jest.fn()
+      back: vi.fn()
     };
     mockLocation = { href: "" };
     location = window.location;
@@ -57,16 +57,16 @@ describe("ButtonBar.vue ___ no previousAppUrl", () => {
   let location;
   let mockLocation;
   beforeAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     mockStore = {
       state: { previousAppUrl: null },
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      back: jest.fn()
+      back: vi.fn()
     };
     mockLocation = { href: "" };
     location = window.location;

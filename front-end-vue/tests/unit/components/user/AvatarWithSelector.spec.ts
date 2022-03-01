@@ -9,7 +9,7 @@ describe("AvatarWithSelector.vue", () => {
   let mockRef: any;
 
   beforeEach(() => {
-    mockRef = { render: () => {}, methods: { toggle: jest.fn() } };
+    mockRef = { render: () => {}, methods: { toggle: vi.fn() } };
 
     wrapper = shallowMount(AvatarWithSelector, {
       props: { selectedAvatar: "colour/002-man.png" },
@@ -29,7 +29,7 @@ describe("AvatarWithSelector.vue", () => {
   });
 
   it("returns the correct image url", async () => {
-    jest.mock("@/assets/avatars/colour/013-woman.png", () => {
+    vi.mock("@/assets/avatars/colour/013-woman.png", () => {
       return "/img/013-woman.7f32b854.png";
     });
     const url = wrapper.vm.getUrl("colour/013-woman.png");

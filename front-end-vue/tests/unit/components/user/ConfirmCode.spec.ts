@@ -3,21 +3,25 @@ import Button from "primevue/button";
 import { mount, flushPromises } from "@vue/test-utils";
 import ConfirmCode from "@/components/user/ConfirmCode.vue";
 import InputText from "primevue/inputtext";
-import Swal from "sweetalert2";
 import AuthService from "@/services/AuthService";
 
 describe("ConfirmCode.vue no registeredUser", () => {
   let wrapper: any;
   let mockStore: any;
+  let mockSwal: any;
+
   it("starts empty if no store registeredUsername", async () => {
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
+    };
     mockStore = {
-      state: {registeredUsername: ""},
-      commit: jest.fn()
-    }
+      state: { registeredUsername: "" },
+      commit: vi.fn()
+    };
     wrapper = mount(ConfirmCode, {
       global: {
         components: { Card, Button, InputText },
-        mocks: { $store: mockStore }
+        mocks: { $store: mockStore, $swal: mockSwal }
       }
     });
     const userNameField = wrapper.find("#fieldUsername");
@@ -36,27 +40,30 @@ describe("ConfirmCode.vue with registeredUser", () => {
   let wrapper: any;
   let mockStore: any;
   let mockRouter: any;
+  let mockSwal: any;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
-    AuthService.confirmRegister = jest.fn().mockResolvedValue({ status: 200, message: "Register confirmation successful" });
+    AuthService.confirmRegister = vi.fn().mockResolvedValue({ status: 200, message: "Register confirmation successful" });
 
-    AuthService.resendConfirmationCode = jest.fn().mockResolvedValue({ status: 200, message: "Resend confirmation code successful" });
+    AuthService.resendConfirmationCode = vi.fn().mockResolvedValue({ status: 200, message: "Resend confirmation code successful" });
 
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve());
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
+    };
     mockStore = {
-      state: {registeredUsername: "testUser"},
-      commit: jest.fn()
-    }
+      state: { registeredUsername: "testUser" },
+      commit: vi.fn()
+    };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
-    }
+      push: vi.fn(),
+      go: vi.fn()
+    };
     wrapper = mount(ConfirmCode, {
       global: {
         components: { Card, Button, InputText },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
   });
@@ -107,7 +114,7 @@ describe("ConfirmCode.vue with registeredUser", () => {
     expect(wrapper.vm.codeVerified).toBe(true);
   });
 
-  it("calls the Auth.ConfirmSignUp method on handle submit", async() => {
+  it("calls the Auth.ConfirmSignUp method on handle submit", async () => {
     wrapper.vm.code = "123456";
     await wrapper.vm.$nextTick();
     wrapper.vm.handleSubmit();
@@ -117,17 +124,17 @@ describe("ConfirmCode.vue with registeredUser", () => {
     expect(AuthService.confirmRegister).toBeCalledWith("testUser", "123456");
   });
 
-  it("opens swal on correct username/code", async() => {
+  it("opens swal on correct username/code", async () => {
     wrapper.vm.code = "123456";
     await wrapper.vm.$nextTick;
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({icon: "success", title: "Success", text: "Register confirmation successful", confirmButtonText: "Login" });
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Register confirmation successful", confirmButtonText: "Login" });
   });
 
-  it("updates the store on correct username/code and re-routes", async() => {
+  it("updates the store on correct username/code and re-routes", async () => {
     wrapper.vm.code = "123456";
     await wrapper.vm.$nextTick;
     wrapper.vm.handleSubmit();
@@ -139,72 +146,75 @@ describe("ConfirmCode.vue with registeredUser", () => {
     expect(mockRouter.push).toBeCalledWith({ name: "Login" });
   });
 
-  it("opens swal on incorrect username/code", async() => {
+  it("opens swal on incorrect username/code", async () => {
     wrapper.vm.code = "1234";
     await wrapper.vm.$nextTick;
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({icon: "warning", title: "Invalid Credentials", text: "Username or Confirmation Code incorrect." });
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({ icon: "warning", title: "Invalid Credentials", text: "Username or Confirmation Code incorrect." });
   });
 
-  it("opens swal on authservice fail", async() => {
-    console.error = jest.fn();
-    AuthService.confirmRegister = jest.fn().mockRejectedValue({ status: 403, message: "Failed register confirmation", error: "deliberate test error" })
-    // Auth.confirmSignUp = jest.fn().mockRejectedValue({ status: 403, message: "test"});
+  it("opens swal on authservice fail", async () => {
+    console.error = vi.fn();
+    AuthService.confirmRegister = vi.fn().mockRejectedValue({ status: 403, message: "Failed register confirmation", error: "deliberate test error" });
+    // Auth.confirmSignUp = vi.fn().mockRejectedValue({ status: 403, message: "test"});
     wrapper.vm.code = "123456";
     await wrapper.vm.$nextTick;
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({icon: "error", title: "Error", text: "Auth Service Error" });
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Auth Service Error" });
   });
 
-  it("opens swal on auth code fail", async() => {
-    console.error = jest.fn();
-    AuthService.confirmRegister = jest.fn().mockResolvedValue({ status: 403, message: "Failed register confirmation", error: "deliberate test error" });
-    // Auth.confirmSignUp = jest.fn().mockRejectedValue({ status: 403, message: "test"});
+  it("opens swal on auth code fail", async () => {
+    console.error = vi.fn();
+    AuthService.confirmRegister = vi.fn().mockResolvedValue({ status: 403, message: "Failed register confirmation", error: "deliberate test error" });
+    // Auth.confirmSignUp = vi.fn().mockRejectedValue({ status: 403, message: "test"});
     wrapper.vm.code = "123456";
     await wrapper.vm.$nextTick;
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({icon: "error", title: "Error", text: "Failed register confirmation" });
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Failed register confirmation" });
   });
 
-  it("calls authservice on requestCode function run", async() => {
+  it("calls authservice on requestCode function run", async () => {
     wrapper.vm.requestCode(wrapper.vm.username);
     await wrapper.vm.$nextTick();
     expect(AuthService.resendConfirmationCode).toBeCalledTimes(1);
     expect(AuthService.resendConfirmationCode).toBeCalledWith("testUser");
   });
 
-  it("fires swal with successful resend of code", async() => {
+  it("fires swal with successful resend of code", async () => {
     wrapper.vm.requestCode(wrapper.vm.username);
+    await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Code has been resent to email for: testUser" });
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Code has been resent to email for: testUser" });
   });
 
-  it("fires swal with failed resend of code ___ auth status incorrect", async() => {
-    console.error = jest.fn();
-    AuthService.resendConfirmationCode = jest.fn().mockResolvedValue({ status: 403, message: "Failed code resend", error: "deliberate test error" });
+  it("fires swal with failed resend of code ___ auth status incorrect", async () => {
+    console.error = vi.fn();
+    AuthService.resendConfirmationCode = vi.fn().mockResolvedValue({ status: 403, message: "Failed code resend", error: "deliberate test error" });
     wrapper.vm.requestCode(wrapper.vm.username);
+    await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Code resending failed. Please contact an admin." });
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Code resending failed. Please contact an admin." });
   });
 
-  it("fires swal with failed resend of code ___ auth error", async() => {
-    console.error = jest.fn();
-    AuthService.resendConfirmationCode = jest.fn().mockRejectedValue({ status: 403, message: "Failed code resend", error: "deliberate test error" });
+  it("fires swal with failed resend of code ___ auth error", async () => {
+    console.error = vi.fn();
+    AuthService.resendConfirmationCode = vi.fn().mockRejectedValue({ status: 403, message: "Failed code resend", error: "deliberate test error" });
     wrapper.vm.requestCode(wrapper.vm.username);
+    await flushPromises();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Internal application error" });
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Internal application error" });
   });
 });

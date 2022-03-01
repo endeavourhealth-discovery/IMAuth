@@ -65,7 +65,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
-import Swal from "sweetalert2";
 import AuthService from "@/services/AuthService";
 import { Helpers, Enums } from "im-library";
 const {
@@ -113,19 +112,21 @@ export default defineComponent({
       ) {
         AuthService.changePassword(this.passwordOld, this.passwordNew1).then(res => {
           if (res.status === 200) {
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Password successfully updated"
-            }).then(() => {
-              if (this.previousAppUrl) {
-                window.location.href = this.previousAppUrl;
-              } else {
-                this.$router.push({ name: "UserDetails" });
-              }
-            });
+            this.$swal
+              .fire({
+                icon: "success",
+                title: "Success",
+                text: "Password successfully updated"
+              })
+              .then(() => {
+                if (this.previousAppUrl) {
+                  window.location.href = this.previousAppUrl;
+                } else {
+                  this.$router.push({ name: "UserDetails" });
+                }
+              });
           } else {
-            Swal.fire({
+            this.$swal.fire({
               icon: "error",
               title: "Error",
               text: res.message
@@ -133,13 +134,13 @@ export default defineComponent({
           }
         });
       } else if (!this.passwordDifferentFromOriginal()) {
-        Swal.fire({
+        this.$swal.fire({
           icon: "error",
           title: "Error",
           text: "New password can not be the same as the current password."
         });
       } else {
-        Swal.fire({
+        this.$swal.fire({
           icon: "error",
           title: "Error",
           text: "Error updating password. Authentication error or new passwords do not match."
@@ -152,7 +153,8 @@ export default defineComponent({
     },
 
     getUrl(item: string): string {
-      return require("@/assets/avatars/" + item);
+      const url = new URL(`../../assets/avatars/${item}`, import.meta.url);
+      return url.href;
     },
 
     checkKey(event: any): void {

@@ -1,16 +1,17 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import { resolve } from "path";
 const path = require("path");
-import { esbuildCommonjs } from "@originjs/vite-plugin-commonjs";
 
 export default defineConfig({
-    plugins: [vue()],
-    resolve: {
-        dedupe: ["vue"],
-        alias: {'./runtimeConfig': './runtimeConfig.browser', "@": path.resolve(__dirname, "./src")}
-    },
-    test: {
-        globals: true,
-        environment: "jsdom"
-    }
+  plugins: [vue()],
+  resolve: {
+    dedupe: ["vue"],
+    alias: { "./runtimeConfig": "./runtimeConfig.browser", "@": path.resolve(__dirname, "./src") }
+  },
+  test: {
+    globals: true,
+    setupFiles: [resolve(__dirname, "tests/setupTests.js")],
+    environment: "jsdom"
+  }
 });

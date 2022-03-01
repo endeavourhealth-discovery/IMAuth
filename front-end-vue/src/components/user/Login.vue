@@ -44,9 +44,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
-import Swal from "sweetalert2";
 import AuthService from "@/services/AuthService";
 import { Constants } from "im-library";
+import { SweetAlertResult } from "sweetalert2";
 const { Avatars } = Constants;
 
 export default defineComponent({
@@ -77,31 +77,35 @@ export default defineComponent({
             this.$store.commit("updateCurrentUser", loggedInUser);
             this.$store.commit("updateRegisteredUsername", null);
             this.$store.commit("updateIsLoggedIn", true);
-            this.$swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Login successful"
-            }).then(() => {
-              if (this.previousAppUrl) {
-                window.location.href = this.previousAppUrl;
-              } else {
-                this.$router.push({ name: "UserDetails" });
-              }
-            });
+            this.$swal
+              .fire({
+                icon: "success",
+                title: "Success",
+                text: "Login successful"
+              })
+              .then(() => {
+                if (this.previousAppUrl) {
+                  window.location.href = this.previousAppUrl;
+                } else {
+                  this.$router.push({ name: "UserDetails" });
+                }
+              });
           } else if (res.status === 401) {
-            this.$swal.fire({
-              icon: "warning",
-              title: "User Unconfirmed",
-              text: "Account has not been confirmed. Please confirm account to continue.",
-              showCloseButton: true,
-              showCancelButton: true,
-              confirmButtonText: "Confirm Account"
-            }).then(result => {
-              if (result.isConfirmed) {
-                this.$store.commit("updateRegisteredUsername", this.username);
-                this.$router.push({ name: "ConfirmCode" });
-              }
-            });
+            this.$swal
+              .fire({
+                icon: "warning",
+                title: "User Unconfirmed",
+                text: "Account has not been confirmed. Please confirm account to continue.",
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Confirm Account"
+              })
+              .then((result: SweetAlertResult) => {
+                if (result.isConfirmed) {
+                  this.$store.commit("updateRegisteredUsername", this.username);
+                  this.$router.push({ name: "ConfirmCode" });
+                }
+              });
           } else {
             this.$swal.fire({
               icon: "error",
