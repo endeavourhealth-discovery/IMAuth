@@ -10,11 +10,8 @@ import AvatarWithSelector from "@/components/user/AvatarWithSelector.vue";
 import AuthService from "@/services/AuthService";
 import Swal from "sweetalert2";
 import { Models, Enums } from "im-library";
-import {vi} from 'vitest';
 const { User } = Models;
 const { PasswordStrength } = Enums;
-
-const jest=vi
 
 let testUser: Models.User;
 

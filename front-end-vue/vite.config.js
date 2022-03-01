@@ -7,11 +7,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     dedupe: ["vue"],
-    alias: { './runtimeConfig': './runtimeConfig.browser', "@": path.resolve(__dirname, "./src") }
+    alias: { "@": path.resolve(__dirname, "./src") }
   },
-    test: {
-      globals: true,
-        setupFiles: 'tests/setupTests.js',
-        environment: "jsdom"
-    }
+  define: { global: {} }
 });
