@@ -10,6 +10,14 @@ export default defineConfig({
     },
     test: {
         globals: true,
-        environment: "jsdom"
+        environment: "jsdom",
+        environmentOptions: {
+            jsdom: {
+                url: 'http://localhost'
+            }
+        },
+        coverage: {
+            reporter: ['text', 'json', 'html']
+        }
     }
 });
