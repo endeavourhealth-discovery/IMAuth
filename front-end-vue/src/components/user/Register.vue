@@ -193,7 +193,7 @@ export default defineComponent({
         AuthService.register(user)
           .then(res => {
             if (res.status === 201) {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "success",
                 title: "Success",
                 text: res.message,
@@ -209,14 +209,14 @@ export default defineComponent({
                 }
               });
             } else if (res.status === 409) {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "error",
                 title: "Error",
                 text: "Username already taken. Please pick another username",
                 confirmButtonText: "Close"
               });
             } else {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "error",
                 title: "Error",
                 text: res.message,
@@ -228,7 +228,7 @@ export default defineComponent({
             console.error(err);
           });
       } else {
-        Swal.fire({
+        this.$swal.fire({
           icon: "error",
           title: "Error",
           text: "User creation failed. Check input data.",

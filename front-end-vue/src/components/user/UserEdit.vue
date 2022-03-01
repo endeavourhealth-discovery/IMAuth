@@ -102,7 +102,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
-import Swal, { SweetAlertIcon } from "sweetalert2";
+import { SweetAlertIcon } from "sweetalert2";
 import AuthService from "@/services/AuthService";
 import AvatarWithSelector from "./AvatarWithSelector.vue";
 import { Models, Helpers, Enums, Constants } from "im-library";
@@ -209,8 +209,8 @@ export default defineComponent({
       this.showLastNameNotice = this.lastNameVerified ? false : true;
     },
 
-    async swalert(icon: SweetAlertIcon, title: string, text: string) {
-      Swal.fire({
+    swalert(icon: SweetAlertIcon, title: string, text: string) {
+      return this.$swal.fire({
         icon: icon,
         title: title,
         text: text
@@ -293,7 +293,7 @@ export default defineComponent({
     },
 
     resetForm(): void {
-      Swal.fire({
+      this.$swal.fire({
         icon: "warning",
         title: "Warning",
         text: "Are you sure that you want to reset changes to this form? Any changes you have made will be lost.",
@@ -302,6 +302,7 @@ export default defineComponent({
         reverseButtons: true
       }).then(result => {
         if (result.isConfirmed) {
+          console.log(this.currentUser)
           this.username = this.currentUser.username;
           this.firstName = this.currentUser.firstName;
           this.lastName = this.currentUser.lastName;
