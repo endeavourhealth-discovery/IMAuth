@@ -57,11 +57,11 @@ import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import AuthService from "@/services/AuthService";
 import { Helpers, Enums } from "im-library";
+import { SweetAlertResult } from "sweetalert2";
 const {
   UserMethods: { verifyPasswordsMatch, checkPasswordStrength }
 } = Helpers;
 const { PasswordStrength } = Enums;
-import Swal from "sweetalert2";
 
 export default defineComponent({
   name: "ForgotPasswordSubmit",
@@ -107,28 +107,32 @@ export default defineComponent({
       if (this.codeVerified && this.username !== "" && this.passwordsMatch && this.passwordStrength !== PasswordStrength.fail) {
         AuthService.forgotPasswordSubmit(this.username, this.code, this.newPassword1).then(res => {
           if (res.status === 200) {
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Password successfully reset",
-              confirmButtonText: "Continue"
-            }).then(() => {
-              this.$router.push({ name: "Login" });
-            });
+            this.$swal
+              .fire({
+                icon: "success",
+                title: "Success",
+                text: "Password successfully reset",
+                confirmButtonText: "Continue"
+              })
+              .then(() => {
+                this.$router.push({ name: "Login" });
+              });
           } else if (res.status === 403) {
-            Swal.fire({
-              icon: "error",
-              title: "Code Expired",
-              text: "Password reset code has expired. Please request a new code",
-              showCancelButton: true,
-              confirmButtonText: "Request new code"
-            }).then(result => {
-              if (result.isConfirmed) {
-                this.$router.push({ name: "ForgotPassword" });
-              }
-            });
+            this.$swal
+              .fire({
+                icon: "error",
+                title: "Code Expired",
+                text: "Password reset code has expired. Please request a new code",
+                showCancelButton: true,
+                confirmButtonText: "Request new code"
+              })
+              .then((result: SweetAlertResult) => {
+                if (result.isConfirmed) {
+                  this.$router.push({ name: "ForgotPassword" });
+                }
+              });
           } else {
-            Swal.fire({
+            this.$swal.fire({
               icon: "error",
               title: "Error",
               text: res.message + ". Check input data."

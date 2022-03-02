@@ -48,7 +48,9 @@ export default defineComponent({
     },
 
     getUrl(item: string): string {
-      return require("@/assets/avatars/" + item);
+      const url = new URL(`../../assets/avatars/${item}`, import.meta.url);
+      console.log(url.href);
+      return url.href;
     }
   }
 });

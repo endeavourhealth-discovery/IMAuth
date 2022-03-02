@@ -5,43 +5,44 @@ import { flushPromises, mount } from "@vue/test-utils";
 import PasswordEdit from "@/components/user/PasswordEdit.vue";
 import InputText from "primevue/inputtext";
 import AuthService from "@/services/AuthService";
-import Swal from "sweetalert2";
 import { Models, Enums, Constants } from "im-library";
 const { User, CustomAlert } = Models;
 const { PasswordStrength } = Enums;
 const { Avatars } = Constants;
 
 describe("PasswordEdit.vue with registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
   const user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", Avatars[0]);
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    AuthService.changePassword = jest.fn().mockResolvedValue({ status: 200, message: "Password change successful" });
-
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
+    vi.clearAllMocks();
+    AuthService.changePassword = vi.fn().mockResolvedValue({ status: 200, message: "Password change successful" });
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
+    };
     mockStore = {
       state: { currentUser: user, isLoggedIn: true },
-      commit: jest.fn(),
-      dispatch: jest.fn().mockResolvedValue(new CustomAlert(200, "logout success"))
+      commit: vi.fn(),
+      dispatch: vi.fn().mockResolvedValue(new CustomAlert(200, "logout success"))
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
     };
     wrapper = mount(PasswordEdit, {
       global: {
         components: { Card, Button, InputText, InlineMessage },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
   });
 
   it("renders username from store currentUser", async () => {
     const userNameField = wrapper.find("#username");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("username");
@@ -135,9 +136,10 @@ describe("PasswordEdit.vue with registeredUser", () => {
     wrapper.vm.passwordNew2 = "87654321";
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
+    await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({
       icon: "success",
       title: "Success",
       text: "Password successfully updated"
@@ -150,6 +152,7 @@ describe("PasswordEdit.vue with registeredUser", () => {
     wrapper.vm.passwordNew2 = "87654321";
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
+    await flushPromises();
     await wrapper.vm.$nextTick();
     await flushPromises();
     expect(mockRouter.push).toBeCalledTimes(1);
@@ -157,15 +160,17 @@ describe("PasswordEdit.vue with registeredUser", () => {
   });
 
   it("opens swal if auth fail ___ not 200", async () => {
-    AuthService.changePassword = jest.fn().mockResolvedValue({ status: 403, message: "Password change error" });
+    AuthService.changePassword = vi.fn().mockResolvedValue({ status: 403, message: "Password change error" });
     wrapper.vm.passwordOld = "12345678";
     wrapper.vm.passwordNew1 = "87654321";
     wrapper.vm.passwordNew2 = "87654321";
     await wrapper.vm.$nextTick();
+    await flushPromises();
     wrapper.vm.handleEditSubmit();
+    await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "Password change error"
@@ -178,9 +183,10 @@ describe("PasswordEdit.vue with registeredUser", () => {
     wrapper.vm.passwordNew2 = "87654321";
     await wrapper.vm.$nextTick();
     wrapper.vm.handleEditSubmit();
+    await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "New password can not be the same as the current password."
@@ -192,10 +198,11 @@ describe("PasswordEdit.vue with registeredUser", () => {
     wrapper.vm.passwordNew1 = "87654321";
     wrapper.vm.passwordNew2 = "87654320";
     await wrapper.vm.$nextTick();
+    await flushPromises();
     wrapper.vm.handleEditSubmit();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "Error updating password. Authentication error or new passwords do not match."
@@ -215,11 +222,9 @@ describe("PasswordEdit.vue with registeredUser", () => {
   });
 
   it("returns the correct image url", async () => {
-    jest.mock("@/assets/avatars/colour/013-woman.png", () => {
-      return "/img/013-woman.7f32b854.png";
-    });
+    const testUrl = "file://" + __dirname.slice(0, -26) + "src/assets/avatars/colour/013-woman.png";
     const url = wrapper.vm.getUrl("colour/013-woman.png");
-    expect(url).toBe("/img/013-woman.7f32b854.png");
+    expect(url).toBe(testUrl);
   });
 
   it("can check a keycode ___ correct", async () => {

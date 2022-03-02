@@ -5,11 +5,11 @@ import SelectButton from "primevue/selectbutton";
 import OverlayPanel from "primevue/overlaypanel";
 
 describe("AvatarWithSelector.vue", () => {
-  let wrapper: any;
-  let mockRef: any;
+  let wrapper;
+  let mockRef;
 
   beforeEach(() => {
-    mockRef = { render: () => {}, methods: { toggle: jest.fn() } };
+    mockRef = { render: () => {}, methods: { toggle: vi.fn() } };
 
     wrapper = shallowMount(AvatarWithSelector, {
       props: { selectedAvatar: "colour/002-man.png" },
@@ -29,11 +29,9 @@ describe("AvatarWithSelector.vue", () => {
   });
 
   it("returns the correct image url", async () => {
-    jest.mock("@/assets/avatars/colour/013-woman.png", () => {
-      return "/img/013-woman.7f32b854.png";
-    });
+    const testUrl = "file://" + __dirname.slice(0, -26) + "src/assets/avatars/colour/013-woman.png";
     const url = wrapper.vm.getUrl("colour/013-woman.png");
-    expect(url).toBe("/img/013-woman.7f32b854.png");
+    expect(url).toBe(testUrl);
   });
 
   it("can toggleAvatarSelect", () => {

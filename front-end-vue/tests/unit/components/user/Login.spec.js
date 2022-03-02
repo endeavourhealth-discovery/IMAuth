@@ -8,10 +8,10 @@ import { Models } from "im-library";
 const { User } = Models;
 
 describe("login.vue no registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -36,7 +36,7 @@ describe("login.vue no registeredUser", () => {
 
   it("starts empty if no store registeredUsername", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
@@ -45,11 +45,11 @@ describe("login.vue no registeredUser", () => {
 });
 
 describe("login.vue with registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
-  let testUser: Models.User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let testUser;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -80,7 +80,7 @@ describe("login.vue with registeredUser", () => {
 
   it("starts with registeredUsername if in store", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");

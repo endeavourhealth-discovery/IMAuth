@@ -4,13 +4,13 @@ import Toast from "primevue/toast";
 import ProgressSpinner from "primevue/progressspinner";
 
 describe("App.vue", () => {
-  let wrapper: any;
-  let mockStore: any;
+  let wrapper;
+  let mockStore;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     mockStore = {
-      dispatch: jest.fn()
+      dispatch: vi.fn()
     };
     wrapper = shallowMount(App, {
       global: {

@@ -43,7 +43,6 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import AuthService from "@/services/AuthService";
-import Swal from "sweetalert2";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -76,17 +75,19 @@ export default defineComponent({
         AuthService.confirmRegister(this.username, this.code)
           .then(res => {
             if (res.status === 200) {
-              Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: res.message,
-                confirmButtonText: "Login"
-              }).then(() => {
-                this.$store.commit("updateRegisteredUsername", this.username);
-                this.$router.push({ name: "Login" });
-              });
+              this.$swal
+                .fire({
+                  icon: "success",
+                  title: "Success",
+                  text: res.message,
+                  confirmButtonText: "Login"
+                })
+                .then(() => {
+                  this.$store.commit("updateRegisteredUsername", this.username);
+                  this.$router.push({ name: "Login" });
+                });
             } else {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "error",
                 title: "Error",
                 text: res.message
@@ -95,14 +96,14 @@ export default defineComponent({
           })
           .catch(err => {
             console.error(err);
-            Swal.fire({
+            this.$swal.fire({
               icon: "error",
               title: "Error",
               text: "Auth Service Error"
             });
           });
       } else {
-        Swal.fire({
+        this.$swal.fire({
           icon: "warning",
           title: "Invalid Credentials",
           text: "Username or Confirmation Code incorrect."
@@ -114,13 +115,13 @@ export default defineComponent({
       AuthService.resendConfirmationCode(this.username)
         .then(res => {
           if (res.status === 200) {
-            Swal.fire({
+            this.$swal.fire({
               icon: "success",
               title: "Success",
               text: "Code has been resent to email for: " + this.username
             });
           } else {
-            Swal.fire({
+            this.$swal.fire({
               icon: "error",
               title: "Error",
               text: "Code resending failed. Please contact an admin."
@@ -129,7 +130,7 @@ export default defineComponent({
         })
         .catch(err => {
           console.error(err);
-          Swal.fire({
+          this.$swal.fire({
             icon: "error",
             title: "Error",
             text: "Internal application error"

@@ -94,7 +94,6 @@
 </template>
 
 <script lang="ts">
-import Swal from "sweetalert2";
 import AuthService from "@/services/AuthService";
 import AvatarWithSelector from "./AvatarWithSelector.vue";
 import { defineComponent } from "vue";
@@ -193,21 +192,23 @@ export default defineComponent({
         AuthService.register(user)
           .then(res => {
             if (res.status === 201) {
-              this.$swal.fire({
-                icon: "success",
-                title: "Success",
-                text: res.message,
-                showCancelButton: true,
-                confirmButtonText: "Continue"
-              }).then(result => {
-                this.$emit("userCreated", user);
-                if (result.isConfirmed) {
-                  this.$store.commit("updateRegisteredUsername", this.username);
-                  this.$router.push({ name: "ConfirmCode" });
-                } else {
-                  this.clearForm();
-                }
-              });
+              this.$swal
+                .fire({
+                  icon: "success",
+                  title: "Success",
+                  text: res.message,
+                  showCancelButton: true,
+                  confirmButtonText: "Continue"
+                })
+                .then(result => {
+                  this.$emit("userCreated", user);
+                  if (result.isConfirmed) {
+                    this.$store.commit("updateRegisteredUsername", this.username);
+                    this.$router.push({ name: "ConfirmCode" });
+                  } else {
+                    this.clearForm();
+                  }
+                });
             } else if (res.status === 409) {
               this.$swal.fire({
                 icon: "error",
