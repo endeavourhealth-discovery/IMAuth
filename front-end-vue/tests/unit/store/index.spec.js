@@ -7,7 +7,7 @@ const { User, CustomAlert } = Models;
 
 describe("state", () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     window.sessionStorage.clear();
   });
 
@@ -52,8 +52,8 @@ describe("mutations", () => {
 
 describe("actions", () => {
   it("can logoutCurrentUser ___ 200", async () => {
-    AuthService.signOut = jest.fn().mockResolvedValue(new CustomAlert(200, "logout successful"));
-    LoggerService.error = jest.fn();
+    AuthService.signOut = vi.fn().mockResolvedValue(new CustomAlert(200, "logout successful"));
+    LoggerService.error = vi.fn();
     let result = false;
     await store.dispatch("logoutCurrentUser").then(res => (result = res));
     await flushPromises();
@@ -65,8 +65,8 @@ describe("actions", () => {
   });
 
   it("can logoutCurrentUser ___ 400", async () => {
-    AuthService.signOut = jest.fn().mockResolvedValue(new CustomAlert(400, "logout failed 400"));
-    LoggerService.error = jest.fn();
+    AuthService.signOut = vi.fn().mockResolvedValue(new CustomAlert(400, "logout failed 400"));
+    LoggerService.error = vi.fn();
     let result = false;
     await store.dispatch("logoutCurrentUser").then(res => (result = res));
     await flushPromises();
@@ -78,7 +78,7 @@ describe("actions", () => {
   it("can authenticateCurrentUser___ 200 ___ avatar", async () => {
     let testUser = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", "colour/003-man.png");
     testUser.setId("8901-test");
-    AuthService.getCurrentAuthenticatedUser = jest.fn().mockResolvedValue(new CustomAlert(200, "user authenticated", undefined, testUser));
+    AuthService.getCurrentAuthenticatedUser = vi.fn().mockResolvedValue(new CustomAlert(200, "user authenticated", undefined, testUser));
     let result = { authenticated: false };
     await store.dispatch("authenticateCurrentUser").then(res => (result = res));
     await flushPromises();
@@ -92,7 +92,7 @@ describe("actions", () => {
   it("can authenticateCurrentUser___ 200 ___ no avatar", async () => {
     let testUser = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", "http://testimage.jpg");
     testUser.setId("8901-test");
-    AuthService.getCurrentAuthenticatedUser = jest.fn().mockResolvedValue(new CustomAlert(200, "user authenticated", undefined, testUser));
+    AuthService.getCurrentAuthenticatedUser = vi.fn().mockResolvedValue(new CustomAlert(200, "user authenticated", undefined, testUser));
     let result = { authenticated: false };
     await store.dispatch("authenticateCurrentUser").then(res => (result = res));
     await flushPromises();
@@ -105,9 +105,9 @@ describe("actions", () => {
   });
 
   it("can authenticateCurrentUser___ 403 ___ logout 200", async () => {
-    AuthService.getCurrentAuthenticatedUser = jest.fn().mockResolvedValue(new CustomAlert(403, "user authenticated"));
-    AuthService.signOut = jest.fn().mockResolvedValue(new CustomAlert(200, "logout successful"));
-    LoggerService.info = jest.fn();
+    AuthService.getCurrentAuthenticatedUser = vi.fn().mockResolvedValue(new CustomAlert(403, "user authenticated"));
+    AuthService.signOut = vi.fn().mockResolvedValue(new CustomAlert(200, "logout successful"));
+    LoggerService.info = vi.fn();
     let result = { authenticated: false };
     await store.dispatch("authenticateCurrentUser").then(res => (result = res));
     await flushPromises();
@@ -123,9 +123,9 @@ describe("actions", () => {
   });
 
   it("can authenticateCurrentUser___ 403 ___ logout 200", async () => {
-    AuthService.getCurrentAuthenticatedUser = jest.fn().mockResolvedValue(new CustomAlert(403, "user authenticated"));
-    AuthService.signOut = jest.fn().mockResolvedValue(new CustomAlert(400, "logout failed"));
-    LoggerService.error = jest.fn();
+    AuthService.getCurrentAuthenticatedUser = vi.fn().mockResolvedValue(new CustomAlert(403, "user authenticated"));
+    AuthService.signOut = vi.fn().mockResolvedValue(new CustomAlert(400, "logout failed"));
+    LoggerService.error = vi.fn();
     let result = { authenticated: false };
     await store.dispatch("authenticateCurrentUser").then(res => (result = res));
     await flushPromises();

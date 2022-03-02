@@ -34,8 +34,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Swal from "sweetalert2";
 import AuthService from "@/services/AuthService";
+import { SweetAlertResult } from "sweetalert2";
 
 export default defineComponent({
   name: "ForgotPassword",
@@ -46,35 +46,39 @@ export default defineComponent({
   },
   methods: {
     handleSubmit(): void {
-      Swal.fire({
-        icon: "warning",
-        title: "Warning",
-        text: "Reset password for account: " + this.username,
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Reset Password"
-      }).then(result => {
-        if (result.isConfirmed) {
-          AuthService.forgotPassword(this.username).then(res => {
-            if (res.status === 200) {
-              Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: "Password has been reset for account: " + this.username + ". An email has been sent with a recovery code."
-              }).then(() => {
-                this.$store.commit("updateRegisteredUsername", this.username);
-                this.$router.push({ name: "ForgotPasswordSubmit" });
-              });
-            } else {
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: res.message + ". Check username is correct."
-              });
-            }
-          });
-        }
-      });
+      this.$swal
+        .fire({
+          icon: "warning",
+          title: "Warning",
+          text: "Reset password for account: " + this.username,
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Reset Password"
+        })
+        .then((result: SweetAlertResult) => {
+          if (result.isConfirmed) {
+            AuthService.forgotPassword(this.username).then(res => {
+              if (res.status === 200) {
+                this.$swal
+                  .fire({
+                    icon: "success",
+                    title: "Success",
+                    text: "Password has been reset for account: " + this.username + ". An email has been sent with a recovery code."
+                  })
+                  .then(() => {
+                    this.$store.commit("updateRegisteredUsername", this.username);
+                    this.$router.push({ name: "ForgotPasswordSubmit" });
+                  });
+              } else {
+                this.$swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: res.message + ". Check username is correct."
+                });
+              }
+            });
+          }
+        });
     }
   }
 });

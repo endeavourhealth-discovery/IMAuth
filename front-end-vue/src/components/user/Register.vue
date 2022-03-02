@@ -94,7 +94,6 @@
 </template>
 
 <script lang="ts">
-import Swal from "sweetalert2";
 import AuthService from "@/services/AuthService";
 import AvatarWithSelector from "./AvatarWithSelector.vue";
 import { defineComponent } from "vue";
@@ -193,30 +192,32 @@ export default defineComponent({
         AuthService.register(user)
           .then(res => {
             if (res.status === 201) {
-              Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: res.message,
-                showCancelButton: true,
-                confirmButtonText: "Continue"
-              }).then(result => {
-                this.$emit("userCreated", user);
-                if (result.isConfirmed) {
-                  this.$store.commit("updateRegisteredUsername", this.username);
-                  this.$router.push({ name: "ConfirmCode" });
-                } else {
-                  this.clearForm();
-                }
-              });
+              this.$swal
+                .fire({
+                  icon: "success",
+                  title: "Success",
+                  text: res.message,
+                  showCancelButton: true,
+                  confirmButtonText: "Continue"
+                })
+                .then(result => {
+                  this.$emit("userCreated", user);
+                  if (result.isConfirmed) {
+                    this.$store.commit("updateRegisteredUsername", this.username);
+                    this.$router.push({ name: "ConfirmCode" });
+                  } else {
+                    this.clearForm();
+                  }
+                });
             } else if (res.status === 409) {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "error",
                 title: "Error",
                 text: "Username already taken. Please pick another username",
                 confirmButtonText: "Close"
               });
             } else {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "error",
                 title: "Error",
                 text: res.message,
@@ -228,7 +229,7 @@ export default defineComponent({
             console.error(err);
           });
       } else {
-        Swal.fire({
+        this.$swal.fire({
           icon: "error",
           title: "Error",
           text: "User creation failed. Check input data.",
