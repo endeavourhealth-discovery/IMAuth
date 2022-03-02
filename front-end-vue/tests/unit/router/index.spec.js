@@ -6,20 +6,20 @@ import { flushPromises, shallowMount } from "@vue/test-utils";
 
 describe("router", () => {
   beforeEach(() => {
-    console.log = jest.fn();
+    console.log = vi.fn();
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("router ___ no auth", () => {
     let wrapper;
 
     beforeEach(async () => {
-      jest.resetAllMocks();
+      vi.resetAllMocks();
       window.sessionStorage.clear();
-      store.dispatch = jest.fn().mockResolvedValue({ authenticated: false });
+      store.dispatch = vi.fn().mockResolvedValue({ authenticated: false });
       router.push("/");
       await router.isReady();
 
@@ -32,7 +32,7 @@ describe("router", () => {
 
       await flushPromises();
       await wrapper.vm.$nextTick();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it("routes to login if false", async () => {
@@ -46,9 +46,9 @@ describe("router", () => {
     let wrapper;
 
     beforeEach(async () => {
-      jest.resetAllMocks();
+      vi.resetAllMocks();
       window.sessionStorage.clear();
-      store.dispatch = jest.fn().mockResolvedValue({ authenticated: true });
+      store.dispatch = vi.fn().mockResolvedValue({ authenticated: true });
       router.push("/");
       await router.isReady();
 
@@ -61,7 +61,7 @@ describe("router", () => {
 
       await flushPromises();
       await wrapper.vm.$nextTick();
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it("routes to login if false", async () => {

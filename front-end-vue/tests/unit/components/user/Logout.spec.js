@@ -8,11 +8,11 @@ const { User, CustomAlert } = Models;
 const { Avatars } = Constants;
 
 describe("Logout.vue", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
-  let user: Models.User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let user;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -42,7 +42,7 @@ describe("Logout.vue", () => {
 
   it("renders current username from store", async () => {
     const userNameField = wrapper.find("#username-display");
-    const userNameInput = userNameField.element as HTMLParagraphElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("username-display");
@@ -50,11 +50,9 @@ describe("Logout.vue", () => {
   });
 
   it("returns the correct image url", async () => {
-    vi.mock("@/assets/avatars/colour/013-woman.png", () => {
-      return "/img/013-woman.7f32b854.png";
-    });
+    const testUrl = "file://" + __dirname.slice(0, -26) + "src/assets/avatars/colour/013-woman.png";
     const url = wrapper.vm.getUrl("colour/013-woman.png");
-    expect(url).toBe("/img/013-woman.7f32b854.png");
+    expect(url).toBe(testUrl);
   });
 
   it("fires swal on handleSubmit", async () => {

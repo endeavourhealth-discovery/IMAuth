@@ -12,13 +12,13 @@ import { Models, Enums } from "im-library";
 const { User } = Models;
 const { PasswordStrength } = Enums;
 
-let testUser: Models.User;
+let testUser;
 
 describe("userEdit.vue ___ user", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -52,15 +52,15 @@ describe("userEdit.vue ___ user", () => {
 
   it("should render details from current user to form values", async () => {
     const userNameField = wrapper.find("#username");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     const firstNameField = wrapper.find("#firstName");
-    const firstNameInput = firstNameField.element as HTMLInputElement;
+    const firstNameInput = firstNameField.element;
     const lastNameField = wrapper.find("#lastName");
-    const lastNameInput = lastNameField.element as HTMLInputElement;
+    const lastNameInput = lastNameField.element;
     const email1Field = wrapper.find("#email1");
-    const email1Input = email1Field.element as HTMLInputElement;
+    const email1Input = email1Field.element;
     const email2Field = wrapper.find("#email2");
-    const email2Input = email2Field.element as HTMLInputElement;
+    const email2Input = email2Field.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("username");
@@ -649,9 +649,9 @@ describe("userEdit.vue ___ user", () => {
 });
 
 describe("userEdit.vue ___ no user", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
 
   beforeEach(() => {
     vi.clearAllMocks();

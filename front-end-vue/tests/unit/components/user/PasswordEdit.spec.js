@@ -11,10 +11,10 @@ const { PasswordStrength } = Enums;
 const { Avatars } = Constants;
 
 describe("PasswordEdit.vue with registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
   const user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", Avatars[0]);
 
   beforeEach(() => {
@@ -42,7 +42,7 @@ describe("PasswordEdit.vue with registeredUser", () => {
 
   it("renders username from store currentUser", async () => {
     const userNameField = wrapper.find("#username");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("username");
@@ -222,7 +222,7 @@ describe("PasswordEdit.vue with registeredUser", () => {
   });
 
   it("returns the correct image url", async () => {
-    const testUrl = "file://" + __dirname + "colour/013-woman.png";
+    const testUrl = "file://" + __dirname.slice(0, -26) + "src/assets/avatars/colour/013-woman.png";
     const url = wrapper.vm.getUrl("colour/013-woman.png");
     expect(url).toBe(testUrl);
   });

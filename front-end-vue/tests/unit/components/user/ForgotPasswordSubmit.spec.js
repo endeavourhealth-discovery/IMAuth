@@ -9,10 +9,10 @@ import { Enums } from "im-library";
 const { PasswordStrength } = Enums;
 
 describe("ForgotPasswordSubmit.vue no registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -38,7 +38,7 @@ describe("ForgotPasswordSubmit.vue no registeredUser", () => {
 
   it("starts empty if no store registeredUsername", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
@@ -47,10 +47,10 @@ describe("ForgotPasswordSubmit.vue no registeredUser", () => {
 });
 
 describe("ForgotPasswordSubmit.vue with registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -77,7 +77,7 @@ describe("ForgotPasswordSubmit.vue with registeredUser", () => {
 
   it("starts with username if store has registeredUsername", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");

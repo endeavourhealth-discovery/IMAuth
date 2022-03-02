@@ -14,11 +14,11 @@ const { Avatars } = Constants;
 const { PasswordStrength } = Enums;
 
 describe("register.vue empty", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
-  let testUser: Models.User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let testUser;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -59,11 +59,11 @@ describe("register.vue empty", () => {
 });
 
 describe("register.vue prefilled", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
-  let testUser: Models.User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let testUser;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -98,19 +98,19 @@ describe("register.vue prefilled", () => {
 
   it("should render data to form", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     const emailField = wrapper.find("#fieldEmail1");
-    const email1Input = emailField.element as HTMLInputElement;
+    const email1Input = emailField.element;
     const email2Field = wrapper.find("#fieldEmail2");
-    const email2Input = email2Field.element as HTMLInputElement;
+    const email2Input = email2Field.element;
     const firstNameField = wrapper.find("#fieldFirstName");
-    const firstNameInput = firstNameField.element as HTMLInputElement;
+    const firstNameInput = firstNameField.element;
     const lastNameField = wrapper.find("#fieldLastName");
-    const lastNameInput = lastNameField.element as HTMLInputElement;
+    const lastNameInput = lastNameField.element;
     const password1Field = wrapper.find("#fieldPassword1");
-    const password1Input = password1Field.element as HTMLInputElement;
+    const password1Input = password1Field.element;
     const password2Field = wrapper.find("#fieldPassword2");
-    const password2Input = password2Field.element as HTMLInputElement;
+    const password2Input = password2Field.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
@@ -230,19 +230,19 @@ describe("register.vue prefilled", () => {
     wrapper.vm.clearForm();
     await wrapper.vm.$nextTick();
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     const emailField = wrapper.find("#fieldEmail1");
-    const email1Input = emailField.element as HTMLInputElement;
+    const email1Input = emailField.element;
     const email2Field = wrapper.find("#fieldEmail2");
-    const email2Input = email2Field.element as HTMLInputElement;
+    const email2Input = email2Field.element;
     const firstNameField = wrapper.find("#fieldFirstName");
-    const firstNameInput = firstNameField.element as HTMLInputElement;
+    const firstNameInput = firstNameField.element;
     const lastNameField = wrapper.find("#fieldLastName");
-    const lastNameInput = lastNameField.element as HTMLInputElement;
+    const lastNameInput = lastNameField.element;
     const password1Field = wrapper.find("#fieldPassword1");
-    const password1Input = password1Field.element as HTMLInputElement;
+    const password1Input = password1Field.element;
     const password2Field = wrapper.find("#fieldPassword2");
-    const password2Input = password2Field.element as HTMLInputElement;
+    const password2Input = password2Field.element;
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
     expect(userNameInput.value).toBe("");
@@ -562,11 +562,11 @@ describe("register.vue prefilled", () => {
 });
 
 describe("AuthService fail", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
-  let testUser: Models.User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let testUser;
 
   beforeEach(() => {
     vi.clearAllMocks();

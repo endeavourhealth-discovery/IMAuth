@@ -6,9 +6,9 @@ import InputText from "primevue/inputtext";
 import AuthService from "@/services/AuthService";
 
 describe("ConfirmCode.vue no registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockSwal: any;
+  let wrapper;
+  let mockStore;
+  let mockSwal;
 
   it("starts empty if no store registeredUsername", async () => {
     mockSwal = {
@@ -25,7 +25,7 @@ describe("ConfirmCode.vue no registeredUser", () => {
       }
     });
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.username).toBe("");
     expect(wrapper.vm.code).toBe("");
@@ -37,10 +37,10 @@ describe("ConfirmCode.vue no registeredUser", () => {
 });
 
 describe("ConfirmCode.vue with registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -75,7 +75,7 @@ describe("ConfirmCode.vue with registeredUser", () => {
   it("renders username when set", async () => {
     // Assert the rendered text of the component
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
@@ -85,7 +85,7 @@ describe("ConfirmCode.vue with registeredUser", () => {
   it("updates Username when edited", async () => {
     wrapper.vm.username = "John";
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
@@ -95,7 +95,7 @@ describe("ConfirmCode.vue with registeredUser", () => {
   it("updates Code when edited", async () => {
     wrapper.vm.code = "123456";
     const code = wrapper.find("#fieldCode");
-    const codeInput = code.element as HTMLInputElement;
+    const codeInput = code.element;
     await wrapper.vm.$nextTick();
     expect(code.exists()).toBe(true);
     expect(code.element.id).toBe("fieldCode");

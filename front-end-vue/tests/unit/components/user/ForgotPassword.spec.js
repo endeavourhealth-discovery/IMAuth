@@ -6,10 +6,10 @@ import InputText from "primevue/inputtext";
 import AuthService from "@/services/AuthService";
 
 describe("ForgotPassword.vue", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let mockSwal: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -37,7 +37,7 @@ describe("ForgotPassword.vue", () => {
 
   it("updates username on user entry", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
