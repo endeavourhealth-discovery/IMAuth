@@ -39,10 +39,12 @@ import { Amplify, Auth } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import axios from "axios";
 
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
 // IMLibrary imports
 import "im-library/dist/style.css";
 import { Helpers } from "im-library";
-import Swal from 'sweetalert2';
 const {
   DataTypeCheckers: { isObjectHasKeys }
 } = Helpers;
@@ -55,6 +57,7 @@ const app = createApp(App)
   .use(router)
   .use(PrimeVue, { ripple: true })
   .use(ToastService)
+  .use(VueSweetalert2)
   .component("Card", Card)
   .component("ProgressSpinner", ProgressSpinner)
   .component("InputText", InputText)
@@ -64,8 +67,6 @@ const app = createApp(App)
   .component("Toast", Toast)
   .component("InlineMessage", InlineMessage)
   .component("SelectButton", SelectButton);
-
-app.config.globalProperties.$swal = Swal;
 
 const vm = app.mount("#app");
 
