@@ -18,12 +18,16 @@ npm install
 In project root add files
 
 > .env.development.local
+
 > .env.production.local
+
 > .env.test.local
 
 Files should contain:
-VITE_API={url for IMApi} [local default: http://localhost:8080/]
-VITE_DIRECTORY_URL={url for IMDirectory} [local default: http://localhost:8082]
+
+    VITE_API={url for IMApi} [local default: http://localhost:8080/]
+
+    VITE_DIRECTORY_URL={url for IMDirectory} [local default: http://localhost:8082]
 
 ### Compiles and hot-reloads for development
 
