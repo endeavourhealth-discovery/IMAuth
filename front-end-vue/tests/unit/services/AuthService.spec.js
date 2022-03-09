@@ -1,20 +1,20 @@
 import { flushPromises } from "@vue/test-utils";
 import { Auth } from "aws-amplify";
 import AuthService from "@/services/AuthService";
-import { User } from "@/models/user/User";
-import { CustomAlert } from "@/models/user/CustomAlert";
+import { Models } from "im-library";
+const { User, CustomAlert } = Models;
 
 const testUser = new User("devtest", "John", "Doe", "john.doe@ergosoft.co.uk", "12345678", "colour/002-man.png");
 
 describe("register", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 201 with auth success", async () => {
-    Auth.signUp = jest.fn().mockResolvedValue({ status: 200, message: "test confirm code" });
+    Auth.signUp = vi.fn().mockResolvedValue({ status: 200, message: "test confirm code" });
     const result = AuthService.register(testUser);
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -29,10 +29,10 @@ describe("register", () => {
   });
 
   it("returns 409 with auth fail ___ username exists", async () => {
-    Auth.signUp = jest.fn().mockRejectedValue({ code: "UsernameExistsException", name: "testError", message: "User already exists" });
+    Auth.signUp = vi.fn().mockRejectedValue({ code: "UsernameExistsException", name: "testError", message: "User already exists" });
     const result = AuthService.register(testUser);
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -48,10 +48,10 @@ describe("register", () => {
   });
 
   it("returns 400 with auth fail ___ fail", async () => {
-    Auth.signUp = jest.fn().mockRejectedValue("test");
+    Auth.signUp = vi.fn().mockRejectedValue("test");
     const result = AuthService.register(testUser);
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -69,13 +69,13 @@ describe("register", () => {
 
 describe("confirmRegister", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success", async () => {
-    Auth.confirmSignUp = jest.fn().mockResolvedValue({ status: 200, message: "test confirm code" });
+    Auth.confirmSignUp = vi.fn().mockResolvedValue({ status: 200, message: "test confirm code" });
     const result = AuthService.confirmRegister("devtest", "123456");
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -86,10 +86,10 @@ describe("confirmRegister", () => {
   });
 
   it("returns 403 with auth fail", async () => {
-    Auth.confirmSignUp = jest.fn().mockRejectedValue({ code: "TestErrorCode", name: "testError", message: "CodeRejected" });
+    Auth.confirmSignUp = vi.fn().mockRejectedValue({ code: "TestErrorCode", name: "testError", message: "CodeRejected" });
     const result = AuthService.confirmRegister("devtest", "123456");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -103,11 +103,11 @@ describe("confirmRegister", () => {
 
 describe("signIn", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success, password empty, id set", async () => {
-    Auth.signIn = jest.fn().mockResolvedValue({
+    Auth.signIn = vi.fn().mockResolvedValue({
       username: "devtest",
       attributes: {
         "custom:avatar": "colour/002-man.png",
@@ -119,7 +119,7 @@ describe("signIn", () => {
       }
     });
     const result = AuthService.signIn("devTest", "12345678");
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -132,10 +132,10 @@ describe("signIn", () => {
   });
 
   it("returns 401 with auth fail ___ user not confirmed", async () => {
-    Auth.signIn = jest.fn().mockRejectedValue({ code: "UserNotConfirmedException", name: "testError", message: "User not confirmed test" });
+    Auth.signIn = vi.fn().mockRejectedValue({ code: "UserNotConfirmedException", name: "testError", message: "User not confirmed test" });
     const result = AuthService.signIn("devTest", "12345678");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -147,10 +147,10 @@ describe("signIn", () => {
   });
 
   it("returns 403 with auth fail ___ login failed", async () => {
-    Auth.signIn = jest.fn().mockRejectedValue({ code: "LoginError", name: "testError", message: "Login error test" });
+    Auth.signIn = vi.fn().mockRejectedValue({ code: "LoginError", name: "testError", message: "Login error test" });
     const result = AuthService.signIn("devTest", "12345678");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -164,13 +164,13 @@ describe("signIn", () => {
 
 describe("resendConfirmationCode", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success", async () => {
-    Auth.resendSignUp = jest.fn().mockResolvedValue({ code: 200 });
+    Auth.resendSignUp = vi.fn().mockResolvedValue({ code: 200 });
     const result = AuthService.resendConfirmationCode("devTest");
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -181,10 +181,10 @@ describe("resendConfirmationCode", () => {
   });
 
   it("returns 400 with auth fail", async () => {
-    Auth.resendSignUp = jest.fn().mockRejectedValue({ code: "Resend", name: "testError", message: "Resend error test" });
+    Auth.resendSignUp = vi.fn().mockRejectedValue({ code: "Resend", name: "testError", message: "Resend error test" });
     const result = AuthService.resendConfirmationCode("devTest");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -198,13 +198,13 @@ describe("resendConfirmationCode", () => {
 
 describe("signOut", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success", async () => {
-    Auth.signOut = jest.fn().mockResolvedValue({ code: 200 });
+    Auth.signOut = vi.fn().mockResolvedValue({ code: 200 });
     const result = AuthService.signOut();
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -214,10 +214,10 @@ describe("signOut", () => {
   });
 
   it("returns 400 with auth fail", async () => {
-    Auth.signOut = jest.fn().mockRejectedValue({ code: "Logout", name: "testError", message: "Logout error test" });
+    Auth.signOut = vi.fn().mockRejectedValue({ code: "Logout", name: "testError", message: "Logout error test" });
     const result = AuthService.signOut();
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -230,11 +230,11 @@ describe("signOut", () => {
 
 describe("updateUser", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success, id remains same, password returns empty", async () => {
-    Auth.currentAuthenticatedUser = jest
+    Auth.currentAuthenticatedUser = vi
       .fn()
       .mockResolvedValueOnce({
         username: "devtest",
@@ -258,11 +258,11 @@ describe("updateUser", () => {
           sub: "9gkej864-l39k-9u87-4lau-w7777b3m5g09"
         }
       });
-    Auth.updateUserAttributes = jest.fn().mockResolvedValue({ code: "UpdateUser", name: "updatesuccess", message: "User updated" });
+    Auth.updateUserAttributes = vi.fn().mockResolvedValue({ code: "UpdateUser", name: "updatesuccess", message: "User updated" });
     const updatedUser = new User("devtestupdated", "Bill", "Williams", "bill.williams@ergosoft.co.uk", "87654321", "colour/003-man.png");
     updatedUser.setId("9gkej864-l39k-9u87-4lau-w7777b3m5g09");
     const result = AuthService.updateUser(updatedUser);
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -293,7 +293,7 @@ describe("updateUser", () => {
   });
 
   it("returns 403 with auth fail, ids differ", async () => {
-    Auth.currentAuthenticatedUser = jest
+    Auth.currentAuthenticatedUser = vi
       .fn()
       .mockResolvedValueOnce({
         username: "devtest",
@@ -317,12 +317,12 @@ describe("updateUser", () => {
           sub: "9gkej864-l39k-9u87-4lau-w7777b3m5g09"
         }
       });
-    Auth.updateUserAttributes = jest.fn().mockResolvedValue({ code: "UpdateUser", name: "updatesuccess", message: "User updated" });
+    Auth.updateUserAttributes = vi.fn().mockResolvedValue({ code: "UpdateUser", name: "updatesuccess", message: "User updated" });
     const updatedUser = new User("devtestupdated", "Bill", "Williams", "bill.williams@ergosoft.co.uk", "87654321", "colour/003-man.png");
     updatedUser.setId("9gkej864-l39k-9u87-4lau-w7777b3m5g08");
     const result = AuthService.updateUser(updatedUser);
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -334,13 +334,13 @@ describe("updateUser", () => {
   });
 
   it("returns 500 with auth fail", async () => {
-    Auth.currentAuthenticatedUser = jest.fn().mockRejectedValue(false);
-    Auth.updateUserAttributes = jest.fn().mockRejectedValue(false);
+    Auth.currentAuthenticatedUser = vi.fn().mockRejectedValue(false);
+    Auth.updateUserAttributes = vi.fn().mockRejectedValue(false);
     const updatedUser = new User("devtestupdated", "Bill", "Williams", "bill.williams@ergosoft.co.uk", "87654321", "colour/003-man.png");
     updatedUser.setId("9gkej864-l39k-9u87-4lau-w7777b3m5g08");
     const result = AuthService.updateUser(updatedUser);
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -354,11 +354,11 @@ describe("updateUser", () => {
 
 describe("changePassword", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success", async () => {
-    Auth.currentAuthenticatedUser = jest.fn().mockResolvedValueOnce({
+    Auth.currentAuthenticatedUser = vi.fn().mockResolvedValueOnce({
       username: "devtest",
       attributes: {
         "custom:avatar": "colour/002-man.png",
@@ -369,9 +369,9 @@ describe("changePassword", () => {
         sub: "9gkej864-l39k-9u87-4lau-w7777b3m5g09"
       }
     });
-    Auth.changePassword = jest.fn().mockResolvedValue({ code: 200 });
+    Auth.changePassword = vi.fn().mockResolvedValue({ code: 200 });
     const result = AuthService.changePassword("12345678", "87654321");
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -382,7 +382,7 @@ describe("changePassword", () => {
   });
 
   it("returns 400 with auth fail", async () => {
-    Auth.currentAuthenticatedUser = jest.fn().mockResolvedValueOnce({
+    Auth.currentAuthenticatedUser = vi.fn().mockResolvedValueOnce({
       username: "devtest",
       attributes: {
         "custom:avatar": "colour/002-man.png",
@@ -393,10 +393,10 @@ describe("changePassword", () => {
         sub: "9gkej864-l39k-9u87-4lau-w7777b3m5g09"
       }
     });
-    Auth.changePassword = jest.fn().mockRejectedValue({ code: "passwordChangeError", message: "Password change error" });
+    Auth.changePassword = vi.fn().mockRejectedValue({ code: "passwordChangeError", message: "Password change error" });
     const result = AuthService.changePassword("12345678", "87654321");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -410,13 +410,13 @@ describe("changePassword", () => {
 
 describe("forgotPassword", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success", async () => {
-    Auth.forgotPassword = jest.fn().mockResolvedValue({ code: 200 });
+    Auth.forgotPassword = vi.fn().mockResolvedValue({ code: 200 });
     const result = AuthService.forgotPassword("devtest");
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -427,10 +427,10 @@ describe("forgotPassword", () => {
   });
 
   it("returns 400 with auth fail ___ fail", async () => {
-    Auth.forgotPassword = jest.fn().mockRejectedValue({ code: "PasswordResetFail", message: "Password reset error" });
+    Auth.forgotPassword = vi.fn().mockRejectedValue({ code: "PasswordResetFail", message: "Password reset error" });
     const result = AuthService.forgotPassword("devtest");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -444,13 +444,13 @@ describe("forgotPassword", () => {
 
 describe("forgotPasswordSubmit", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success", async () => {
-    Auth.forgotPasswordSubmit = jest.fn().mockResolvedValue({ code: 200 });
+    Auth.forgotPasswordSubmit = vi.fn().mockResolvedValue({ code: 200 });
     const result = AuthService.forgotPasswordSubmit("devtest", "123456", "87654321");
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -461,10 +461,10 @@ describe("forgotPasswordSubmit", () => {
   });
 
   it("returns 400 with auth fail ___ fail", async () => {
-    Auth.forgotPasswordSubmit = jest.fn().mockRejectedValue({ code: "PasswordResetCodeFail", message: "Password reset code error" });
+    Auth.forgotPasswordSubmit = vi.fn().mockRejectedValue({ code: "PasswordResetCodeFail", message: "Password reset code error" });
     const result = AuthService.forgotPasswordSubmit("devtest", "123456", "87654321");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -476,10 +476,10 @@ describe("forgotPasswordSubmit", () => {
   });
 
   it("returns 403 with auth fail ___ expired", async () => {
-    Auth.forgotPasswordSubmit = jest.fn().mockRejectedValue({ code: "ExpiredCodeException", message: "Password reset error" });
+    Auth.forgotPasswordSubmit = vi.fn().mockRejectedValue({ code: "ExpiredCodeException", message: "Password reset error" });
     const result = AuthService.forgotPasswordSubmit("devtest", "123456", "87654321");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -493,13 +493,13 @@ describe("forgotPasswordSubmit", () => {
 
 describe("forgotUsername", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success", async () => {
-    Auth.verifyCurrentUserAttribute = jest.fn().mockResolvedValue({ code: 200 });
+    Auth.verifyCurrentUserAttribute = vi.fn().mockResolvedValue({ code: 200 });
     const result = AuthService.forgotUsername("john.doe@ergosoft.co.uk");
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -510,10 +510,10 @@ describe("forgotUsername", () => {
   });
 
   it("returns 400 with auth fail ___ fail", async () => {
-    Auth.verifyCurrentUserAttribute = jest.fn().mockRejectedValue({ code: "UsernameRecoveryFail", message: "Username recovery error" });
+    Auth.verifyCurrentUserAttribute = vi.fn().mockRejectedValue({ code: "UsernameRecoveryFail", message: "Username recovery error" });
     const result = AuthService.forgotUsername("john.doe@ergosoft.co.uk");
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;
@@ -527,11 +527,11 @@ describe("forgotUsername", () => {
 
 describe("getCurrentAuthenticatedUser", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns 200 with auth success, user, password empty, with id", async () => {
-    Auth.currentAuthenticatedUser = jest.fn().mockResolvedValueOnce({
+    Auth.currentAuthenticatedUser = vi.fn().mockResolvedValueOnce({
       username: "devtest",
       attributes: {
         "custom:avatar": "colour/002-man.png",
@@ -543,7 +543,7 @@ describe("getCurrentAuthenticatedUser", () => {
       }
     });
     const result = AuthService.getCurrentAuthenticatedUser();
-    let promiseResult: any;
+    let promiseResult;
     result.then(res => {
       promiseResult = res;
     });
@@ -555,10 +555,10 @@ describe("getCurrentAuthenticatedUser", () => {
   });
 
   it("returns 400 with auth fail", async () => {
-    Auth.currentAuthenticatedUser = jest.fn().mockRejectedValue({ code: "currentUserFail", message: "get current user error" });
+    Auth.currentAuthenticatedUser = vi.fn().mockRejectedValue({ code: "currentUserFail", message: "get current user error" });
     const result = AuthService.getCurrentAuthenticatedUser();
-    let promiseResult: any;
-    let err: any;
+    let promiseResult;
+    let err;
     result.then(res => {
       err = res.error;
       promiseResult = res;

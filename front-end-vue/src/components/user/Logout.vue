@@ -1,6 +1,6 @@
 <template>
-  <div class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center logout-card">
+  <div class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center logout-card">
       <template #header>
         <i class="fa fa-fw fa-sign-out-alt icon-header" aria-hidden="true" />
       </template>
@@ -9,11 +9,11 @@
       </template>
       <template #content>
         <div class="p-fluid logout-form">
-          <div class="p-field">
+          <div class="field">
             <div class="p-text-left">Current User:</div>
           </div>
-          <div class="p-field">
-            <div v-if="isLoggedIn" class="p-d-flex p-flex-row p-ai-center p-text-capitalize">
+          <div class="field">
+            <div v-if="isLoggedIn" class="flex flex-row align-items-center p-text-capitalize">
               <img
                 v-if="isLoggedIn"
                 id="user-icon"
@@ -30,7 +30,7 @@
               Guest
             </div>
           </div>
-          <div class="p-d-flex p-flex-row p-jc-center">
+          <div class="flex flex-row justify-content-center">
             <Button class="user-submit" type="submit" label="Logout" v-on:click.prevent="handleSubmit" />
           </div>
         </div>
@@ -42,50 +42,55 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
-import Swal from "sweetalert2";
-import { CustomAlert } from "@/models/user/CustomAlert";
+import { Models } from "im-library";
+import { SweetAlertResult } from "sweetalert2";
 
 export default defineComponent({
   name: "Logout",
   computed: mapState(["currentUser", "isLoggedIn", "previousAppUrl"]),
   methods: {
     handleSubmit(): void {
-      Swal.fire({
-        icon: "warning",
-        title: "Are you sure?",
-        text: "Confirm logout request",
-        showCancelButton: true,
-        confirmButtonText: "Logout",
-        reverseButtons: true
-      }).then(result => {
-        if (result.isConfirmed) {
-          this.$store.dispatch("logoutCurrentUser").then((res: CustomAlert) => {
-            if (res.status === 200) {
-              Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: res.message
-              }).then(() => {
-                if (this.previousAppUrl) {
-                  window.location.href = this.previousAppUrl;
-                } else {
-                  this.$router.push({ name: "Login" });
-                }
-              });
-            } else {
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: res.message
-              });
-            }
-          });
-        }
-      });
+      this.$swal
+        .fire({
+          icon: "warning",
+          title: "Are you sure?",
+          text: "Confirm logout request",
+          showCancelButton: true,
+          confirmButtonText: "Logout",
+          reverseButtons: true
+        })
+        .then((result: SweetAlertResult) => {
+          if (result.isConfirmed) {
+            this.$store.dispatch("logoutCurrentUser").then((res: Models.CustomAlert) => {
+              if (res.status === 200) {
+                this.$swal
+                  .fire({
+                    icon: "success",
+                    title: "Success",
+                    text: res.message
+                  })
+                  .then(() => {
+                    if (this.previousAppUrl) {
+                      window.location.href = this.previousAppUrl;
+                    } else {
+                      this.$router.push({ name: "Login" });
+                    }
+                  });
+              } else {
+                this.$swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: res.message
+                });
+              }
+            });
+          }
+        });
     },
 
     getUrl(item: string): string {
-      return require("@/assets/avatars/" + item);
+      const url = new URL(`../../assets/avatars/${item}`, import.meta.url);
+      return url.href;
     }
   }
 });

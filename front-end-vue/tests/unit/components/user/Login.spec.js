@@ -4,35 +4,39 @@ import Card from "primevue/card";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import AuthService from "@/services/AuthService";
-import Swal from "sweetalert2";
-import { User } from "@/models/user/User";
+import { Models } from "im-library";
+const { User } = Models;
 
 describe("login.vue no registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockStore = {
       state: { registeredUsername: "" },
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
+    };
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
     };
     wrapper = mount(Login, {
       global: {
         components: { Card, Button, InputText },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
   });
 
   it("starts empty if no store registeredUsername", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
@@ -41,39 +45,42 @@ describe("login.vue no registeredUser", () => {
 });
 
 describe("login.vue with registeredUser", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let testUser: User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let testUser;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUser = new User("devtest", "John", "Doe", "john.doe@ergosoft.co.uk", "", "colour/001-man.png");
 
     testUser.setId("9gkej864-l39k-9u87-4lau-w7777b3m5g09");
 
-    AuthService.signIn = jest.fn().mockResolvedValue({ status: 200, message: "Login successful", user: testUser });
+    AuthService.signIn = vi.fn().mockResolvedValue({ status: 200, message: "Login successful", user: testUser });
 
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
     mockStore = {
       state: { registeredUsername: "testUser" },
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
+    };
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
     };
     wrapper = mount(Login, {
       global: {
         components: { Card, Button, InputText },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
   });
 
   it("starts with registeredUsername if in store", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
@@ -126,7 +133,7 @@ describe("login.vue with registeredUser", () => {
 
   it("checks for existing avatar and sets user avatar ___ false", async () => {
     const legacyUser = { username: "legacy", avatar: "image.jpg" };
-    AuthService.signIn = jest.fn().mockResolvedValue({ status: 200, message: "Login successful", user: legacyUser });
+    AuthService.signIn = vi.fn().mockResolvedValue({ status: 200, message: "Login successful", user: legacyUser });
     wrapper.vm.username = "Devtest";
     wrapper.vm.password = "12345678";
     wrapper.vm.handleSubmit();
@@ -141,8 +148,8 @@ describe("login.vue with registeredUser", () => {
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Login successful" });
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Login successful" });
   });
 
   it("reroutes on auth success", async () => {
@@ -156,14 +163,14 @@ describe("login.vue with registeredUser", () => {
   });
 
   it("fires swal on auth error ___ 401", async () => {
-    AuthService.signIn = jest.fn().mockResolvedValue({ status: 401, message: "Login successful", user: testUser });
+    AuthService.signIn = vi.fn().mockResolvedValue({ status: 401, message: "Login successful", user: testUser });
     wrapper.vm.username = "Devtest";
     wrapper.vm.password = "12345678";
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "warning",
       title: "User Unconfirmed",
       text: "Account has not been confirmed. Please confirm account to continue.",
@@ -174,7 +181,7 @@ describe("login.vue with registeredUser", () => {
   });
 
   it("updates store and reroutes on auth error ___ 401", async () => {
-    AuthService.signIn = jest.fn().mockResolvedValue({ status: 401, message: "Login successful", user: testUser });
+    AuthService.signIn = vi.fn().mockResolvedValue({ status: 401, message: "Login successful", user: testUser });
     wrapper.vm.username = "Devtest";
     wrapper.vm.password = "12345678";
     wrapper.vm.handleSubmit();
@@ -187,8 +194,8 @@ describe("login.vue with registeredUser", () => {
   });
 
   it("doesn't update store and reroutes on auth error, swal cancelled ___ 401", async () => {
-    AuthService.signIn = jest.fn().mockResolvedValue({ status: 401, message: "Login successful", user: testUser });
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: false }));
+    AuthService.signIn = vi.fn().mockResolvedValue({ status: 401, message: "Login successful", user: testUser });
+    wrapper.vm.$swal.fire = vi.fn().mockImplementation(() => Promise.resolve({ isConfirmed: false }));
     wrapper.vm.username = "Devtest";
     wrapper.vm.password = "12345678";
     wrapper.vm.handleSubmit();
@@ -199,26 +206,26 @@ describe("login.vue with registeredUser", () => {
   });
 
   it("fires swal on auth error ___ other", async () => {
-    AuthService.signIn = jest.fn().mockResolvedValue({ status: 400, message: "Login failed", user: testUser });
+    AuthService.signIn = vi.fn().mockResolvedValue({ status: 400, message: "Login failed", user: testUser });
     wrapper.vm.username = "Devtest";
     wrapper.vm.password = "12345678";
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Login failed", confirmButtonText: "Close" });
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Login failed", confirmButtonText: "Close" });
   });
 
   it("fires swal on authservice error", async () => {
-    console.error = jest.fn();
-    AuthService.signIn = jest.fn().mockRejectedValue({ status: 400, message: "Login failed", error: "deliberate test error" });
+    console.error = vi.fn();
+    AuthService.signIn = vi.fn().mockRejectedValue({ status: 400, message: "Login failed", error: "deliberate test error" });
     wrapper.vm.username = "Devtest";
     wrapper.vm.password = "12345678";
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Authentication error", confirmButtonText: "Close" });
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Authentication error", confirmButtonText: "Close" });
   });
 
   it("can check a keycode ___ correct", async () => {

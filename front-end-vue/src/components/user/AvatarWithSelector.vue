@@ -19,13 +19,14 @@
 </template>
 
 <script lang="ts">
-import { avatars } from "@/models/user/Avatars";
+import { Constants } from "im-library";
 import { defineComponent } from "vue";
+const { Avatars } = Constants;
 
 export default defineComponent({
   name: "AvatarWithSelector",
   props: { selectedAvatar: { type: String } },
-  emits: { avatarSelected: (payload: string) => avatars.includes(payload) },
+  emits: { avatarSelected: (payload: string) => Avatars.includes(payload) },
   watch: {
     selectedAvatar(newValue): void {
       this.newAvatar = newValue;
@@ -36,7 +37,7 @@ export default defineComponent({
   },
   data() {
     return {
-      avatarOptions: avatars,
+      avatarOptions: Avatars,
       newAvatar: this.selectedAvatar
     };
   },
@@ -47,7 +48,8 @@ export default defineComponent({
     },
 
     getUrl(item: string): string {
-      return require("@/assets/avatars/" + item);
+      const url = new URL(`../../assets/avatars/${item}`, import.meta.url);
+      return url.href;
     }
   }
 });

@@ -7,36 +7,38 @@ import Button from "primevue/button";
 import SelectButton from "primevue/selectbutton";
 import OverlayPanel from "primevue/overlaypanel";
 import AvatarWithSelector from "@/components/user/AvatarWithSelector.vue";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
-import { avatars } from "@/models/user/Avatars";
 import AuthService from "@/services/AuthService";
-import Swal from "sweetalert2";
-import { User } from "@/models/user/User";
+import { Models, Constants, Enums } from "im-library";
+const { User } = Models;
+const { Avatars } = Constants;
+const { PasswordStrength } = Enums;
 
 describe("register.vue empty", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let testUser: User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let testUser;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    AuthService.register = jest.fn().mockResolvedValue({ status: 201, message: "Register successful" });
+    vi.clearAllMocks();
+    AuthService.register = vi.fn().mockResolvedValue({ status: 201, message: "Register successful" });
 
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
-
-    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", avatars[0]);
+    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", Avatars[0]);
     mockStore = {
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
+    };
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
     };
     wrapper = mount(Register, {
       global: {
         components: { Card, Button, InputText, InlineMessage, SelectButton, OverlayPanel, AvatarWithSelector },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
   });
@@ -57,29 +59,31 @@ describe("register.vue empty", () => {
 });
 
 describe("register.vue prefilled", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let testUser: User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let testUser;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    AuthService.register = jest.fn().mockResolvedValue({ status: 201, message: "Register successful" });
+    vi.clearAllMocks();
+    AuthService.register = vi.fn().mockResolvedValue({ status: 201, message: "Register successful" });
 
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
-
-    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", avatars[0]);
+    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", Avatars[0]);
     mockStore = {
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
+    };
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
     };
     wrapper = mount(Register, {
       global: {
         components: { Card, Button, InputText, InlineMessage, SelectButton, OverlayPanel, AvatarWithSelector },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
     wrapper.vm.username = "DevTest";
@@ -89,24 +93,24 @@ describe("register.vue prefilled", () => {
     wrapper.vm.password2 = "12345678";
     wrapper.vm.firstName = "John";
     wrapper.vm.lastName = "Doe";
-    wrapper.vm.selectedAvatar = avatars[0];
+    wrapper.vm.selectedAvatar = Avatars[0];
   });
 
   it("should render data to form", async () => {
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     const emailField = wrapper.find("#fieldEmail1");
-    const email1Input = emailField.element as HTMLInputElement;
+    const email1Input = emailField.element;
     const email2Field = wrapper.find("#fieldEmail2");
-    const email2Input = email2Field.element as HTMLInputElement;
+    const email2Input = email2Field.element;
     const firstNameField = wrapper.find("#fieldFirstName");
-    const firstNameInput = firstNameField.element as HTMLInputElement;
+    const firstNameInput = firstNameField.element;
     const lastNameField = wrapper.find("#fieldLastName");
-    const lastNameInput = lastNameField.element as HTMLInputElement;
+    const lastNameInput = lastNameField.element;
     const password1Field = wrapper.find("#fieldPassword1");
-    const password1Input = password1Field.element as HTMLInputElement;
+    const password1Input = password1Field.element;
     const password2Field = wrapper.find("#fieldPassword2");
-    const password2Input = password2Field.element as HTMLInputElement;
+    const password2Input = password2Field.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
@@ -226,19 +230,19 @@ describe("register.vue prefilled", () => {
     wrapper.vm.clearForm();
     await wrapper.vm.$nextTick();
     const userNameField = wrapper.find("#fieldUsername");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     const emailField = wrapper.find("#fieldEmail1");
-    const email1Input = emailField.element as HTMLInputElement;
+    const email1Input = emailField.element;
     const email2Field = wrapper.find("#fieldEmail2");
-    const email2Input = email2Field.element as HTMLInputElement;
+    const email2Input = email2Field.element;
     const firstNameField = wrapper.find("#fieldFirstName");
-    const firstNameInput = firstNameField.element as HTMLInputElement;
+    const firstNameInput = firstNameField.element;
     const lastNameField = wrapper.find("#fieldLastName");
-    const lastNameInput = lastNameField.element as HTMLInputElement;
+    const lastNameInput = lastNameField.element;
     const password1Field = wrapper.find("#fieldPassword1");
-    const password1Input = password1Field.element as HTMLInputElement;
+    const password1Input = password1Field.element;
     const password2Field = wrapper.find("#fieldPassword2");
-    const password2Input = password2Field.element as HTMLInputElement;
+    const password2Input = password2Field.element;
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("fieldUsername");
     expect(userNameInput.value).toBe("");
@@ -357,7 +361,7 @@ describe("register.vue prefilled", () => {
   });
 
   it("should updateAvatar", async () => {
-    expect(wrapper.vm.selectedAvatar).toStrictEqual(avatars[0]);
+    expect(wrapper.vm.selectedAvatar).toStrictEqual(Avatars[0]);
     wrapper.vm.updateAvatar("colour/003-man.png");
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.selectedAvatar).toStrictEqual("colour/003-man.png");
@@ -389,8 +393,9 @@ describe("register.vue prefilled", () => {
     await wrapper.vm.$nextTick();
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    await flushPromises();
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "success",
       title: "Success",
       text: "Register successful",
@@ -420,7 +425,7 @@ describe("register.vue prefilled", () => {
   });
 
   it("clears form on auth success and swal cancelled", async () => {
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: false }));
+    wrapper.vm.$swal.fire = vi.fn().mockImplementation(() => Promise.resolve({ isConfirmed: false }));
     await wrapper.vm.$nextTick();
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
@@ -429,13 +434,13 @@ describe("register.vue prefilled", () => {
   });
 
   it("fires swal on auth success ___ 409", async () => {
-    AuthService.register = jest.fn().mockResolvedValue({ status: 409, message: "Username taken" });
+    AuthService.register = vi.fn().mockResolvedValue({ status: 409, message: "Username taken" });
     await wrapper.vm.$nextTick();
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "Username already taken. Please pick another username",
@@ -444,13 +449,13 @@ describe("register.vue prefilled", () => {
   });
 
   it("fires swal on auth success ___ other", async () => {
-    AuthService.register = jest.fn().mockResolvedValue({ status: 400, message: "Register failed" });
+    AuthService.register = vi.fn().mockResolvedValue({ status: 400, message: "Register failed" });
     await wrapper.vm.$nextTick();
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "Register failed",
@@ -464,8 +469,8 @@ describe("register.vue prefilled", () => {
     wrapper.vm.handleSubmit();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({
+    expect(wrapper.vm.$swal.fire).toBeCalledTimes(1);
+    expect(wrapper.vm.$swal.fire).toBeCalledWith({
       icon: "error",
       title: "Error",
       text: "User creation failed. Check input data.",
@@ -557,30 +562,32 @@ describe("register.vue prefilled", () => {
 });
 
 describe("AuthService fail", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
-  let testUser: User;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
+  let mockSwal;
+  let testUser;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    AuthService.register = jest.fn().mockRejectedValue({ status: 500, message: "Register test failed" });
-    console.error = jest.fn();
+    vi.clearAllMocks();
+    AuthService.register = vi.fn().mockRejectedValue({ status: 500, message: "Register test failed" });
+    console.error = vi.fn();
 
-    Swal.fire = jest.fn().mockImplementation(() => Promise.resolve({ isConfirmed: true }));
-
-    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", avatars[0]);
+    testUser = new User("DevTest", "John", "Doe", "devtest@ergo.co.uk", "12345678", Avatars[0]);
     mockStore = {
-      commit: jest.fn()
+      commit: vi.fn()
     };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
+      push: vi.fn(),
+      go: vi.fn()
+    };
+    mockSwal = {
+      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
     };
     wrapper = mount(Register, {
       global: {
         components: { Card, Button, InputText, InlineMessage, SelectButton, OverlayPanel, AvatarWithSelector },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
     wrapper.vm.username = "DevTest";
@@ -590,7 +597,7 @@ describe("AuthService fail", () => {
     wrapper.vm.password2 = "12345678";
     wrapper.vm.firstName = "John";
     wrapper.vm.lastName = "Doe";
-    wrapper.vm.selectedAvatar = avatars[0];
+    wrapper.vm.selectedAvatar = Avatars[0];
   });
   it("logs AuthService error to console", async () => {
     wrapper.vm.handleSubmit();

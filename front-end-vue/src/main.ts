@@ -38,7 +38,16 @@ import SelectButton from "primevue/selectbutton";
 import { Amplify, Auth } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import axios from "axios";
-import { isObjectHasKeys } from "./helpers/DataTypeCheckers";
+
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
+// IMLibrary imports
+import "im-library/dist/style.css";
+import { Helpers } from "im-library";
+const {
+  DataTypeCheckers: { isObjectHasKeys }
+} = Helpers;
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -48,6 +57,7 @@ const app = createApp(App)
   .use(router)
   .use(PrimeVue, { ripple: true })
   .use(ToastService)
+  .use(VueSweetalert2)
   .component("Card", Card)
   .component("ProgressSpinner", ProgressSpinner)
   .component("InputText", InputText)
@@ -61,7 +71,7 @@ const app = createApp(App)
 const vm = app.mount("#app");
 
 axios.interceptors.request.use(async request => {
-  if (store.state.isLoggedIn && process.env.VUE_APP_API && request.url?.startsWith(process.env.VUE_APP_API)) {
+  if (store.state.isLoggedIn && import.meta.env.VITE_API && request.url?.startsWith(import.meta.env.VITE_API as string)) {
     request.headers.Authorization = "Bearer " + (await Auth.currentSession()).getIdToken().getJwtToken();
   }
   return request;

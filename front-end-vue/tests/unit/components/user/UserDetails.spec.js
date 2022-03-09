@@ -3,32 +3,26 @@ import UserDetails from "@/components/user/UserDetails.vue";
 import Card from "primevue/card";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
-import { User } from "@/models/user/User";
-import { avatars } from "@/models/user/Avatars";
+import { Models, Constants } from "im-library";
+const { User } = Models;
+const { Avatars } = Constants;
 
 describe("userDetails.vue", () => {
-  let wrapper: any;
-  let mockStore: any;
-  let mockRouter: any;
+  let wrapper;
+  let mockStore;
+  let mockRouter;
 
   beforeEach(() => {
-    const user = new User(
-      "testUser",
-      "John",
-      "Doe",
-      "john.doe@ergosoft.co.uk",
-      "",
-      avatars[0]
-    );
-    jest.clearAllMocks();
+    const user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", Avatars[0]);
+    vi.clearAllMocks();
     mockStore = {
-      state: {"currentUser": user, "isLoggedIn": true},
-      commit: jest.fn(),
-    }
+      state: { currentUser: user, isLoggedIn: true },
+      commit: vi.fn()
+    };
     mockRouter = {
-      push: jest.fn(),
-      go: jest.fn()
-    }
+      push: vi.fn(),
+      go: vi.fn()
+    };
     wrapper = mount(UserDetails, {
       global: {
         components: { Card, Button, InputText },
@@ -39,13 +33,13 @@ describe("userDetails.vue", () => {
 
   it("correctly renders User details from store", async () => {
     const userNameField = wrapper.find("#username");
-    const userNameInput = userNameField.element as HTMLInputElement;
+    const userNameInput = userNameField.element;
     const firstNameField = wrapper.find("#firstName");
-    const firstNameInput = firstNameField.element as HTMLInputElement;
+    const firstNameInput = firstNameField.element;
     const lastNameField = wrapper.find("#lastName");
-    const lastNameInput = lastNameField.element as HTMLInputElement;
+    const lastNameInput = lastNameField.element;
     const emailField = wrapper.find("#email");
-    const emailInput = emailField.element as HTMLInputElement;
+    const emailInput = emailField.element;
     await wrapper.vm.$nextTick();
     expect(userNameField.exists()).toBe(true);
     expect(userNameField.element.id).toBe("username");
@@ -61,7 +55,7 @@ describe("userDetails.vue", () => {
     expect(emailInput.value).toBe("john.doe@ergosoft.co.uk");
   });
 
-  it("rerouted on handleEditClicked", async() => {
+  it("rerouted on handleEditClicked", async () => {
     wrapper.vm.handleEditClicked();
     await wrapper.vm.$nextTick();
     expect(mockRouter.push).toBeCalledTimes(1);
@@ -69,10 +63,8 @@ describe("userDetails.vue", () => {
   });
 
   it("returns the correct image url", async () => {
-    jest.mock("@/assets/avatars/colour/013-woman.png", () => {
-      return "/img/013-woman.7f32b854.png"
-    })
+    const testUrl = "file://" + __dirname.slice(0, -26) + "src/assets/avatars/colour/013-woman.png";
     const url = wrapper.vm.getUrl("colour/013-woman.png");
-    expect(url).toBe("/img/013-woman.7f32b854.png");
+    expect(url).toBe(testUrl);
   });
 });

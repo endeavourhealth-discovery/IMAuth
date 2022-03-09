@@ -1,5 +1,5 @@
 <template>
-  <div class="p-d-flex p-flex-row p-jc-start">
+  <div class="flex flex-row justify-content-start">
     <Button class="back-button" label="Back" icon="pi pi-arrow-circle-left" iconPos="left" v-on:click.prevent="clickedBack" />
     <Button class="home-button" icon="pi pi-home" v-on:click.prevent="homeClicked" />
   </div>
@@ -18,7 +18,7 @@ export default defineComponent({
     },
 
     homeClicked(): void {
-      window.location.href = this.previousAppUrl ? this.previousAppUrl : process.env.VUE_APP_DIRECTORY;
+      window.location.href = this.previousAppUrl ? this.previousAppUrl : import.meta.env.VITE_DIRECTORY;
     }
   }
 });

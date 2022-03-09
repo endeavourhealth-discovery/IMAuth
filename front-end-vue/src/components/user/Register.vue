@@ -1,5 +1,5 @@
 <template>
-  <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center register-card">
+  <Card class="flex flex-column justify-content-sm-around align-items-center register-card">
     <template #header>
       <avatar-with-selector :selectedAvatar="selectedAvatar" @avatarSelected="updateAvatar" />
     </template>
@@ -8,16 +8,16 @@
     </template>
     <template #content>
       <div class="p-fluid register-form">
-        <div class="p-field">
+        <div class="field">
           <label for="fieldUsername">Username</label>
           <InputText id="fieldUsername" type="text" maxlength="50" v-model="username" v-on:blur="setShowUsernameNotice" />
           <InlineMessage v-if="showUsernameNotice" severity="error">
             Username contains unexpected characters. A-Z, 0-9 and hyphen/underscore(-_) only allowed e.g."John-Doe2"
           </InlineMessage>
         </div>
-        <div class="p-field">
+        <div class="field">
           <label for="fieldEmail1">Email address</label>
-          <div class="p-d-flex p-flex-row p-ai-center">
+          <div class="flex flex-row align-items-center">
             <InputText
               id="fieldEmail1"
               type="text"
@@ -30,28 +30,28 @@
             <i v-if="showEmail1Notice && !email1Verified" class="pi pi-times-circle email-times" aria-hidden="true" />
           </div>
         </div>
-        <div class="p-field">
+        <div class="field">
           <label for="fieldEmail2">Confirm email address</label>
           <InputText id="fieldEmail2" type="text" maxlength="50" v-model="email2" v-on:blur="setShowEmail2Notice" />
           <InlineMessage v-if="showEmail2Notice" severity="error">
             Email addresses do not match!
           </InlineMessage>
         </div>
-        <div class="p-field">
+        <div class="field">
           <label for="fieldFirstName">First name</label>
           <InputText id="fieldFirstName" type="text" maxlength="50" v-model="firstName" v-on:blur="setShowFirstNameNotice" />
           <InlineMessage v-if="showFirstNameNotice" severity="error">
             First name contains unexpected characters. A-Z and hyphens only allowed e.g."Mary-Anne"
           </InlineMessage>
         </div>
-        <div class="p-field">
+        <div class="field">
           <label for="fieldLastName">Last name</label>
           <InputText id="fieldLastName" type="text" maxlength="50" v-model="lastName" v-on:blur="setShowLastNameNotice" />
           <InlineMessage v-if="showLastNameNotice" severity="error">
             Last name contains unexpected characters. A-Z, apostropies and hyphens only allowed e.g."O'Keith-Smith"
           </InlineMessage>
         </div>
-        <div class="p-field">
+        <div class="field">
           <label for="fieldPassword1">Password</label>
           <InputText id="fieldPassword1" type="password" maxlength="50" aria-describedby="password-help" v-model="password1" />
           <InlineMessage v-if="passwordStrength === 'strong'" severity="success">
@@ -71,14 +71,14 @@
             [!@#$%^&*].
           </small>
         </div>
-        <div class="p-field">
+        <div class="field">
           <label for="fieldPassword2">Confirm password</label>
           <InputText id="fieldPassword2" type="password" maxlength="50" v-model="password2" v-on:blur="setShowPassword2Notice" @keyup="checkKey" />
           <InlineMessage v-if="showPassword2Notice" severity="error">
             Passwords do not match!
           </InlineMessage>
         </div>
-        <div class="p-d-flex p-flex-row p-jc-center">
+        <div class="flex flex-row justify-content-center">
           <Button v-if="!allVerified()" class="user-submit" type="submit" label="Register" disabled v-on:click.prevent="handleSubmit" />
           <Button v-else class="user-submit" type="submit" label="Register" v-on:click.prevent="handleSubmit" />
         </div>
@@ -94,21 +94,23 @@
 </template>
 
 <script lang="ts">
-import { User } from "@/models/user/User";
-import { PasswordStrength } from "@/models/user/PasswordStrength";
-import Swal from "sweetalert2";
-import { verifyIsUsername, verifyIsEmail, verifyPasswordsMatch, verifyEmailsMatch, verifyIsName, checkPasswordStrength } from "@/helpers/UserMethods";
 import AuthService from "@/services/AuthService";
-import { avatars } from "@/models/user/Avatars";
 import AvatarWithSelector from "./AvatarWithSelector.vue";
 import { defineComponent } from "vue";
+import { Helpers, Enums, Constants, Models } from "im-library";
+const {
+  UserMethods: { verifyEmailsMatch, verifyIsEmail, verifyIsName, verifyIsUsername, verifyPasswordsMatch, checkPasswordStrength }
+} = Helpers;
+const { PasswordStrength } = Enums;
+const { User } = Models;
+const { Avatars } = Constants;
 
 export default defineComponent({
   name: "Register",
   components: {
     "avatar-with-selector": AvatarWithSelector
   },
-  emits: { userCreated: (payload: User) => true },
+  emits: { userCreated: (payload: Models.User) => true },
   watch: {
     username(newValue) {
       this.usernameVerified = verifyIsUsername(newValue);
@@ -147,7 +149,7 @@ export default defineComponent({
       lastNameVerified: false,
       password1: "",
       password2: "",
-      passwordStrength: PasswordStrength.fail as PasswordStrength,
+      passwordStrength: PasswordStrength.fail as Enums.PasswordStrength,
       passwordsMatch: false,
       showEmail1Notice: false,
       showEmail2Notice: false,
@@ -155,7 +157,7 @@ export default defineComponent({
       showUsernameNotice: false,
       showFirstNameNotice: false,
       showLastNameNotice: false,
-      selectedAvatar: avatars[0]
+      selectedAvatar: Avatars[0]
     };
   },
 
@@ -190,30 +192,32 @@ export default defineComponent({
         AuthService.register(user)
           .then(res => {
             if (res.status === 201) {
-              Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: res.message,
-                showCancelButton: true,
-                confirmButtonText: "Continue"
-              }).then(result => {
-                this.$emit("userCreated", user);
-                if (result.isConfirmed) {
-                  this.$store.commit("updateRegisteredUsername", this.username);
-                  this.$router.push({ name: "ConfirmCode" });
-                } else {
-                  this.clearForm();
-                }
-              });
+              this.$swal
+                .fire({
+                  icon: "success",
+                  title: "Success",
+                  text: res.message,
+                  showCancelButton: true,
+                  confirmButtonText: "Continue"
+                })
+                .then(result => {
+                  this.$emit("userCreated", user);
+                  if (result.isConfirmed) {
+                    this.$store.commit("updateRegisteredUsername", this.username);
+                    this.$router.push({ name: "ConfirmCode" });
+                  } else {
+                    this.clearForm();
+                  }
+                });
             } else if (res.status === 409) {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "error",
                 title: "Error",
                 text: "Username already taken. Please pick another username",
                 confirmButtonText: "Close"
               });
             } else {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "error",
                 title: "Error",
                 text: res.message,
@@ -225,7 +229,7 @@ export default defineComponent({
             console.error(err);
           });
       } else {
-        Swal.fire({
+        this.$swal.fire({
           icon: "error",
           title: "Error",
           text: "User creation failed. Check input data.",
@@ -252,7 +256,7 @@ export default defineComponent({
       this.showPassword2Notice = false;
       this.showFirstNameNotice = false;
       this.showLastNameNotice = false;
-      this.selectedAvatar = avatars[0];
+      this.selectedAvatar = Avatars[0];
     },
 
     allVerified(): boolean {

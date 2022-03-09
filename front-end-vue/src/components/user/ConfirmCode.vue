@@ -1,6 +1,6 @@
 <template>
-  <div class="p-d-flex p-flex-row p-ai-center">
-    <Card class="p-d-flex p-flex-column p-jc-sm-around p-ai-center confirm-card">
+  <div class="flex flex-row align-items-center">
+    <Card class="flex flex-column justify-content-sm-around align-items-center confirm-card">
       <template #header>
         <i class="pi pi-fw pi-key icon-header" aria-hidden="true" />
       </template>
@@ -9,20 +9,20 @@
       </template>
       <template #content>
         <div class="p-fluid code-form">
-          <div class="p-field">
+          <div class="field">
             <label for="fieldUsername">Username</label>
             <InputText id="fieldUsername" type="text" v-model="username" :placeholder="username" />
           </div>
-          <div class="p-field">
+          <div class="field">
             <label for="fieldCode">Confirmation code</label>
-            <div class="p-d-flex p-flex-row p-ai-center">
+            <div class="flex flex-row align-items-center">
               <InputText id="fieldCode" type="password" v-model="code" />
               <i v-if="codeVerified" class="pi pi-check-circle password-check" aria-hidden="true" />
               <i v-if="!codeVerified && code !== ''" class="pi pi-times-circle password-times" aria-hidden="true" />
             </div>
             <small id="code-help">Your 6-digit code should arrive by email from<br />no-reply@verificationemail.com</small>
           </div>
-          <div class="p-d-flex p-flex-row p-jc-center">
+          <div class="flex flex-row justify-content-center">
             <Button class="user-submit" type="submit" label="Submit" v-on:click.prevent="handleSubmit" />
           </div>
         </div>
@@ -43,7 +43,6 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import AuthService from "@/services/AuthService";
-import Swal from "sweetalert2";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -76,17 +75,19 @@ export default defineComponent({
         AuthService.confirmRegister(this.username, this.code)
           .then(res => {
             if (res.status === 200) {
-              Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: res.message,
-                confirmButtonText: "Login"
-              }).then(() => {
-                this.$store.commit("updateRegisteredUsername", this.username);
-                this.$router.push({ name: "Login" });
-              });
+              this.$swal
+                .fire({
+                  icon: "success",
+                  title: "Success",
+                  text: res.message,
+                  confirmButtonText: "Login"
+                })
+                .then(() => {
+                  this.$store.commit("updateRegisteredUsername", this.username);
+                  this.$router.push({ name: "Login" });
+                });
             } else {
-              Swal.fire({
+              this.$swal.fire({
                 icon: "error",
                 title: "Error",
                 text: res.message
@@ -95,14 +96,14 @@ export default defineComponent({
           })
           .catch(err => {
             console.error(err);
-            Swal.fire({
+            this.$swal.fire({
               icon: "error",
               title: "Error",
               text: "Auth Service Error"
             });
           });
       } else {
-        Swal.fire({
+        this.$swal.fire({
           icon: "warning",
           title: "Invalid Credentials",
           text: "Username or Confirmation Code incorrect."
@@ -114,13 +115,13 @@ export default defineComponent({
       AuthService.resendConfirmationCode(this.username)
         .then(res => {
           if (res.status === 200) {
-            Swal.fire({
+            this.$swal.fire({
               icon: "success",
               title: "Success",
               text: "Code has been resent to email for: " + this.username
             });
           } else {
-            Swal.fire({
+            this.$swal.fire({
               icon: "error",
               title: "Error",
               text: "Code resending failed. Please contact an admin."
@@ -129,7 +130,7 @@ export default defineComponent({
         })
         .catch(err => {
           console.error(err);
-          Swal.fire({
+          this.$swal.fire({
             icon: "error",
             title: "Error",
             text: "Internal application error"
