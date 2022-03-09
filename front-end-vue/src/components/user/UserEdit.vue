@@ -293,29 +293,30 @@ export default defineComponent({
     },
 
     resetForm(): void {
-      this.$swal.fire({
-        icon: "warning",
-        title: "Warning",
-        text: "Are you sure that you want to reset changes to this form? Any changes you have made will be lost.",
-        showCancelButton: true,
-        confirmButtonText: "Reset changes",
-        reverseButtons: true
-      }).then(result => {
-        if (result.isConfirmed) {
-          console.log(this.currentUser)
-          this.username = this.currentUser.username;
-          this.firstName = this.currentUser.firstName;
-          this.lastName = this.currentUser.lastName;
-          this.email1 = this.currentUser.email;
-          this.email2 = this.currentUser.email;
-          this.selectedAvatar = this.currentUser.avatar;
-          this.showFirstNameNotice = false;
-          this.showLastNameNotice = false;
-          this.showEmail1Notice = false;
-          this.showEmail2Notice = false;
-          this.selectedAvatar = this.currentUser.avatar;
-        }
-      });
+      this.$swal
+        .fire({
+          icon: "warning",
+          title: "Warning",
+          text: "Are you sure that you want to reset changes to this form? Any changes you have made will be lost.",
+          showCancelButton: true,
+          confirmButtonText: "Reset changes",
+          reverseButtons: true
+        })
+        .then(result => {
+          if (result.isConfirmed) {
+            this.username = this.currentUser.username;
+            this.firstName = this.currentUser.firstName;
+            this.lastName = this.currentUser.lastName;
+            this.email1 = this.currentUser.email;
+            this.email2 = this.currentUser.email;
+            this.selectedAvatar = this.currentUser.avatar;
+            this.showFirstNameNotice = false;
+            this.showLastNameNotice = false;
+            this.showEmail1Notice = false;
+            this.showEmail2Notice = false;
+            this.selectedAvatar = this.currentUser.avatar;
+          }
+        });
     },
 
     updateAvatar(newValue: string): void {

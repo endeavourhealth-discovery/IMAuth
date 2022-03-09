@@ -86,7 +86,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.query.returnUrl) {
-    store.commit("updatePreviousAppUrl", import.meta.env[to.query.returnUrl.toString()]);
+    store.commit("updatePreviousAppUrl", to.query.returnUrl);
   }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     store.dispatch("authenticateCurrentUser").then(res => {
