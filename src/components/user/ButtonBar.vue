@@ -18,7 +18,7 @@ export default defineComponent({
     },
 
     homeClicked(): void {
-      window.location.href = this.previousAppUrl ? this.previousAppUrl : import.meta.env.VITE_DIRECTORY;
+      window.location.href = this.previousAppUrl ? this.previousAppUrl : import.meta.env.VITE_DIRECTORY_URL;
     }
   }
 });
