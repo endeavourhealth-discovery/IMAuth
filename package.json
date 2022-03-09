@@ -1,5 +1,5 @@
 {
-  "name": "front-end-vue",
+  "name": "im-auth",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,13 +8,11 @@
     "build": "vite build",
     "test:unit": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:unit:ci": "vue-cli-service test:unit > testResult.txt 2>&1",
-    "test:e2e": "cross-env VITE_API=http://localhost:8082/ vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
-    "test:e2e:ci": "vue-cli-service test:e2e"
+    "test:e2e": "cross-env VITE_API=http://localhost:8082/ cypress run",
+    "lint": "eslint",
+    "format": "prettier"
   },
   "dependencies": {
-    "@babel/preset-flow": "^7.16.7",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
@@ -22,7 +20,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "aws-amplify": "^3.4.3",
     "axios": "^0.21.1",
-    "im-library": "file:../IMLibrary",
+    "im-library": "https://github.com/endeavourhealth-discovery/IMLibrary/blob/main/im-library-1.0.1.tgz?raw=true",
     "path": "^0.12.7",
     "primeflex": "^3.1.2",
     "primeicons": "^5.0.0",
