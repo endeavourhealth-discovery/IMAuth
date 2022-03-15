@@ -1,4 +1,11 @@
 {
+  "testFiles": "**/*_spec.js",
+  "componentFolder": "src",
+  "integrationFolder": "tests/e2e/specs",
+  "screenshotsFolder": "tests/e2e/screenshots",
+  "supportFile": "tests/e2e/support",
   "pluginsFile": "tests/e2e/plugins/index.js",
-  "chromeWebSecurity": false
+  "videosFolder": "tests/e2e/videos",
+  "chromeWebSecurity": false,
+  "env": {"VITE_API=http":"//localhost:8082/"}
 }

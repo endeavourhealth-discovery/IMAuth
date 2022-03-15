@@ -8,7 +8,7 @@
     "build": "vite build",
     "test:unit": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "cross-env VITE_API=http://localhost:8082/ cypress run",
+    "test:e2e": "cross-env VITE_API=http://localhost:8082/ cypress run --browser chrome",
     "lint": "eslint",
     "format": "prettier"
   },
@@ -20,7 +20,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "aws-amplify": "^3.4.3",
     "axios": "^0.21.1",
-    "im-library": "https://github.com/endeavourhealth-discovery/IMLibrary/blob/main/im-library-1.0.1.tgz?raw=true",
+    "im-library": "https://github.com/endeavourhealth-discovery/IMLibrary/blob/main/im-library-1.0.0.tgz?raw=true",
     "path": "^0.12.7",
     "primeflex": "^3.1.2",
     "primeicons": "^5.0.0",
@@ -34,6 +34,8 @@
     "vuex": "^4.0.1"
   },
   "devDependencies": {
+    "@cypress/vite-dev-server": "^2.2.2",
+    "@cypress/vue": "^3.1.1",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
