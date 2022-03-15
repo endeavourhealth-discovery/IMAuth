@@ -4,6 +4,7 @@ import { resolve } from "path";
 const path = require("path");
 
 export default defineConfig({
+  base: "./",
   plugins: [vue()],
   resolve: {
     dedupe: ["vue"],
