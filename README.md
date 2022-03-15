@@ -1,24 +1,58 @@
-# Information Model Auth
+# IMAuth
 
 ![Version](https://s3.eu-west-2.amazonaws.com/endeavour-codebuild-output/badges/IMAuth/version.svg)
 ![Build Status](https://s3.eu-west-2.amazonaws.com/endeavour-codebuild-output/badges/IMAuth/build.svg)
 ![Unit Tests](https://s3.eu-west-2.amazonaws.com/endeavour-codebuild-output/badges/IMAuth/unit-test.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=endeavourhealth-discovery_IMAuth&metric=alert_status)](https://sonarcloud.io/dashboard?id=endeavourhealth-discovery_IMAuth)
 
-## Run Frontend (development)
+## Project setup
 
-Checkout from GIT
+**The proxy expects IMAPI to be running on localhost:8080**
 
-`cd frontend-vue`
+```
+npm install
+```
 
-`npm install` (you only have to do this once)
+#### Environment variables
 
-`npm run serve`
+In project root add files
 
-Navigate your browser to `http://localhost:8082`
+> .env.development.local
 
-The proxy expects the API to be running on localhost:8080
+> .env.production.local
 
-## Build Frontend (production)
+> .env.test.local
 
-`npm run build`
+Files should contain:
+
+    VITE_API={url for IMApi} [local default: http://localhost:8080/]
+
+    VITE_DIRECTORY_URL={url for IMDirectory} [local default: http://localhost:8082]
+
+### Compiles and hot-reloads for development
+
+```
+npm run dev
+```
+
+### Compiles and minifies for production
+
+```
+npm run build
+```
+
+### Preview production build
+
+```
+npm run serve
+```
+
+### Lints and fixes files
+
+```
+npm run lint
+```
+
+### Customize configuration
+
+See [Configuration Reference](https://cli.vuejs.org/config/).
