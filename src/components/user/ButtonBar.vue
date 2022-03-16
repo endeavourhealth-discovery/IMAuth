@@ -8,6 +8,7 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import { defineComponent } from "vue";
+import {Env} from "im-library";
 
 export default defineComponent({
   name: "ButtonBar",
@@ -18,7 +19,8 @@ export default defineComponent({
     },
 
     homeClicked(): void {
-      window.location.href = this.previousAppUrl ? this.previousAppUrl : import.meta.env.VITE_DIRECTORY_URL;
+      console.log(Env.directoryUrl);
+      window.location.href = this.previousAppUrl ? this.previousAppUrl : Env.directoryUrl;
     }
   }
 });

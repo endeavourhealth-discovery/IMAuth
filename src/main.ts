@@ -44,7 +44,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 
 // IMLibrary imports
 import "im-library/dist/style.css";
-import Env from "im-library";
+import {Env} from "im-library";
 import { Helpers } from "im-library";
 const {
   DataTypeCheckers: { isObjectHasKeys }

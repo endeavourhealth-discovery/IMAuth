@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import AuthService from "@/services/AuthService";
-import LoggerService from "im-library";
+import {LoggerService} from "im-library";
 import { Models, Constants } from "im-library";
 const { User, CustomAlert } = Models;
 const { Avatars } = Constants;
