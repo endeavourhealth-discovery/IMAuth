@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vite --port 8082",
+    "dev": "npm link im-library && vite --port 8082",
     "serve": "vite preview --port 8082",
     "build": "vite build",
     "test:unit": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "cross-env VITE_API=http://localhost:8082/ cypress run",
+    "test:e2e": "cross-env VITE_API=http://localhost:8082/ cypress run --browser chrome",
     "lint": "eslint",
     "format": "prettier"
   },
@@ -34,6 +34,8 @@
     "vuex": "^4.0.1"
   },
   "devDependencies": {
+    "@cypress/vite-dev-server": "^2.2.2",
+    "@cypress/vue": "^3.1.1",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
