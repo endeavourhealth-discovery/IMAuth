@@ -1,6 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
 import ButtonBar from "@/components/user/ButtonBar.vue";
 import Button from "primevue/button";
+import {Env} from "im-library";
 
 describe("ButtonBar.vue ___ previousAppUrl", () => {
   let wrapper;
@@ -87,6 +88,6 @@ describe("ButtonBar.vue ___ no previousAppUrl", () => {
     const homeButton = wrapper.find(".home-button");
     homeButton.trigger("click");
     await wrapper.vm.$nextTick();
-    expect(window.location.href).toBe(import.meta.env.VITE_DIRECTORY_URL);
+    expect(window.location.href).toBe(Env.directoryUrl);
   });
 });
