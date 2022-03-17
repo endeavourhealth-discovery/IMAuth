@@ -8,9 +8,9 @@
     "build": "vite build",
     "test:unit": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "cross-env VITE_API=http://localhost:8082/ cypress run --browser chrome",
-    "lint": "eslint",
-    "format": "prettier"
+    "test:e2e": "cypress open --browser chrome",
+    "lint": "eslint --fix",
+    "format": "prettier --write"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -46,7 +46,7 @@
     "axios-mock-adapter": "^1.19.0",
     "c8": "^7.11.0",
     "cross-env": "^7.0.3",
-    "cypress": "^7.5.0",
+    "cypress": "^9.5.2",
     "eslint": "^6.7.2",
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-prettier": "^3.4.0",

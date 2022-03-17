@@ -1,15 +1,6 @@
-import {mount} from "@cypress/vue";
-import Login from "../../../src/components/user/Login.vue";
-
 describe("The Login page", () => {
   beforeEach(() => {
-    // cy.visit('/');
-    mount(Login, {})
-    // cy.get(".p-button-label")
-    //   .contains("Agree")
-    //   .click();
-    // cy.get("#user-icon").click();
-    // cy.contains("Login").click();
+    cy.visit('/login');
   });
 
   it("accepts user input in fields", () => {

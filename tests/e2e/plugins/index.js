@@ -12,12 +12,12 @@ const { startDevServer } = require("@cypress/vite-dev-server");
 // /* eslint-disable import/no-extraneous-dependencies, global-require */
 // const webpack = require('@cypress/webpack-preprocessor')
 
-module.exports = (on, config) => {
+export default function(on, config) {
   // on('file:preprocessor', webpack({
   //  webpackOptions: require('@vue/cli-service/webpack.config'),
   //  watchOptions: {}
   // }))
-  on("dev-server:start", (options) => {
+  on("dev-server:start", async(options) => {
     return startDevServer({
       options,
       viteConfig: {
