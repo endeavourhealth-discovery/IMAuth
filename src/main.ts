@@ -44,6 +44,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 
 // IMLibrary imports
 import "im-library/dist/style.css";
+import {Env} from "im-library";
 import { Helpers } from "im-library";
 const {
   DataTypeCheckers: { isObjectHasKeys }
@@ -71,7 +72,7 @@ const app = createApp(App)
 const vm = app.mount("#app");
 
 axios.interceptors.request.use(async request => {
-  if (store.state.isLoggedIn && import.meta.env.VITE_API && request.url?.startsWith(import.meta.env.VITE_API as string)) {
+  if (store.state.isLoggedIn && Env.api && request.url?.startsWith(Env.api)) {
     request.headers.Authorization = "Bearer " + (await Auth.currentSession()).getIdToken().getJwtToken();
   }
   return request;
