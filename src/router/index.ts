@@ -11,7 +11,7 @@ import ForgotPassword from "../components/user/ForgotPassword.vue";
 import ForgotPasswordSubmit from "../components/user/ForgotPasswordSubmit.vue";
 import store from "@/store/index";
 import { nextTick } from "vue";
-import { Env, Helpers } from "im-library";
+import { Helpers } from "im-library";
 const {
   RouterGuards: { checkAuth }
 } = Helpers;
@@ -89,11 +89,11 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const hasCalledNext = false;
+  let hasCalledNext = false;
   if (to.query.returnUrl) {
     store.commit("updatePreviousAppUrl", to.query.returnUrl);
   }
-  await checkAuth(to, "", store);
+  hasCalledNext = await checkAuth(to, next, store, hasCalledNext, "Auth");
   if (!hasCalledNext) next();
 });
 
