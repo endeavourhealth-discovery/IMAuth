@@ -88,13 +88,18 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach(async (to, from, next) => {
-  let hasCalledNext = false;
+router.beforeEach(async (to, from) => {
   if (to.query.returnUrl) {
     store.commit("updatePreviousAppUrl", to.query.returnUrl);
   }
-  hasCalledNext = await checkAuth(to, next, store, hasCalledNext, "Auth");
-  if (!hasCalledNext) next();
+  if (to.matched.some((record: any) => record.meta.requiresAuth)) {
+    const res = await store.dispatch("authenticateCurrentUser");
+    console.log("auth guard user authenticated: " + res.authenticated);
+    if (!res.authenticated) {
+      console.log("redirecting to login");
+      return { path: "/login" };
+    }
+  }
 });
 
 router.afterEach(to => {
