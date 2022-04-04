@@ -11,10 +11,6 @@ import ForgotPassword from "../components/user/ForgotPassword.vue";
 import ForgotPasswordSubmit from "../components/user/ForgotPasswordSubmit.vue";
 import store from "@/store/index";
 import { nextTick } from "vue";
-import { Helpers } from "im-library";
-const {
-  RouterGuards: { checkAuth }
-} = Helpers;
 
 const APP_TITLE = "IMAuth";
 
