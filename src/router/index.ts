@@ -84,24 +84,17 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from) => {
   if (to.query.returnUrl) {
     store.commit("updatePreviousAppUrl", to.query.returnUrl);
   }
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    store.dispatch("authenticateCurrentUser").then(res => {
-      console.log("auth guard user authenticated:" + res.authenticated);
-      if (!res.authenticated) {
-        console.log("redirecting to login");
-        next({
-          path: "/login"
-        });
-      } else {
-        next();
-      }
-    });
-  } else {
-    next();
+  if (to.matched.some((record: any) => record.meta.requiresAuth)) {
+    const res = await store.dispatch("authenticateCurrentUser");
+    console.log("auth guard user authenticated: " + res.authenticated);
+    if (!res.authenticated) {
+      console.log("redirecting to login");
+      return { path: "/login" };
+    }
   }
 });
 
