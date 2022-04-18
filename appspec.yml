@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /dist
-    destination: //opt/tomcat/webapps/auth
+    destination: /usr/share/nginx/auth
 hooks:
   BeforeInstall:
     - location: aws_scripts/cleanup

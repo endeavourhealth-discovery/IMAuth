@@ -1,1 +1,1 @@
-rm -rf /opt/tomcat/webapps/auth
+rm -rf /usr/share/nginx/auth
