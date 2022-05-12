@@ -218,15 +218,44 @@ export default defineComponent({
     },
 
     handleFieldsVerified(handlePasswordChange: boolean) {
+      const oldEmail = this.currentUser.email;
       const updatedUser = new User(this.username, this.firstName, this.lastName, this.email1, "", this.selectedAvatar);
       updatedUser.setId(this.currentUser.id);
       AuthService.updateUser(updatedUser).then(res => {
         if (res.status === 200) {
           if (!handlePasswordChange) {
-            this.swalert("success", "Success", "Account details updated successfully.").then(() => {
-              this.$store.commit("updateCurrentUser", res.user);
-              this.$router.push({ name: "UserDetails" });
-            });
+            if (oldEmail !== res.user?.email) {
+              this.$swal
+                .fire({
+                  title: "Verify your changes",
+                  text: "Enter the 6-digit code sent to you by no-reply@verificationemail.com.",
+                  input: "text",
+                  showCancelButton: false,
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+                })
+                .then(result => {
+                  if (result.value) {
+                    AuthService.verifyEmail(result.value).then(res => {
+                      if (res.status === 200) {
+                        this.swalert("success", "Success", "Account details updated successfully.").then(() => {
+                          this.$store.commit("updateCurrentUser", res.user);
+                          this.$router.push({ name: "UserDetails" });
+                        });
+                      } else {
+                        this.swalert("error", "Error", "Email verification failed, but user details updated successfully. " + res.message);
+                      }
+                    });
+                  } else {
+                    this.swalert("error", "Error", "Email verification failed, but user details updated successfully. ");
+                  }
+                });
+            } else {
+              this.swalert("success", "Success", "Account details updated successfully.").then(() => {
+                this.$store.commit("updateCurrentUser", res.user);
+                this.$router.push({ name: "UserDetails" });
+              });
+            }
           } else {
             AuthService.changePassword(this.passwordOld, this.passwordNew1).then(res2 => {
               res2.status === 200
