@@ -102,7 +102,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
-import { SweetAlertIcon } from "sweetalert2";
+import Swal, { SweetAlertIcon } from "sweetalert2";
 import AuthService from "@/services/AuthService";
 import AvatarWithSelector from "./AvatarWithSelector.vue";
 import { Models, Helpers, Enums, Constants } from "im-library";
@@ -225,31 +225,33 @@ export default defineComponent({
         if (res.status === 200) {
           if (!handlePasswordChange) {
             if (oldEmail !== res.user?.email) {
-              this.$swal
-                .fire({
-                  title: "Verify your changes",
-                  text: "Enter the 6-digit code sent to you by no-reply@verificationemail.com.",
-                  input: "text",
-                  showCancelButton: false,
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-                })
-                .then(result => {
-                  if (result.value) {
-                    AuthService.verifyEmail(result.value).then(res => {
-                      if (res.status === 200) {
-                        this.swalert("success", "Success", "Account details updated successfully.").then(() => {
-                          this.$store.commit("updateCurrentUser", res.user);
-                          this.$router.push({ name: "UserDetails" });
-                        });
-                      } else {
-                        this.swalert("error", "Error", "Email verification failed, but user details updated successfully. " + res.message);
-                      }
-                    });
-                  } else {
-                    this.swalert("error", "Error", "Email verification failed, but user details updated successfully. ");
-                  }
-                });
+              Swal.fire({
+                title: "Verify your changes",
+                text: "Enter the 6-digit code sent to you by no-reply@verificationemail.com.",
+                input: "text",
+                showCancelButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                inputValidator: value => {
+                  if (!value) return "Please enter the 6-digit code";
+                  else return null;
+                }
+              }).then(result => {
+                if (result.value) {
+                  AuthService.verifyEmail(result.value).then(res => {
+                    if (res.status === 200) {
+                      this.swalert("success", "Success", "Account details updated successfully.").then(() => {
+                        this.$store.commit("updateCurrentUser", res.user);
+                        this.$router.push({ name: "UserDetails" });
+                      });
+                    } else {
+                      this.swalert("error", "Error", "Email verification failed, but user details updated successfully. " + res.message);
+                    }
+                  });
+                } else {
+                  this.swalert("error", "Error", "Email verification failed, but user details updated successfully. ");
+                }
+              });
             } else {
               this.swalert("success", "Success", "Account details updated successfully.").then(() => {
                 this.$store.commit("updateCurrentUser", res.user);
