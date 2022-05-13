@@ -11,6 +11,7 @@ import ForgotPassword from "../components/user/ForgotPassword.vue";
 import ForgotPasswordSubmit from "../components/user/ForgotPasswordSubmit.vue";
 import store from "@/store/index";
 import { nextTick } from "vue";
+import { PageNotFound } from "im-library";
 
 const APP_TITLE = "IMAuth";
 
@@ -74,6 +75,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "password-recovery/submit:returnUrl?",
         name: "ForgotPasswordSubmit",
         component: ForgotPasswordSubmit
+      },
+      {
+        path: "/:pathMatch(.*)*",
+        name: "PageNotFound",
+        component: PageNotFound
       }
     ]
   }
