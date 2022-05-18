@@ -2,7 +2,7 @@
   <div class="flex flex-row align-items-center">
     <Card class="flex flex-column justify-content-sm-around align-items-center logout-card">
       <template #header>
-        <i class="fa fa-fw fa-sign-out-alt icon-header" aria-hidden="true" />
+        <i class="fa-solid fa-arrow-right-from-bracket icon-header" aria-hidden="true" />
       </template>
       <template #title>
         Logout
@@ -20,7 +20,6 @@
                 class="avatar-icon"
                 :src="getUrl(currentUser.avatar)"
                 alt="avatar icon"
-                @click="toggle"
                 aria-haspopup="true"
                 aria-controls="overlay_menu"
               />
