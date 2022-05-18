@@ -5,7 +5,6 @@ import store from "./store";
 import PrimeVue from "primevue/config";
 
 // Font Awesome
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
@@ -64,7 +63,6 @@ const app = createApp(App)
   .component("InputText", InputText)
   .component("Button", Button)
   .component("OverlayPanel", OverlayPanel)
-  .component("font-awesome-icon", FontAwesomeIcon)
   .component("Toast", Toast)
   .component("InlineMessage", InlineMessage)
   .component("SelectButton", SelectButton);

@@ -2,7 +2,7 @@
   <div class="flex flex-row align-items-center">
     <Card class="flex flex-column justify-content-sm-around align-items-center confirm-card">
       <template #header>
-        <i class="pi pi-fw pi-key icon-header" aria-hidden="true" />
+        <i class="fa-solid fa-key icon-header" aria-hidden="true" />
       </template>
       <template #title>
         Confirmation Code
