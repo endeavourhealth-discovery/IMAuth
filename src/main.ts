@@ -33,6 +33,7 @@ import ToastService from "primevue/toastservice";
 import Toast from "primevue/toast";
 import InlineMessage from "primevue/inlinemessage";
 import SelectButton from "primevue/selectbutton";
+import Dialog from "primevue/dialog";
 
 import { Amplify, Auth } from "aws-amplify";
 import awsconfig from "./aws-exports";
@@ -65,7 +66,8 @@ const app = createApp(App)
   .component("OverlayPanel", OverlayPanel)
   .component("Toast", Toast)
   .component("InlineMessage", InlineMessage)
-  .component("SelectButton", SelectButton);
+  .component("SelectButton", SelectButton)
+  .component("Dialog", Dialog);
 
 const vm = app.mount("#app");
 
