@@ -1,9 +1,10 @@
 import store from "@/store/index";
 import { flushPromises } from "@vue/test-utils";
-import {LoggerService} from "im-library";
+import { Services } from "im-library";
 import AuthService from "@/services/AuthService";
 import { Models } from "im-library";
 const { User, CustomAlert } = Models;
+const { LoggerService } = Services;
 
 describe("state", () => {
   beforeEach(() => {
