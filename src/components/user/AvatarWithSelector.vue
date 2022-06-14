@@ -25,7 +25,7 @@ const { Avatars } = Constants;
 
 export default defineComponent({
   name: "AvatarWithSelector",
-  props: { selectedAvatar: { type: String } },
+  props: { selectedAvatar: { type: String, required: true } },
   emits: { avatarSelected: (payload: string) => Avatars.includes(payload) },
   watch: {
     selectedAvatar(newValue): void {
