@@ -1,9 +1,9 @@
 import { createStore } from "vuex";
 import AuthService from "@/services/AuthService";
-import {LoggerService} from "im-library";
-import { Models, Constants } from "im-library";
+import { Models, Constants, Services } from "im-library";
 const { User, CustomAlert } = Models;
 const { Avatars } = Constants;
+const { LoggerService } = Services;
 
 export default createStore({
   // update stateType.ts when adding new state!
