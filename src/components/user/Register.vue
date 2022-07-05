@@ -97,6 +97,7 @@
 import AuthService from "@/services/AuthService";
 import AvatarWithSelector from "./AvatarWithSelector.vue";
 import { defineComponent } from "vue";
+import { SweetAlertResult } from "sweetalert2";
 import { Helpers, Enums, Constants, Models } from "im-library";
 const {
   UserMethods: { verifyEmailsMatch, verifyIsEmail, verifyIsName, verifyIsUsername, verifyPasswordsMatch, checkPasswordStrength }
@@ -200,7 +201,7 @@ export default defineComponent({
                   showCancelButton: true,
                   confirmButtonText: "Continue"
                 })
-                .then(result => {
+                .then((result: SweetAlertResult) => {
                   this.$emit("userCreated", user);
                   if (result.isConfirmed) {
                     this.$store.commit("updateRegisteredUsername", this.username);

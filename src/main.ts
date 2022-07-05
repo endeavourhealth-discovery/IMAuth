@@ -5,7 +5,6 @@ import store from "./store";
 import PrimeVue from "primevue/config";
 
 // Font Awesome
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
@@ -34,6 +33,7 @@ import ToastService from "primevue/toastservice";
 import Toast from "primevue/toast";
 import InlineMessage from "primevue/inlinemessage";
 import SelectButton from "primevue/selectbutton";
+import Dialog from "primevue/dialog";
 
 import { Amplify, Auth } from "aws-amplify";
 import awsconfig from "./aws-exports";
@@ -44,11 +44,11 @@ import "sweetalert2/dist/sweetalert2.min.css";
 
 // IMLibrary imports
 import "im-library/dist/style.css";
-import {Env} from "im-library";
-import { Helpers } from "im-library";
+import { Helpers, Services } from "im-library";
 const {
   DataTypeCheckers: { isObjectHasKeys }
 } = Helpers;
+const { Env } = Services;
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -64,15 +64,15 @@ const app = createApp(App)
   .component("InputText", InputText)
   .component("Button", Button)
   .component("OverlayPanel", OverlayPanel)
-  .component("font-awesome-icon", FontAwesomeIcon)
   .component("Toast", Toast)
   .component("InlineMessage", InlineMessage)
-  .component("SelectButton", SelectButton);
+  .component("SelectButton", SelectButton)
+  .component("Dialog", Dialog);
 
 const vm = app.mount("#app");
 
 axios.interceptors.request.use(async request => {
-  if (store.state.isLoggedIn && Env.api && request.url?.startsWith(Env.api)) {
+  if (store.state.isLoggedIn && Env.API && request.url?.startsWith(Env.API)) {
     request.headers.Authorization = "Bearer " + (await Auth.currentSession()).getIdToken().getJwtToken();
   }
   return request;

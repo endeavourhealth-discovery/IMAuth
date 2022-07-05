@@ -2,7 +2,7 @@
   <div class="flex flex-row align-items-center">
     <Card class="flex flex-column justify-content-sm-around align-items-center login-card">
       <template #header>
-        <i class="fa fa-fw fa-users icon-header" aria-hidden="true" />
+        <i class="fa-solid fa-users icon-header" aria-hidden="true" />
       </template>
       <template #title>
         Login

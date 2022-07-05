@@ -3,6 +3,7 @@ import Button from "primevue/button";
 import { mount, flushPromises } from "@vue/test-utils";
 import ConfirmCode from "@/components/user/ConfirmCode.vue";
 import InputText from "primevue/inputtext";
+import Dialog from "primevue/dialog";
 import AuthService from "@/services/AuthService";
 
 describe("ConfirmCode.vue no registeredUser", () => {
@@ -20,7 +21,7 @@ describe("ConfirmCode.vue no registeredUser", () => {
     };
     wrapper = mount(ConfirmCode, {
       global: {
-        components: { Card, Button, InputText },
+        components: { Card, Button, InputText, Dialog },
         mocks: { $store: mockStore, $swal: mockSwal }
       }
     });
@@ -62,7 +63,7 @@ describe("ConfirmCode.vue with registeredUser", () => {
     };
     wrapper = mount(ConfirmCode, {
       global: {
-        components: { Card, Button, InputText },
+        components: { Card, Button, InputText, Dialog },
         mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
       }
     });
@@ -204,7 +205,7 @@ describe("ConfirmCode.vue with registeredUser", () => {
     await flushPromises();
     await wrapper.vm.$nextTick();
     expect(mockSwal.fire).toBeCalledTimes(1);
-    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Code resending failed. Please contact an admin." });
+    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Code resending failed. Please check your username is correct." });
   });
 
   it("fires swal with failed resend of code ___ auth error", async () => {

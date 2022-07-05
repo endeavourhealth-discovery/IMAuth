@@ -1,7 +1,8 @@
 import { shallowMount } from "@vue/test-utils";
 import ButtonBar from "@/components/user/ButtonBar.vue";
 import Button from "primevue/button";
-import {Env} from "im-library";
+import { Services } from "im-library";
+const { Env } = Services;
 
 describe("ButtonBar.vue ___ previousAppUrl", () => {
   let wrapper;
@@ -28,7 +29,7 @@ describe("ButtonBar.vue ___ previousAppUrl", () => {
     wrapper = shallowMount(ButtonBar, {
       global: {
         components: { Button },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $env: Env }
       }
     });
   });
@@ -76,7 +77,7 @@ describe("ButtonBar.vue ___ no previousAppUrl", () => {
     wrapper = shallowMount(ButtonBar, {
       global: {
         components: { Button },
-        mocks: { $store: mockStore, $router: mockRouter }
+        mocks: { $store: mockStore, $router: mockRouter, $env: Env }
       }
     });
   });
@@ -88,6 +89,6 @@ describe("ButtonBar.vue ___ no previousAppUrl", () => {
     const homeButton = wrapper.find(".home-button");
     homeButton.trigger("click");
     await wrapper.vm.$nextTick();
-    expect(window.location.href).toBe(Env.directoryUrl);
+    expect(window.location.href).toBe(Env.DIRECTORY_URL);
   });
 });

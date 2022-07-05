@@ -2,7 +2,7 @@
   <div class="flex flex-row align-items-center">
     <Card class="flex flex-column justify-content-sm-around align-items-center confirm-card">
       <template #header>
-        <i class="pi pi-fw pi-key icon-header" aria-hidden="true" />
+        <i class="fa-solid fa-key icon-header" aria-hidden="true" />
       </template>
       <template #title>
         Confirmation Code
@@ -33,11 +33,23 @@
             class="p-button-secondary p-button-sm code-request"
             type="submit"
             label="Request a new code"
-            v-on:click.prevent="requestCode"
+            v-on:click.prevent="showDialog = true"
         /></small>
       </template>
     </Card>
   </div>
+  <Dialog v-model:visible="showDialog" header="Request new code" :modal="true" :style="{ width: '40vw' }">
+    <div class="dialog-container">
+      <div class="flex flex-column">
+        <label for="dialog-username">Enter your username</label>
+        <InputText id="dialog-username" type="text" v-model="username" :class="usernameInvalid && 'invalid'" />
+        <small v-if="usernameInvalid" class="validate-error">Username is required.</small>
+      </div>
+    </div>
+    <template #footer>
+      <Button type="submit" label="Request a new code" v-on:click.prevent="requestCode" />
+    </template>
+  </Dialog>
 </template>
 
 <script lang="ts">
@@ -51,13 +63,18 @@ export default defineComponent({
   watch: {
     code() {
       this.verifyCode();
+    },
+    username(newValue) {
+      if (newValue) this.usernameInvalid = false;
     }
   },
   data() {
     return {
       code: "",
       codeVerified: false,
-      username: ""
+      username: "",
+      showDialog: false,
+      usernameInvalid: false
     };
   },
   mounted() {
@@ -112,30 +129,37 @@ export default defineComponent({
     },
 
     requestCode() {
-      AuthService.resendConfirmationCode(this.username)
-        .then(res => {
-          if (res.status === 200) {
-            this.$swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Code has been resent to email for: " + this.username
-            });
-          } else {
+      if (this.username) {
+        this.showDialog = false;
+        AuthService.resendConfirmationCode(this.username)
+          .then(res => {
+            if (res.status === 200) {
+              this.$swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "Code has been resent to email for: " + this.username
+              });
+            } else {
+              this.$swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Code resending failed. Please check your username is correct."
+              });
+            }
+          })
+          .catch(err => {
+            console.error(err);
             this.$swal.fire({
               icon: "error",
               title: "Error",
-              text: "Code resending failed. Please contact an admin."
+              text: "Internal application error"
             });
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          this.$swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Internal application error"
           });
-        });
+      } else if (this.showDialog === false) {
+        this.showDialog = true;
+      } else {
+        this.usernameInvalid = true;
+      }
     }
   }
 });
@@ -167,5 +191,15 @@ export default defineComponent({
 .password-times {
   color: #e60017;
   font-size: 2em;
+}
+
+.invalid {
+  border-color: #e24c4c;
+}
+
+.validate-error {
+  color: #e24c4c;
+  font-size: 0.8rem;
+  padding: 0 0 0.25rem 0;
 }
 </style>

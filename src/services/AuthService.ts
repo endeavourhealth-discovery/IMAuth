@@ -1,6 +1,6 @@
 import { Auth } from "aws-amplify";
-import {Models} from "im-library";
-const {User, CustomAlert} = Models
+import { Models } from "im-library";
+const { User, CustomAlert } = Models;
 
 export default {
   async register(userToRegister: Models.User): Promise<Models.CustomAlert> {
@@ -108,6 +108,15 @@ export default {
     }
   },
 
+  async verifyEmail(code: string) {
+    try {
+      const result = await Auth.verifyCurrentUserAttributeSubmit("email", code);
+      return new CustomAlert(200, "Email verified successfully", result);
+    } catch (err: any) {
+      return new CustomAlert(500, "Error verifying email", err);
+    }
+  },
+
   async changePassword(oldPassword: string, newPassword: string): Promise<Models.CustomAlert> {
     try {
       const user = await Auth.currentAuthenticatedUser();
@@ -171,7 +180,7 @@ export default {
   //   try {
   //     await Auth.(email, code); // finish this if ever becomes a feature
   //     return new CustomAlert(200, "Account recovered successfully");
-  //   } catch (err) {
+  //   } catch (err: any) {
   //     console.error(err);
   //     if (err.code === "ExpiredCodeException"){
   //       return new CustomAlert(403, "Code has expired", err);

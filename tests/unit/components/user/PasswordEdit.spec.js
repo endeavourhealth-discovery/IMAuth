@@ -222,9 +222,9 @@ describe("PasswordEdit.vue with registeredUser", () => {
   });
 
   it("returns the correct image url", async () => {
-    const testUrl = "file://" + __dirname.slice(0, -26) + "src/assets/avatars/colour/013-woman.png";
+    const testUrl = "src/assets/avatars/colour/013-woman.png";
     const url = wrapper.vm.getUrl("colour/013-woman.png");
-    expect(url).toBe(testUrl);
+    expect(url).toContain(testUrl);
   });
 
   it("can check a keycode ___ correct", async () => {
