@@ -11,48 +11,51 @@
       </div>
       <SelectButton v-model="newAvatar" :options="avatarOptions">
         <template #option="slotProps">
-          <img class="avatar-select avatar-icon" :src="require('@/assets/avatars/' + slotProps.option)" alt="avatar icon" />
+          <img class="avatar-select avatar-icon" :src="getUrl(slotProps.option)" alt="avatar icon" />
         </template>
       </SelectButton>
     </OverlayPanel>
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { Constants } from "im-library";
-import { defineComponent } from "vue";
+import { Ref, ref, watch } from "vue";
 const { Avatars } = Constants;
 
-export default defineComponent({
-  name: "AvatarWithSelector",
-  props: { selectedAvatar: { type: String, required: true } },
-  emits: { avatarSelected: (payload: string) => Avatars.includes(payload) },
-  watch: {
-    selectedAvatar(newValue): void {
-      this.newAvatar = newValue;
-    },
-    newAvatar(newValue): void {
-      this.$emit("avatarSelected", newValue);
-    }
-  },
-  data() {
-    return {
-      avatarOptions: Avatars,
-      newAvatar: this.selectedAvatar
-    };
-  },
-  methods: {
-    toggleAvatarSelect(event: any): void {
-      const x = this.$refs.avatar as any;
-      x.toggle(event);
-    },
-
-    getUrl(item: string): string {
-      const url = new URL(`../../assets/avatars/${item}`, import.meta.url);
-      return url.href;
-    }
-  }
+const props = defineProps({
+  selectedAvatar: { type: String, required: true }
 });
+
+const emit = defineEmits({
+  avatarSelected: (payload: string) => Constants.Avatars.includes(payload)
+});
+
+const avatar = ref();
+
+watch(
+  () => props.selectedAvatar,
+  newValue => {
+    newAvatar.value = newValue;
+  }
+);
+
+let avatarOptions: Ref<string[]> = ref([...Avatars]);
+let newAvatar = ref(props.selectedAvatar);
+
+watch(newAvatar, newValue => {
+  emit("avatarSelected", newValue);
+});
+
+function toggleAvatarSelect(event: any): void {
+  const x = avatar.value as any;
+  x.toggle(event);
+}
+
+function getUrl(item: string): string {
+  const url = new URL(`../../assets/avatars/${item}`, import.meta.url);
+  return url.href;
+}
 </script>
 
 <style scoped>
@@ -76,5 +79,18 @@ export default defineComponent({
 
 .avatar-icon {
   width: 3em;
+}
+</style>
+
+<style>
+.avatar-popup {
+  width: 25em;
+  height: 40vh;
+  overflow-y: auto;
+}
+
+.avatar-popup div div .p-button {
+  margin: 2px;
+  border-right: 1px solid #ced4da !important;
 }
 </style>
