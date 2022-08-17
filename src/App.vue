@@ -8,24 +8,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useStore } from "vuex";
 import ProgressSpinner from "primevue/progressspinner";
 
-export default defineComponent({
-  name: "App",
-  components: { ProgressSpinner },
-  async mounted() {
-    // check for user and log them in if found or logout if not
-    this.loading = true;
-    await this.$store.dispatch("authenticateCurrentUser");
-    this.loading = false;
-  },
-  data() {
-    return {
-      loading: false
-    };
-  }
+const store = useStore();
+
+let loading = ref(false);
+
+onMounted(async () => {
+  loading.value = true;
+  await store.dispatch("authenticateCurrentUser");
+  loading.value = false;
 });
 </script>
 
