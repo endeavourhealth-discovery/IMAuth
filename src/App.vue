@@ -70,17 +70,6 @@ body {
   color: #3b3e47 !important;
 }
 
-.avatar-popup {
-  width: 25em;
-  height: 40vh;
-  overflow-y: auto;
-}
-
-.avatar-popup div div .p-button {
-  margin: 2px;
-  border-right: 1px solid #ced4da !important;
-}
-
 /* Settings specifically for dealing with 300% scaling */
 /* @media (-webkit-device-pixel-ratio: 3) {
   .p-component {
