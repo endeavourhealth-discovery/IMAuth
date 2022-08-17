@@ -5,23 +5,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { mapState, useStore } from "vuex";
+import { computed, defineComponent } from "vue";
+import { useRouter } from "vue-router";
+import { Services } from "im-library";
+const { Env } = Services;
 
-export default defineComponent({
-  name: "ButtonBar",
-  computed: mapState(["previousAppUrl"]),
-  methods: {
-    clickedBack(): void {
-      this.$router.back();
-    },
+const store = useStore();
+const router = useRouter();
 
-    homeClicked(): void {
-      window.location.href = this.previousAppUrl ? this.previousAppUrl : this.$env.DIRECTORY_URL;
-    }
-  }
-});
+const previousAppUrl = computed(() => store.state.previousAppUrl);
+
+function clickedBack(): void {
+  router.back();
+}
+
+function homeClicked(): void {
+  window.location.href = previousAppUrl.value ? previousAppUrl.value : Env.DIRECTORY_URL;
+}
 </script>
 
 <style scoped>
