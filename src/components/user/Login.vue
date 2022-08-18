@@ -16,7 +16,7 @@
             <InputText id="fieldPassword" type="password" v-model="password" @keyup="checkKey" />
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button class="user-submit" type="submit" label="Login" v-on:click.prevent="handleSubmit" />
+            <Button class="user-submit" type="submit" label="Login" @click="handleSubmit" />
           </div>
         </div>
       </template>
