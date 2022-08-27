@@ -114,6 +114,7 @@ describe("login.vue with registeredUser", () => {
           id: "9gkej864-l39k-9u87-4lau-w7777b3m5g09",
           lastName: "Doe",
           password: "",
+          roles: [],
           username: "devtest"
         }
       ],
