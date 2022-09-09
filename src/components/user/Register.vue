@@ -3,15 +3,20 @@
     <template #header>
       <avatar-with-selector :selectedAvatar="selectedAvatar" @avatarSelected="updateAvatar" />
     </template>
-    <template #title>
-      Register
-    </template>
+    <template #title> Register </template>
     <template #content>
       <div class="p-fluid register-form">
         <div class="field">
           <label for="fieldUsername">Username</label>
-          <InputText id="fieldUsername" type="text" maxlength="50" v-model="username" v-on:blur="setShowUsernameNotice" />
-          <InlineMessage v-if="showUsernameNotice" severity="error">
+          <InputText
+            id="fieldUsername"
+            type="text"
+            maxlength="50"
+            v-model="username"
+            @focus="updateFocused('username', true)"
+            @blur="updateFocused('username', false)"
+          />
+          <InlineMessage v-if="!usernameVerified && focused.get('username') === false" severity="error">
             Username contains unexpected characters. A-Z, 0-9 and hyphen/underscore(-_) only allowed e.g."John-Doe2"
           </InlineMessage>
         </div>
@@ -23,49 +28,60 @@
               type="text"
               maxlength="50"
               v-model="email1"
-              v-on:focus="setShowEmail1Notice(true)"
-              v-on:blur="setShowEmail1Notice(false)"
+              @focus="updateFocused('email1', true)"
+              @blur="updateFocused('email1', false)"
             />
-            <i v-if="showEmail1Notice && email1Verified" class="pi pi-check-circle email-check" aria-hidden="true" />
-            <i v-if="showEmail1Notice && !email1Verified" class="pi pi-times-circle email-times" aria-hidden="true" />
+            <i v-if="email1Verified && focused.get('email1') === false" class="pi pi-check-circle email-check" aria-hidden="true" />
+            <i v-if="!email1Verified && focused.get('email1') === false" class="pi pi-times-circle email-times" aria-hidden="true" />
           </div>
         </div>
         <div class="field">
           <label for="fieldEmail2">Confirm email address</label>
-          <InputText id="fieldEmail2" type="text" maxlength="50" v-model="email2" v-on:blur="setShowEmail2Notice" />
-          <InlineMessage v-if="showEmail2Notice" severity="error">
-            Email addresses do not match!
-          </InlineMessage>
+          <InputText
+            id="fieldEmail2"
+            type="text"
+            maxlength="50"
+            v-model="email2"
+            @focus="updateFocused('email2', true)"
+            @blur="updateFocused('email2', false)"
+          />
+          <InlineMessage v-if="!emailsMatch && focused.get('email2') === false" severity="error"> Email addresses do not match! </InlineMessage>
         </div>
         <div class="field">
           <label for="fieldFirstName">First name</label>
-          <InputText id="fieldFirstName" type="text" maxlength="50" v-model="firstName" v-on:blur="setShowFirstNameNotice" />
-          <InlineMessage v-if="showFirstNameNotice" severity="error">
+          <InputText
+            id="fieldFirstName"
+            type="text"
+            maxlength="50"
+            v-model="firstName"
+            @focus="updateFocused('firstName', true)"
+            @blur="updateFocused('firstName', false)"
+          />
+          <InlineMessage v-if="!firstNameVerified && focused.get('firstName') === false" severity="error">
             First name contains unexpected characters. A-Z and hyphens only allowed e.g."Mary-Anne"
           </InlineMessage>
         </div>
         <div class="field">
           <label for="fieldLastName">Last name</label>
-          <InputText id="fieldLastName" type="text" maxlength="50" v-model="lastName" v-on:blur="setShowLastNameNotice" />
-          <InlineMessage v-if="showLastNameNotice" severity="error">
+          <InputText
+            id="fieldLastName"
+            type="text"
+            maxlength="50"
+            v-model="lastName"
+            @focus="updateFocused('lastName', true)"
+            @blur="updateFocused('lastName', false)"
+          />
+          <InlineMessage v-if="!lastNameVerified && focused.get('lastName') === false" severity="error">
             Last name contains unexpected characters. A-Z, apostropies and hyphens only allowed e.g."O'Keith-Smith"
           </InlineMessage>
         </div>
         <div class="field">
           <label for="fieldPassword1">Password</label>
           <InputText id="fieldPassword1" type="password" maxlength="50" aria-describedby="password-help" v-model="password1" />
-          <InlineMessage v-if="passwordStrength === 'strong'" severity="success">
-            Password strength: Strong
-          </InlineMessage>
-          <InlineMessage v-if="passwordStrength === 'medium'" severity="success">
-            Password strength: Medium
-          </InlineMessage>
-          <InlineMessage v-if="passwordStrength === 'weak'" severity="warn">
-            Password strength: Weak
-          </InlineMessage>
-          <InlineMessage v-if="passwordStrength === 'fail' && password1 !== ''" severity="error">
-            Invalid password
-          </InlineMessage>
+          <InlineMessage v-if="passwordStrength === 'strong'" severity="success"> Password strength: Strong </InlineMessage>
+          <InlineMessage v-if="passwordStrength === 'medium'" severity="success"> Password strength: Medium </InlineMessage>
+          <InlineMessage v-if="passwordStrength === 'weak'" severity="warn"> Password strength: Weak </InlineMessage>
+          <InlineMessage v-if="passwordStrength === 'fail' && password1 !== ''" severity="error"> Invalid password </InlineMessage>
           <small id="password-help">
             Password must be a minimum length of 8 characters. Improve password strength with a mixture of UPPERCASE, lowercase, numbers and special characters
             [!@#$%^&*].
@@ -73,14 +89,20 @@
         </div>
         <div class="field">
           <label for="fieldPassword2">Confirm password</label>
-          <InputText id="fieldPassword2" type="password" maxlength="50" v-model="password2" v-on:blur="setShowPassword2Notice" @keyup="checkKey" />
-          <InlineMessage v-if="showPassword2Notice" severity="error">
-            Passwords do not match!
-          </InlineMessage>
+          <InputText
+            id="fieldPassword2"
+            type="password"
+            maxlength="50"
+            v-model="password2"
+            @keyup="checkKey"
+            @focus="updateFocused('password2', true)"
+            @blur="updateFocused('password2', false)"
+          />
+          <InlineMessage v-if="!passwordsMatch && focused.get('password2') === false" severity="error"> Passwords do not match! </InlineMessage>
         </div>
         <div class="flex flex-row justify-content-center">
-          <Button v-if="!allVerified()" class="user-submit" type="submit" label="Register" disabled v-on:click.prevent="handleSubmit" />
-          <Button v-else class="user-submit" type="submit" label="Register" v-on:click.prevent="handleSubmit" />
+          <Button v-if="!allVerified()" class="user-submit" type="submit" label="Register" disabled @click="handleSubmit" />
+          <Button v-else class="user-submit" type="submit" label="Register" @click="handleSubmit" />
         </div>
       </div>
     </template>
@@ -93,12 +115,14 @@
   </Card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import AuthService from "@/services/AuthService";
 import AvatarWithSelector from "./AvatarWithSelector.vue";
-import { defineComponent } from "vue";
-import { SweetAlertResult } from "sweetalert2";
+import { computed, defineComponent, Ref, ref } from "vue";
+import Swal, { SweetAlertResult } from "sweetalert2";
 import { Helpers, Enums, Constants, Models } from "im-library";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 const {
   UserMethods: { verifyEmailsMatch, verifyIsEmail, verifyIsName, verifyIsUsername, verifyPasswordsMatch, checkPasswordStrength }
 } = Helpers;
@@ -106,189 +130,122 @@ const { PasswordStrength } = Enums;
 const { User } = Models;
 const { Avatars } = Constants;
 
-export default defineComponent({
-  name: "Register",
-  components: {
-    "avatar-with-selector": AvatarWithSelector
-  },
-  emits: { userCreated: (payload: Models.User) => true },
-  watch: {
-    username(newValue) {
-      this.usernameVerified = verifyIsUsername(newValue);
-    },
-    email1(newValue) {
-      this.email1Verified = verifyIsEmail(newValue);
-    },
-    email2(newValue) {
-      this.emailsMatch = verifyEmailsMatch(this.email1, newValue);
-    },
-    firstName(newValue) {
-      this.firstNameVerified = verifyIsName(newValue);
-    },
-    lastName(newValue) {
-      this.lastNameVerified = verifyIsName(newValue);
-    },
-    password1(newValue) {
-      this.passwordStrength = checkPasswordStrength(newValue);
-    },
-    password2(newValue) {
-      this.passwordsMatch = verifyPasswordsMatch(this.password1, newValue);
-    }
-  },
-
-  data() {
-    return {
-      username: "",
-      usernameVerified: false,
-      email1: "",
-      email1Verified: false,
-      email2: "",
-      emailsMatch: false,
-      firstName: "",
-      firstNameVerified: false,
-      lastName: "",
-      lastNameVerified: false,
-      password1: "",
-      password2: "",
-      passwordStrength: PasswordStrength.fail as Enums.PasswordStrength,
-      passwordsMatch: false,
-      showEmail1Notice: false,
-      showEmail2Notice: false,
-      showPassword2Notice: false,
-      showUsernameNotice: false,
-      showFirstNameNotice: false,
-      showLastNameNotice: false,
-      selectedAvatar: Avatars[0]
-    };
-  },
-
-  methods: {
-    setShowUsernameNotice(): void {
-      this.showUsernameNotice = this.usernameVerified ? false : true;
-    },
-
-    setShowEmail1Notice(result: boolean): void {
-      this.showEmail1Notice = result;
-    },
-
-    setShowEmail2Notice(): void {
-      this.showEmail2Notice = this.emailsMatch ? false : true;
-    },
-
-    setShowPassword2Notice(): void {
-      this.showPassword2Notice = this.passwordsMatch ? false : true;
-    },
-
-    setShowFirstNameNotice(): void {
-      this.showFirstNameNotice = this.firstNameVerified ? false : true;
-    },
-
-    setShowLastNameNotice(): void {
-      this.showLastNameNotice = this.lastNameVerified ? false : true;
-    },
-
-    handleSubmit(): void {
-      if (this.allVerified()) {
-        const user = new User(this.username, this.firstName, this.lastName, this.email1.toLowerCase(), this.password1, this.selectedAvatar);
-        AuthService.register(user)
-          .then(res => {
-            if (res.status === 201) {
-              this.$swal
-                .fire({
-                  icon: "success",
-                  title: "Success",
-                  text: res.message,
-                  showCancelButton: true,
-                  confirmButtonText: "Continue"
-                })
-                .then((result: SweetAlertResult) => {
-                  this.$emit("userCreated", user);
-                  if (result.isConfirmed) {
-                    this.$store.commit("updateRegisteredUsername", this.username);
-                    this.$router.push({ name: "ConfirmCode" });
-                  } else {
-                    this.clearForm();
-                  }
-                });
-            } else if (res.status === 409) {
-              this.$swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Username already taken. Please pick another username",
-                confirmButtonText: "Close"
-              });
-            } else {
-              this.$swal.fire({
-                icon: "error",
-                title: "Error",
-                text: res.message,
-                confirmButtonText: "Close"
-              });
-            }
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      } else {
-        this.$swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "User creation failed. Check input data.",
-          confirmButtonText: "Close"
-        });
-      }
-    },
-
-    clearForm(): void {
-      this.username = "";
-      this.usernameVerified = false;
-      this.email1 = "";
-      this.email1Verified = false;
-      this.email2 = "";
-      this.emailsMatch = false;
-      this.firstName = "";
-      this.lastName = "";
-      this.password1 = "";
-      this.password2 = "";
-      this.passwordStrength = PasswordStrength.fail;
-      this.passwordsMatch = false;
-      this.showEmail1Notice = false;
-      this.showEmail2Notice = false;
-      this.showPassword2Notice = false;
-      this.showFirstNameNotice = false;
-      this.showLastNameNotice = false;
-      this.selectedAvatar = Avatars[0];
-    },
-
-    allVerified(): boolean {
-      if (
-        verifyIsUsername(this.username) &&
-        verifyIsEmail(this.email1) &&
-        verifyIsEmail(this.email2) &&
-        verifyEmailsMatch(this.email1, this.email2) &&
-        verifyPasswordsMatch(this.password1, this.password2) &&
-        this.passwordStrength !== PasswordStrength.fail &&
-        verifyIsName(this.firstName) &&
-        verifyIsName(this.lastName) &&
-        this.selectedAvatar
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-
-    updateAvatar(newValue: string): void {
-      this.selectedAvatar = newValue;
-    },
-
-    checkKey(event: any): void {
-      if (event.keyCode === 13) {
-        this.handleSubmit();
-      }
-    }
-  }
+const emit = defineEmits({
+  userCreated: (payload: Models.User) => true
 });
+
+const store = useStore();
+const router = useRouter();
+
+let username = ref("");
+let email1 = ref("");
+let email2 = ref("");
+let firstName = ref("");
+let lastName = ref("");
+let password1 = ref("");
+let password2 = ref("");
+let selectedAvatar = ref(Avatars[0]);
+let focused: Ref<Map<string, boolean>> = ref(new Map());
+
+const usernameVerified = computed(() => verifyIsUsername(username.value));
+const email1Verified = computed(() => verifyIsEmail(email1.value));
+const emailsMatch = computed(() => verifyEmailsMatch(email1.value, email2.value));
+const firstNameVerified = computed(() => verifyIsName(firstName.value));
+const lastNameVerified = computed(() => verifyIsName(lastName.value));
+const passwordStrength = computed(() => checkPasswordStrength(password1.value));
+const passwordsMatch = computed(() => verifyEmailsMatch(password1.value, password2.value));
+
+function updateFocused(key: string, value: boolean) {
+  focused.value.set(key, value);
+}
+
+function handleSubmit(): void {
+  if (allVerified()) {
+    const user = new User(username.value, firstName.value, lastName.value, email1.value.toLowerCase(), password1.value, selectedAvatar.value);
+    AuthService.register(user)
+      .then(res => {
+        if (res.status === 201) {
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: res.message,
+            showCancelButton: true,
+            confirmButtonText: "Continue"
+          }).then((result: SweetAlertResult) => {
+            emit("userCreated", user);
+            if (result.isConfirmed) {
+              store.commit("updateRegisteredUsername", username.value);
+              router.push({ name: "ConfirmCode" });
+            } else {
+              clearForm();
+            }
+          });
+        } else if (res.status === 409) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Username already taken. Please pick another username",
+            confirmButtonText: "Close"
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: res.message,
+            confirmButtonText: "Close"
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  } else {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "User creation failed. Check input data.",
+      confirmButtonText: "Close"
+    });
+  }
+}
+
+function clearForm(): void {
+  username.value = "";
+  email1.value = "";
+  email2.value = "";
+  firstName.value = "";
+  lastName.value = "";
+  password1.value = "";
+  password2.value = "";
+  selectedAvatar.value = Avatars[0];
+}
+
+function allVerified(): boolean {
+  if (
+    usernameVerified.value &&
+    email1Verified.value &&
+    emailsMatch.value &&
+    passwordsMatch.value &&
+    passwordStrength.value !== PasswordStrength.fail &&
+    firstNameVerified.value &&
+    lastNameVerified.value &&
+    selectedAvatar.value
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function updateAvatar(newValue: string): void {
+  selectedAvatar.value = newValue;
+}
+
+function checkKey(event: any): void {
+  if (event.keyCode === 13) {
+    handleSubmit();
+  }
+}
 </script>
 
 <style scoped>

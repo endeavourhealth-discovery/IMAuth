@@ -4,9 +4,7 @@
       <template #header>
         <img id="selected-avatar" :src="getUrl(currentUser.avatar)" alt="avatar icon" />
       </template>
-      <template #title>
-        My account details
-      </template>
+      <template #title> My account details </template>
       <template #content>
         <div v-if="isLoggedIn" class="p-fluid flex flex-column justify-content-start user-details-form">
           <div class="field">
@@ -26,7 +24,7 @@
             <InputText id="email" type="text" :value="currentUser.email" disabled />
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button class="user-edit" type="submit" label="Edit" v-on:click.prevent="handleEditClicked" />
+            <Button class="user-edit" type="submit" label="Edit" @click="handleEditClicked" />
           </div>
         </div>
       </template>
@@ -34,25 +32,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
+<script setup lang="ts">
+import { computed, defineComponent } from "vue";
+import { useRouter } from "vue-router";
+import { mapState, useStore } from "vuex";
 
-export default defineComponent({
-  name: "UserDetails",
-  components: {},
-  computed: mapState(["currentUser", "isLoggedIn"]),
-  methods: {
-    handleEditClicked(): void {
-      this.$router.push({ name: "UserEdit" });
-    },
+const router = useRouter();
+const store = useStore();
+const currentUser = computed(() => store.state.currentUser);
+const isLoggedIn = computed(() => store.state.isLoggedIn);
 
-    getUrl(item: string): string {
-      const url = new URL(`../../assets/avatars/${item}`, import.meta.url);
-      return url.href;
-    }
-  }
-});
+function handleEditClicked(): void {
+  router.push({ name: "UserEdit" });
+}
+
+function getUrl(item: string): string {
+  const url = new URL(`../../assets/avatars/${item}`, import.meta.url);
+  return url.href;
+}
 </script>
 
 <style scoped>
