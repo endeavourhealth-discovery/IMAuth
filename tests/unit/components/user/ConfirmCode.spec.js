@@ -5,24 +5,38 @@ import ConfirmCode from "@/components/user/ConfirmCode.vue";
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
 import AuthService from "@/services/AuthService";
+import Swal from "sweetalert2";
+import { vi } from "vitest";
+
+const mockDispatch = vi.fn();
+const mockState = { registeredUsername: "" };
+const mockCommit = vi.fn();
+
+vi.mock("vuex", () => ({
+  useStore: () => ({
+    dispatch: mockDispatch,
+    state: mockState,
+    commit: mockCommit
+  })
+}));
+
+const mockPush = vi.fn();
+const mockGo = vi.fn();
+
+vi.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: mockPush,
+    go: mockGo
+  })
+}));
 
 describe("ConfirmCode.vue no registeredUser", () => {
   let wrapper;
-  let mockStore;
-  let mockSwal;
 
   it("starts empty if no store registeredUsername", async () => {
-    mockSwal = {
-      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
-    };
-    mockStore = {
-      state: { registeredUsername: "" },
-      commit: vi.fn()
-    };
     wrapper = mount(ConfirmCode, {
       global: {
-        components: { Card, Button, InputText, Dialog },
-        mocks: { $store: mockStore, $swal: mockSwal }
+        components: { Card, Button, InputText, Dialog }
       }
     });
     const userNameField = wrapper.find("#fieldUsername");
@@ -39,9 +53,6 @@ describe("ConfirmCode.vue no registeredUser", () => {
 
 describe("ConfirmCode.vue with registeredUser", () => {
   let wrapper;
-  let mockStore;
-  let mockRouter;
-  let mockSwal;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -50,21 +61,12 @@ describe("ConfirmCode.vue with registeredUser", () => {
 
     AuthService.resendConfirmationCode = vi.fn().mockResolvedValue({ status: 200, message: "Resend confirmation code successful" });
 
-    mockSwal = {
-      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
-    };
-    mockStore = {
-      state: { registeredUsername: "testUser" },
-      commit: vi.fn()
-    };
-    mockRouter = {
-      push: vi.fn(),
-      go: vi.fn()
-    };
+    mockState.registeredUsername = "testUser";
+
+    Swal.fire = vi.fn();
     wrapper = mount(ConfirmCode, {
       global: {
-        components: { Card, Button, InputText, Dialog },
-        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
+        components: { Card, Button, InputText, Dialog }
       }
     });
   });
@@ -131,8 +133,8 @@ describe("ConfirmCode.vue with registeredUser", () => {
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(mockSwal.fire).toBeCalledTimes(1);
-    expect(mockSwal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Register confirmation successful", confirmButtonText: "Login" });
+    expect(Swal.fire).toBeCalledTimes(1);
+    expect(Swal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Register confirmation successful", confirmButtonText: "Login" });
   });
 
   it("updates the store on correct username/code and re-routes", async () => {
@@ -141,10 +143,10 @@ describe("ConfirmCode.vue with registeredUser", () => {
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(mockStore.commit).toBeCalledTimes(1);
-    expect(mockStore.commit).toBeCalledWith("updateRegisteredUsername", "testUser");
-    expect(mockRouter.push).toBeCalledTimes(1);
-    expect(mockRouter.push).toBeCalledWith({ name: "Login" });
+    expect(mockCommit).toBeCalledTimes(1);
+    expect(mockCommit).toBeCalledWith("updateRegisteredUsername", "testUser");
+    expect(mockPush).toBeCalledTimes(1);
+    expect(mockPush).toBeCalledWith({ name: "Login" });
   });
 
   it("opens swal on incorrect username/code", async () => {
@@ -153,8 +155,8 @@ describe("ConfirmCode.vue with registeredUser", () => {
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(mockSwal.fire).toBeCalledTimes(1);
-    expect(mockSwal.fire).toBeCalledWith({ icon: "warning", title: "Invalid Credentials", text: "Username or Confirmation Code incorrect." });
+    expect(Swal.fire).toBeCalledTimes(1);
+    expect(Swal.fire).toBeCalledWith({ icon: "warning", title: "Invalid Credentials", text: "Username or Confirmation Code incorrect." });
   });
 
   it("opens swal on authservice fail", async () => {
@@ -166,8 +168,8 @@ describe("ConfirmCode.vue with registeredUser", () => {
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(mockSwal.fire).toBeCalledTimes(1);
-    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Auth Service Error" });
+    expect(Swal.fire).toBeCalledTimes(1);
+    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Auth Service Error" });
   });
 
   it("opens swal on auth code fail", async () => {
@@ -179,8 +181,8 @@ describe("ConfirmCode.vue with registeredUser", () => {
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(mockSwal.fire).toBeCalledTimes(1);
-    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Failed register confirmation" });
+    expect(Swal.fire).toBeCalledTimes(1);
+    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Failed register confirmation" });
   });
 
   it("calls authservice on requestCode function run", async () => {
@@ -194,8 +196,8 @@ describe("ConfirmCode.vue with registeredUser", () => {
     wrapper.vm.requestCode(wrapper.vm.username);
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(mockSwal.fire).toBeCalledTimes(1);
-    expect(mockSwal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Code has been resent to email for: testUser" });
+    expect(Swal.fire).toBeCalledTimes(1);
+    expect(Swal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Code has been resent to email for: testUser" });
   });
 
   it("fires swal with failed resend of code ___ auth status incorrect", async () => {
@@ -204,8 +206,8 @@ describe("ConfirmCode.vue with registeredUser", () => {
     wrapper.vm.requestCode(wrapper.vm.username);
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(mockSwal.fire).toBeCalledTimes(1);
-    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Code resending failed. Please check your username is correct." });
+    expect(Swal.fire).toBeCalledTimes(1);
+    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Code resending failed. Please check your username is correct." });
   });
 
   it("fires swal with failed resend of code ___ auth error", async () => {
@@ -215,7 +217,7 @@ describe("ConfirmCode.vue with registeredUser", () => {
     await flushPromises();
     await wrapper.vm.$nextTick();
     await flushPromises();
-    expect(mockSwal.fire).toBeCalledTimes(1);
-    expect(mockSwal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Internal application error" });
+    expect(Swal.fire).toBeCalledTimes(1);
+    expect(Swal.fire).toBeCalledWith({ icon: "error", title: "Error", text: "Internal application error" });
   });
 });

@@ -8,9 +8,34 @@ import SelectButton from "primevue/selectbutton";
 import OverlayPanel from "primevue/overlaypanel";
 import AvatarWithSelector from "@/components/user/AvatarWithSelector.vue";
 import AuthService from "@/services/AuthService";
+import * as vuex from "vuex";
+import * as vueRouter from "vue-router";
+import Swal from "sweetalert2";
 import { Models, Enums } from "im-library";
+import { vi } from "vitest";
 const { User } = Models;
 const { PasswordStrength } = Enums;
+
+vi.mock("vuex", () => ({
+  useStore: () => ({
+    commit: mockCommit,
+    state: mockState
+  })
+}));
+
+vi.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: mockPush,
+    go: mockGo
+  })
+}));
+
+Swal.fire = vi.fn();
+
+const mockCommit = vi.fn();
+const mockState = { currentUser: testUser, isLoggedIn: true };
+const mockPush = vi.fn();
+const mockGo = vi.fn();
 
 let testUser;
 
@@ -19,6 +44,21 @@ describe("userEdit.vue ___ user", () => {
   let mockStore;
   let mockRouter;
   let mockSwal;
+
+  const restHandlers = [];
+  const server = setupServer(...restHandlers);
+
+  beforeAll(() => {
+    server.listen({ onUnhandledRequest: "error" });
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
+  afterEach(() => {
+    server.resetHandlers();
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -31,21 +71,9 @@ describe("userEdit.vue ___ user", () => {
 
     AuthService.updateUser = vi.fn().mockResolvedValue({ status: 200, message: "User Update successful", user: testUser });
 
-    mockStore = {
-      state: { currentUser: testUser, isLoggedIn: true },
-      commit: vi.fn()
-    };
-    mockRouter = {
-      push: vi.fn(),
-      go: vi.fn()
-    };
-    mockSwal = {
-      fire: vi.fn(() => Promise.resolve({ isConfirmed: true }))
-    };
     wrapper = mount(UserEdit, {
       global: {
-        components: { Card, Button, InputText, InlineMessage, SelectButton, OverlayPanel, AvatarWithSelector },
-        mocks: { $store: mockStore, $router: mockRouter, $swal: mockSwal }
+        components: { Card, Button, InputText, InlineMessage, SelectButton, OverlayPanel, AvatarWithSelector }
       }
     });
   });
