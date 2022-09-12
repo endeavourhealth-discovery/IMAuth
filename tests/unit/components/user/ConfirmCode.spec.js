@@ -30,6 +30,12 @@ vi.mock("vue-router", () => ({
   })
 }));
 
+vi.mock("sweetalert2", () => {
+  return {
+    default: { fire: vi.fn() }
+  };
+});
+
 describe("ConfirmCode.vue no registeredUser", () => {
   let wrapper;
 
@@ -63,7 +69,6 @@ describe("ConfirmCode.vue with registeredUser", () => {
 
     mockState.registeredUsername = "testUser";
 
-    Swal.fire = vi.fn();
     wrapper = mount(ConfirmCode, {
       global: {
         components: { Card, Button, InputText, Dialog }
@@ -72,6 +77,7 @@ describe("ConfirmCode.vue with registeredUser", () => {
   });
 
   it("fetches the store registeredUsername if present on mount", async () => {
+    console.log(Swal);
     expect(wrapper.vm.username).toBe("testUser");
   });
 
@@ -133,8 +139,8 @@ describe("ConfirmCode.vue with registeredUser", () => {
     wrapper.vm.handleSubmit();
     await flushPromises();
     await wrapper.vm.$nextTick();
-    expect(Swal.fire).toBeCalledTimes(1);
-    expect(Swal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Register confirmation successful", confirmButtonText: "Login" });
+    expect(mockSwal.fire).toBeCalledTimes(1);
+    expect(mockSwal.fire).toBeCalledWith({ icon: "success", title: "Success", text: "Register confirmation successful", confirmButtonText: "Login" });
   });
 
   it("updates the store on correct username/code and re-routes", async () => {

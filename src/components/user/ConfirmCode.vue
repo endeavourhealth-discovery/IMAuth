@@ -73,6 +73,7 @@ const usernameInvalid = computed(() => {
 });
 
 onMounted(() => {
+  console.log(Swal.fire());
   if (registeredUsername.value && registeredUsername.value !== "") {
     username.value = registeredUsername.value;
   }
