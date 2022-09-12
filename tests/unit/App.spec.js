@@ -2,6 +2,7 @@ import { flushPromises, shallowMount } from "@vue/test-utils";
 import App from "@/App.vue";
 import Toast from "primevue/toast";
 import ProgressSpinner from "primevue/progressspinner";
+import { setupServer } from "msw/node";
 import * as vuex from "vuex";
 import { vi } from "vitest";
 
