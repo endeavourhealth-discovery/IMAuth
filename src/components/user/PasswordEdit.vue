@@ -70,7 +70,7 @@ const passwordStrengthOld: Ref<Enums.PasswordStrength> = computed(() => checkPas
 const passwordDifferentFromOriginal = computed(() => passwordOld.value !== passwordNew1.value);
 
 function setShowPassword2Message(): void {
-  showPassword2Message.value = !passwordsMatch;
+  showPassword2Message.value = !passwordsMatch.value;
 }
 
 function handleEditSubmit(): void {
