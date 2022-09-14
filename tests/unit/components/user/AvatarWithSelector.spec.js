@@ -3,10 +3,26 @@ import AvatarWithSelector from "@/components/user/AvatarWithSelector.vue";
 import Button from "primevue/button";
 import SelectButton from "primevue/selectbutton";
 import OverlayPanel from "primevue/overlaypanel";
+import { setupServer } from "msw/node";
 
 describe("AvatarWithSelector.vue", () => {
   let wrapper;
   let mockRef;
+
+  const restHandlers = [];
+  const server = setupServer(...restHandlers);
+
+  beforeAll(() => {
+    server.listen({ onUnhandledRequest: "error" });
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
+  afterEach(() => {
+    server.resetHandlers();
+  });
 
   beforeEach(() => {
     mockRef = { render: () => {}, methods: { toggle: vi.fn() } };

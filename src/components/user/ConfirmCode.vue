@@ -4,9 +4,7 @@
       <template #header>
         <i class="fa-solid fa-key icon-header" aria-hidden="true" />
       </template>
-      <template #title>
-        Confirmation Code
-      </template>
+      <template #title> Confirmation Code </template>
       <template #content>
         <div class="p-fluid code-form">
           <div class="field">
@@ -23,7 +21,7 @@
             <small id="code-help">Your 6-digit code should arrive by email from<br />no-reply@verificationemail.com</small>
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button class="user-submit" type="submit" label="Submit" v-on:click.prevent="handleSubmit" />
+            <Button class="user-submit" type="submit" label="Submit" @click="handleSubmit" />
           </div>
         </div>
       </template>
@@ -47,122 +45,113 @@
       </div>
     </div>
     <template #footer>
-      <Button type="submit" label="Request a new code" v-on:click.prevent="requestCode" />
+      <Button type="submit" label="Request a new code" @click="requestCode" />
     </template>
   </Dialog>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
+import { useStore } from "vuex";
 import AuthService from "@/services/AuthService";
-import { defineComponent } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import Swal from "sweetalert2";
+import { useRouter } from "vue-router";
 
-export default defineComponent({
-  name: "ConfirmCode",
-  computed: mapState(["registeredUsername"]),
-  watch: {
-    code() {
-      this.verifyCode();
-    },
-    username(newValue) {
-      if (newValue) this.usernameInvalid = false;
-    }
-  },
-  data() {
-    return {
-      code: "",
-      codeVerified: false,
-      username: "",
-      showDialog: false,
-      usernameInvalid: false
-    };
-  },
-  mounted() {
-    if (this.registeredUsername && this.registeredUsername !== "") {
-      this.username = this.registeredUsername;
-    }
-  },
-  methods: {
-    verifyCode() {
-      this.codeVerified = /^(?=.{6,})/.test(this.code);
-    },
+const store = useStore();
+const router = useRouter();
 
-    handleSubmit() {
-      if (this.codeVerified && this.username !== "") {
-        AuthService.confirmRegister(this.username, this.code)
-          .then(res => {
-            if (res.status === 200) {
-              this.$swal
-                .fire({
-                  icon: "success",
-                  title: "Success",
-                  text: res.message,
-                  confirmButtonText: "Login"
-                })
-                .then(() => {
-                  this.$store.commit("updateRegisteredUsername", this.username);
-                  this.$router.push({ name: "Login" });
-                });
-            } else {
-              this.$swal.fire({
-                icon: "error",
-                title: "Error",
-                text: res.message
-              });
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            this.$swal.fire({
-              icon: "error",
-              title: "Error",
-              text: "Auth Service Error"
-            });
-          });
-      } else {
-        this.$swal.fire({
-          icon: "warning",
-          title: "Invalid Credentials",
-          text: "Username or Confirmation Code incorrect."
-        });
-      }
-    },
+const registeredUsername = computed(() => store.state.registeredUsername);
 
-    requestCode() {
-      if (this.username) {
-        this.showDialog = false;
-        AuthService.resendConfirmationCode(this.username)
-          .then(res => {
-            if (res.status === 200) {
-              this.$swal.fire({
-                icon: "success",
-                title: "Success",
-                text: "Code has been resent to email for: " + this.username
-              });
-            } else {
-              this.$swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Code resending failed. Please check your username is correct."
-              });
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            this.$swal.fire({
-              icon: "error",
-              title: "Error",
-              text: "Internal application error"
-            });
-          });
-      } else if (this.showDialog === false) {
-        this.showDialog = true;
-      } else {
-        this.usernameInvalid = true;
-      }
-    }
+let code = ref("");
+let username = ref("");
+let showDialog = ref(false);
+
+const codeVerified = computed(() => verifyCode(code.value));
+
+const usernameInvalid = computed(() => {
+  return username.value ? false : true;
+});
+
+onMounted(() => {
+  if (registeredUsername.value && registeredUsername.value !== "") {
+    username.value = registeredUsername.value;
   }
 });
+
+function verifyCode(code: string) {
+  return /^(?=.{6,})/.test(code);
+}
+
+function handleSubmit() {
+  if (codeVerified.value && !usernameInvalid.value) {
+    AuthService.confirmRegister(username.value, code.value)
+      .then(res => {
+        if (res.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: res.message,
+            confirmButtonText: "Login"
+          }).then(() => {
+            store.commit("updateRegisteredUsername", username.value);
+            router.push({ name: "Login" });
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: res.message
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Auth Service Error"
+        });
+      });
+  } else {
+    Swal.fire({
+      icon: "warning",
+      title: "Invalid Credentials",
+      text: "Username or Confirmation Code incorrect."
+    });
+  }
+}
+
+function requestCode() {
+  if (!usernameInvalid.value) {
+    showDialog.value = false;
+    AuthService.resendConfirmationCode(username.value)
+      .then(res => {
+        if (res.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Code has been resent to email for: " + username.value
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Code resending failed. Please check your username is correct."
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Internal application error"
+        });
+      });
+  } else if (showDialog.value === false) {
+    showDialog.value = true;
+  }
+}
 </script>
 
 <style scoped>

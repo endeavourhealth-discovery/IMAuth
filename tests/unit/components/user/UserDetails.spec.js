@@ -7,26 +7,45 @@ import { Models, Constants } from "im-library";
 const { User } = Models;
 const { Avatars } = Constants;
 
+const mockDispatch = vi.fn();
+const mockState = {};
+const mockCommit = vi.fn();
+
+vi.mock("vuex", () => ({
+  useStore: () => ({
+    dispatch: mockDispatch,
+    state: mockState,
+    commit: mockCommit
+  })
+}));
+
+const mockPush = vi.fn();
+const mockGo = vi.fn();
+
+vi.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: mockPush,
+    go: mockGo
+  })
+}));
+
+// vi.mock("sweetalert2", () => {
+//   return {
+//     default: { fire: vi.fn() }
+//   };
+// });
+
 describe("userDetails.vue", () => {
   let wrapper;
-  let mockStore;
-  let mockRouter;
 
   beforeEach(() => {
     const user = new User("testUser", "John", "Doe", "john.doe@ergosoft.co.uk", "", Avatars[0]);
     vi.clearAllMocks();
-    mockStore = {
-      state: { currentUser: user, isLoggedIn: true },
-      commit: vi.fn()
-    };
-    mockRouter = {
-      push: vi.fn(),
-      go: vi.fn()
-    };
+    mockState.currentUser = user;
+    mockState.isLoggedIn = true;
     wrapper = mount(UserDetails, {
       global: {
-        components: { Card, Button, InputText },
-        mocks: { $store: mockStore, $router: mockRouter }
+        components: { Card, Button, InputText }
       }
     });
   });
@@ -58,8 +77,8 @@ describe("userDetails.vue", () => {
   it("rerouted on handleEditClicked", async () => {
     wrapper.vm.handleEditClicked();
     await wrapper.vm.$nextTick();
-    expect(mockRouter.push).toBeCalledTimes(1);
-    expect(mockRouter.push).toBeCalledWith({ name: "UserEdit" });
+    expect(mockPush).toBeCalledTimes(1);
+    expect(mockPush).toBeCalledWith({ name: "UserEdit" });
   });
 
   it("returns the correct image url", async () => {

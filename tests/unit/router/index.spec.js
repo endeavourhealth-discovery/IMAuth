@@ -2,15 +2,29 @@ import router from "@/router/index";
 import App from "@/App.vue";
 import Toast from "primevue/toast";
 import store from "@/store/index";
+import { setupServer } from "msw/node";
 import { flushPromises, shallowMount } from "@vue/test-utils";
+import { vi } from "vitest";
 
 describe("router", () => {
-  beforeEach(() => {
-    console.log = vi.fn();
+  const restHandlers = [];
+  const server = setupServer(...restHandlers);
+
+  beforeAll(() => {
+    server.listen({ onUnhandledRequest: "error" });
+  });
+
+  afterAll(() => {
+    server.close();
   });
 
   afterEach(() => {
+    server.resetHandlers();
     vi.resetAllMocks();
+  });
+
+  beforeEach(() => {
+    console.log = vi.fn();
   });
 
   describe("router ___ no auth", () => {
