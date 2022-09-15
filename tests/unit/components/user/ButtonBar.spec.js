@@ -1,7 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
 import ButtonBar from "@/components/user/ButtonBar.vue";
 import Button from "primevue/button";
-import { setupServer } from "msw/node";
 import { Services } from "im-library";
 import { vi } from "vitest";
 const { Env } = Services;
@@ -31,20 +30,11 @@ describe("ButtonBar.vue ___ previousAppUrl", () => {
   let location;
   let mockLocation;
 
-  const restHandlers = [];
-  const server = setupServer(...restHandlers);
-
   beforeAll(() => {
-    server.listen({ onUnhandledRequest: "error" });
     vi.clearAllMocks();
   });
 
-  afterAll(() => {
-    server.close();
-  });
-
   afterEach(() => {
-    server.resetHandlers();
     window.location = location;
   });
 
@@ -81,20 +71,8 @@ describe("ButtonBar.vue ___ no previousAppUrl", () => {
   let location;
   let mockLocation;
 
-  const restHandlers = [];
-  const server = setupServer(...restHandlers);
-
   beforeAll(() => {
-    server.listen({ onUnhandledRequest: "error" });
     vi.clearAllMocks();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
-  afterEach(() => {
-    server.resetHandlers();
   });
 
   beforeAll(() => {
