@@ -1,7 +1,7 @@
 <template>
   <Card class="flex flex-column justify-content-sm-around align-items-center register-card">
     <template #header>
-      <avatar-with-selector :selectedAvatar="selectedAvatar" @avatarSelected="updateAvatar" />
+      <avatar-with-selector data-testid="register-avatar-select" :selectedAvatar="selectedAvatar" @avatarSelected="updateAvatar" />
     </template>
     <template #title> Register </template>
     <template #content>
@@ -9,6 +9,7 @@
         <div class="field">
           <label for="fieldUsername">Username</label>
           <InputText
+            data-testid="register-username"
             id="fieldUsername"
             type="text"
             maxlength="50"
@@ -25,20 +26,32 @@
           <div class="flex flex-row align-items-center">
             <InputText
               id="fieldEmail1"
+              data-testid="register-email1"
               type="text"
               maxlength="50"
               v-model="email1"
               @focus="updateFocused('email1', true)"
               @blur="updateFocused('email1', false)"
             />
-            <i v-if="email1Verified && focused.get('email1') === false" class="pi pi-check-circle email-check" aria-hidden="true" />
-            <i v-if="!email1Verified && focused.get('email1') === false" class="pi pi-times-circle email-times" aria-hidden="true" />
+            <i
+              v-if="email1Verified && focused.get('email1') === false"
+              data-testid="register-email1-verified"
+              class="pi pi-check-circle email-check"
+              aria-hidden="true"
+            />
+            <i
+              v-if="!email1Verified && focused.get('email1') === false"
+              data-testid="register-email1-unverified"
+              class="pi pi-times-circle email-times"
+              aria-hidden="true"
+            />
           </div>
         </div>
         <div class="field">
           <label for="fieldEmail2">Confirm email address</label>
           <InputText
             id="fieldEmail2"
+            data-testid="register-email2"
             type="text"
             maxlength="50"
             v-model="email2"
@@ -51,6 +64,7 @@
           <label for="fieldFirstName">First name</label>
           <InputText
             id="fieldFirstName"
+            data-testid="register-firstname"
             type="text"
             maxlength="50"
             v-model="firstName"
@@ -65,6 +79,7 @@
           <label for="fieldLastName">Last name</label>
           <InputText
             id="fieldLastName"
+            data-testid="register-lastname"
             type="text"
             maxlength="50"
             v-model="lastName"
@@ -77,7 +92,7 @@
         </div>
         <div class="field">
           <label for="fieldPassword1">Password</label>
-          <InputText id="fieldPassword1" type="password" maxlength="50" aria-describedby="password-help" v-model="password1" />
+          <InputText data-testid="register-password1" id="fieldPassword1" type="password" maxlength="50" aria-describedby="password-help" v-model="password1" />
           <InlineMessage v-if="passwordStrength === 'strong'" severity="success"> Password strength: Strong </InlineMessage>
           <InlineMessage v-if="passwordStrength === 'medium'" severity="success"> Password strength: Medium </InlineMessage>
           <InlineMessage v-if="passwordStrength === 'weak'" severity="warn"> Password strength: Weak </InlineMessage>
@@ -91,6 +106,7 @@
           <label for="fieldPassword2">Confirm password</label>
           <InputText
             id="fieldPassword2"
+            data-testid="register-password2"
             type="password"
             maxlength="50"
             v-model="password2"
@@ -101,8 +117,16 @@
           <InlineMessage v-if="!passwordsMatch && focused.get('password2') === false" severity="error"> Passwords do not match! </InlineMessage>
         </div>
         <div class="flex flex-row justify-content-center">
-          <Button v-if="!allVerified()" class="user-submit" type="submit" label="Register" disabled @click="handleSubmit" />
-          <Button v-else class="user-submit" type="submit" label="Register" @click="handleSubmit" />
+          <Button
+            data-testid="register-submit-disabled"
+            v-if="!allVerified()"
+            class="user-submit"
+            type="submit"
+            label="Register"
+            disabled
+            @click="handleSubmit"
+          />
+          <Button data-testid="register-submit" v-else class="user-submit" type="submit" label="Register" @click="handleSubmit" />
         </div>
       </div>
     </template>

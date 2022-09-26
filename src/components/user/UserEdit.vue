@@ -9,19 +9,33 @@
         <div class="p-fluid flex flex-column justify-content-start user-edit-form">
           <div class="field">
             <label for="username">Username</label>
-            <InputText id="username" type="text" v-model="username" disabled />
+            <InputText data-testid="user-edit-username" id="username" type="text" v-model="username" disabled />
             <small id="user-help">Username cannot currently be changed.</small>
           </div>
           <div class="field">
             <label for="firstName">First name</label>
-            <InputText id="firstName" type="text" v-model="firstName" @focus="updateFocused('firstName', true)" @blur="updateFocused('firstName', false)" />
+            <InputText
+              data-testid="user-edit-username"
+              id="firstName"
+              type="text"
+              v-model="firstName"
+              @focus="updateFocused('firstName', true)"
+              @blur="updateFocused('firstName', false)"
+            />
             <InlineMessage v-if="!firstNameVerified && focused.get('firstName') === false" severity="error">
               First name contains unexpected characters. A-Z and hyphens only allowed e.g."Mary-Anne".
             </InlineMessage>
           </div>
           <div class="field">
             <label for="lastName">Last name</label>
-            <InputText id="lastName" type="text" v-model="lastName" @focus="updateFocused('lastName', true)" @blur="updateFocused('lastName', false)" />
+            <InputText
+              data-testid="user-edit-lastname"
+              id="lastName"
+              type="text"
+              v-model="lastName"
+              @focus="updateFocused('lastName', true)"
+              @blur="updateFocused('lastName', false)"
+            />
             <InlineMessage v-if="!lastNameVerified && focused.get('lastName') === false" severity="error">
               Last name contains unexpected characters. A-Z, apostropies and hyphens only allowed e.g."O'Keith-Smith".
             </InlineMessage>
@@ -29,23 +43,37 @@
           <div class="field">
             <label for="email1">Email address</label>
             <div class="flex flex-row align-items-center">
-              <InputText id="email1" type="text" v-model="email1" @focus="updateFocused('email1', true)" @blur="updateFocused('email1', false)" />
+              <InputText
+                data-testid="user-edit-email1"
+                id="email1"
+                type="text"
+                v-model="email1"
+                @focus="updateFocused('email1', true)"
+                @blur="updateFocused('email1', false)"
+              />
               <i v-if="email1Verified && focused.get('email1') === false" class="pi pi-check-circle email-check" aria-hidden="true" />
               <i v-if="!email1Verified && focused.get('email1') === false" class="pi pi-times-circle email-times" aria-hidden="true" />
             </div>
           </div>
           <div class="field">
             <label for="email2">Confirm email address</label>
-            <InputText id="email2" type="text" v-model="email2" @focus="updateFocused('email2', true)" @blur="updateFocused('email2', false)" />
+            <InputText
+              data-testid="user-edit-email2"
+              id="email2"
+              type="text"
+              v-model="email2"
+              @focus="updateFocused('email2', true)"
+              @blur="updateFocused('email2', false)"
+            />
             <InlineMessage v-if="!emailsMatch && focused.get('email2') === false" severity="error"> Email addresses do not match! </InlineMessage>
           </div>
           <div v-if="showPasswordEdit" class="field">
             <label for="passwordOld">Current password</label>
-            <InputText id="passwordOld" type="password" v-model="passwordOld" />
+            <InputText data-testid="user-edit-password-old" id="passwordOld" type="password" v-model="passwordOld" />
           </div>
           <div v-if="showPasswordEdit" class="field">
             <label for="passwordNew1">New password</label>
-            <InputText id="passwordNew1" type="password" v-model="passwordNew1" />
+            <InputText data-testid="user-edit-password-new1" id="passwordNew1" type="password" v-model="passwordNew1" />
             <InlineMessage v-if="passwordStrength === 'strong'" severity="success"> Password strength: Strong </InlineMessage>
             <InlineMessage v-if="passwordStrength === 'medium'" severity="success"> Password strength: Medium </InlineMessage>
             <InlineMessage v-if="passwordStrength === 'weak'" severity="warn"> Password strength: Weak </InlineMessage>
@@ -58,6 +86,7 @@
           <div v-if="showPasswordEdit" class="field">
             <label for="passwordNew2">Confirm new password</label>
             <InputText
+              data-testid="user-edit-password-new2"
               id="passwordNew2"
               type="password"
               v-model="passwordNew2"
@@ -68,16 +97,32 @@
           </div>
           <div class="flex flex-row justify-content-between align-items-center">
             <Button
+              data-testid="user-edit-password-change-button"
               v-if="!showPasswordEdit"
               class="password-edit p-button-secondary"
               type="submit"
               label="Change password"
               @click="editPasswordClicked(true)"
             />
-            <Button v-else class="password-edit p-button-secondary" type="submit" label="Cancel password edit" @click="editPasswordClicked(false)" />
-            <Button class="form-reset p-button-warning" type="button" label="Reset changes" @click="resetForm" />
-            <Button v-if="setButtonDisabled()" class="user-edit" type="submit" label="Update account" disabled @click="handleEditSubmit" />
-            <Button v-else class="user-edit" type="submit" label="Update account" @click="handleEditSubmit" />
+            <Button
+              data-testid="user-edit-password-change-cancel-button"
+              v-else
+              class="password-edit p-button-secondary"
+              type="submit"
+              label="Cancel password edit"
+              @click="editPasswordClicked(false)"
+            />
+            <Button data-testid="user-edit-reset-changes-button" class="form-reset p-button-warning" type="button" label="Reset changes" @click="resetForm" />
+            <Button
+              data-testid="user-edit-update-disabled-button"
+              v-if="setButtonDisabled()"
+              class="user-edit"
+              type="submit"
+              label="Update account"
+              disabled
+              @click="handleEditSubmit"
+            />
+            <Button data-testid="user-edit-update-button" v-else class="user-edit" type="submit" label="Update account" @click="handleEditSubmit" />
           </div>
         </div>
       </template>

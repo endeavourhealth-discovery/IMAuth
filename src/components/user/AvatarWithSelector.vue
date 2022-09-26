@@ -1,7 +1,7 @@
 <template>
   <div class="avatar-container">
-    <img id="selected-avatar" :src="getUrl(newAvatar)" alt="avatar icon" />
-    <Button icon="pi pi-angle-down" class="p-button-rounded p-button-primary avatar-button" @click="toggleAvatarSelect" />
+    <img data-testid="avatar-image" id="selected-avatar" :src="getUrl(newAvatar)" alt="avatar icon" />
+    <Button data-testid="avatar-op-button" icon="pi pi-angle-down" class="p-button-rounded p-button-primary avatar-button" @click="toggleAvatarSelect" />
     <OverlayPanel ref="avatar" class="avatar-popup">
       <div>
         Icons made by
@@ -9,7 +9,7 @@
         from
         <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
       </div>
-      <SelectButton v-model="newAvatar" :options="avatarOptions">
+      <SelectButton data-testid="avatar-button-options"  v-model="newAvatar" :options="avatarOptions">
         <template #option="slotProps">
           <img class="avatar-select avatar-icon" :src="getUrl(slotProps.option)" alt="avatar icon" />
         </template>

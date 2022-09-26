@@ -2,29 +2,29 @@
   <div class="flex flex-row align-items-center">
     <Card class="flex flex-column justify-content-sm-around align-items-center user-details-card">
       <template #header>
-        <img id="selected-avatar" :src="getUrl(currentUser.avatar)" alt="avatar icon" />
+        <img data-testid="user-details-avatar" id="selected-avatar" :src="getUrl(currentUser.avatar)" alt="avatar icon" />
       </template>
       <template #title> My account details </template>
       <template #content>
         <div v-if="isLoggedIn" class="p-fluid flex flex-column justify-content-start user-details-form">
           <div class="field">
             <label for="username">Username</label>
-            <InputText id="username" type="text" :value="currentUser.username" disabled />
+            <InputText data-testid="user-details-username" id="username" type="text" :value="currentUser.username" disabled />
           </div>
           <div class="field">
             <label for="firstName">First name</label>
-            <InputText id="firstName" type="text" :value="currentUser.firstName" disabled />
+            <InputText data-testid="user-details-firstname" id="firstName" type="text" :value="currentUser.firstName" disabled />
           </div>
           <div class="field">
             <label for="lastName">Last name</label>
-            <InputText id="lastName" type="text" :value="currentUser.lastName" disabled />
+            <InputText data-testid="user-details-lastname" id="lastName" type="text" :value="currentUser.lastName" disabled />
           </div>
           <div class="field">
             <label for="email">Email address</label>
-            <InputText id="email" type="text" :value="currentUser.email" disabled />
+            <InputText data-testid="user-details-email" id="email" type="text" :value="currentUser.email" disabled />
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button class="user-edit" type="submit" label="Edit" @click="handleEditClicked" />
+            <Button data-testid="user-details-submit" class="user-edit" type="submit" label="Edit" @click="handleEditClicked" />
           </div>
         </div>
       </template>

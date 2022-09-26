@@ -9,10 +9,10 @@
         <div class="p-fluid recovery-form">
           <div class="field">
             <label for="fieldUsername">Username</label>
-            <InputText id="fieldUsername" type="text" v-model="username" />
+            <InputText data-testid="forgot-password-username-input" id="fieldUsername" type="text" v-model="username" />
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button class="user-submit" type="submit" label="Request Reset Code" v-on:click.prevent="handleSubmit" />
+            <Button data-testid="forgot-password-user-submit" class="user-submit" type="submit" label="Request Reset Code" v-on:click.prevent="handleSubmit" />
           </div>
         </div>
       </template>

@@ -1,9 +1,8 @@
-import { shallowMount } from "@vue/test-utils";
-import ButtonBar from "@/components/user/ButtonBar.vue";
+import { render, fireEvent, within, RenderResult, getByAltText, getByText, getAllByRole } from "@testing-library/vue";
+import { vi } from "vitest";
+import ButtonBar from "../../../../src/components/user/ButtonBar.vue";
 import Button from "primevue/button";
 import { Services } from "im-library";
-import { vi } from "vitest";
-const { Env } = Services;
 
 const mockDispatch = vi.fn();
 const mockState = { previousAppUrl: "testUrl" };
@@ -26,79 +25,70 @@ vi.mock("vue-router", () => ({
 }));
 
 describe("ButtonBar.vue ___ previousAppUrl", () => {
-  let wrapper;
-  let location;
-  let mockLocation;
-
-  beforeAll(() => {
-    vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    window.location = location;
-  });
+  let component: RenderResult;
+  let location: any;
+  let mockLocation: any;
 
   beforeEach(() => {
     vi.resetAllMocks();
+
     mockLocation = { href: "" };
     location = window.location;
-    delete window.location;
+    delete (window as any).location;
     window.location = mockLocation;
-    wrapper = shallowMount(ButtonBar, {
+
+    component = render(ButtonBar, {
       global: {
         components: { Button }
       }
     });
   });
 
+  afterEach(() => {
+    window.location = location;
+  });
+
   it("should route to home on home button click", async () => {
-    const homeButton = wrapper.find(".home-button");
-    homeButton.trigger("click");
-    await wrapper.vm.$nextTick();
-    expect(window.location.href).toBe("testUrl");
+    const homeButton = component.getByTestId("button-bar-home-button");
+    await fireEvent.click(homeButton);
+    expect(window.location.href).to.equal("testUrl");
   });
 
   it("should go back on back button click", async () => {
-    const backButton = wrapper.find(".back-button");
-    backButton.trigger("click");
-    await wrapper.vm.$nextTick();
-    expect(mockBack).toBeCalled();
+    const backButton = component.getByTestId("button-bar-back-button");
+    await fireEvent.click(backButton);
+    expect(window.location.href).to.equal("");
   });
 });
 
 describe("ButtonBar.vue ___ no previousAppUrl", () => {
-  let wrapper;
-  let location;
-  let mockLocation;
+  let component: RenderResult;
+  let location: any;
+  let mockLocation: any;
 
-  beforeAll(() => {
-    vi.clearAllMocks();
-  });
-
-  beforeAll(() => {
-    vi.clearAllMocks();
-  });
   beforeEach(() => {
     vi.resetAllMocks();
-    mockState.previousAppUrl = null;
+
+    mockState.previousAppUrl = null as any;
     mockLocation = { href: "" };
     location = window.location;
-    delete window.location;
+    delete (window as any).location;
     window.location = mockLocation;
-    wrapper = shallowMount(ButtonBar, {
+
+    component = render(ButtonBar, {
       global: {
         components: { Button }
       }
     });
   });
+
   afterEach(() => {
     window.location = location;
   });
 
   it("should route to home on home button click", async () => {
-    const homeButton = wrapper.find(".home-button");
-    homeButton.trigger("click");
-    await wrapper.vm.$nextTick();
-    expect(window.location.href).toBe(Env.DIRECTORY_URL);
+    const homeButton = component.getByTestId("button-bar-home-button");
+    await fireEvent.click(homeButton);
+    expect(window.location.href).to.equal(Services.Env.directoryUrl);
   });
 });

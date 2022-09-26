@@ -9,19 +9,19 @@
         <div class="p-fluid code-form">
           <div class="field">
             <label for="fieldUsername">Username</label>
-            <InputText id="fieldUsername" type="text" v-model="username" :placeholder="username" />
+            <InputText data-testid="confirm-code-username-input" id="fieldUsername" type="text" v-model="username" :placeholder="username" />
           </div>
           <div class="field">
             <label for="fieldCode">Confirmation code</label>
             <div class="flex flex-row align-items-center">
-              <InputText id="fieldCode" type="password" v-model="code" />
+              <InputText data-testid="confirm-code-input" id="fieldCode" type="password" v-model="code" />
               <i v-if="codeVerified" class="pi pi-check-circle password-check" aria-hidden="true" />
               <i v-if="!codeVerified && code !== ''" class="pi pi-times-circle password-times" aria-hidden="true" />
             </div>
             <small id="code-help">Your 6-digit code should arrive by email from<br />no-reply@verificationemail.com</small>
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button class="user-submit" type="submit" label="Submit" @click="handleSubmit" />
+            <Button data-testid="confirm-code-submit-button" class="user-submit" type="submit" label="Submit" @click="handleSubmit" />
           </div>
         </div>
       </template>
@@ -30,6 +30,7 @@
           >Not received a code? <br /><Button
             class="p-button-secondary p-button-sm code-request"
             type="submit"
+            data-testid="confirm-code-not-received-button"
             label="Request a new code"
             v-on:click.prevent="showDialog = true"
         /></small>
@@ -45,7 +46,7 @@
       </div>
     </div>
     <template #footer>
-      <Button type="submit" label="Request a new code" @click="requestCode" />
+      <Button data-testid="confirm-code-resend-code-button" type="submit" label="Request a new code" @click="requestCode" />
     </template>
   </Dialog>
 </template>

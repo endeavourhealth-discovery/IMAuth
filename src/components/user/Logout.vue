@@ -13,6 +13,7 @@
           <div class="field">
             <div v-if="isLoggedIn" class="flex flex-row align-items-center p-text-capitalize">
               <img
+                data-testid="logout-avatar-image"
                 v-if="isLoggedIn"
                 id="user-icon"
                 class="avatar-icon"
@@ -26,7 +27,7 @@
             <div v-if="!isLoggedIn" class="p-text-left p-text-capitalize">Guest</div>
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button class="user-submit" type="submit" label="Logout" @click="handleSubmit" />
+            <Button data-testid="logout-submit" class="user-submit" type="submit" label="Logout" @click="handleSubmit" />
           </div>
         </div>
       </template>
@@ -53,7 +54,7 @@ function handleSubmit(): void {
     title: "Are you sure?",
     text: "Confirm logout request",
     showCancelButton: true,
-    confirmButtonText: "Logout",
+    confirmButtonText: "OK",
     reverseButtons: true
   }).then((result: SweetAlertResult) => {
     if (result.isConfirmed) {

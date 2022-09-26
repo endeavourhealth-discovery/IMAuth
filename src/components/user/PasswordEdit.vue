@@ -9,15 +9,15 @@
         <div class="p-fluid flex flex-column justify-content-start password-edit-form">
           <div v-if="currentUser.username" class="field">
             <label for="userName">Username</label>
-            <InputText class="p-text-capitalize" id="username" type="text" :value="currentUser.username" disabled />
+            <InputText data-testid="password-edit-username" class="p-text-capitalize" id="username" type="text" :value="currentUser.username" disabled />
           </div>
           <div class="field">
             <label for="passwordOld">Current password</label>
-            <InputText id="passwordOld" type="password" v-model="passwordOld" />
+            <InputText data-testid="password-edit-password-old" id="passwordOld" type="password" v-model="passwordOld" />
           </div>
           <div class="field">
             <label for="passwordNew1">New password</label>
-            <InputText id="passwordNew1" type="password" v-model="passwordNew1" />
+            <InputText data-testid="password-edit-password-new1" id="passwordNew1" type="password" v-model="passwordNew1" />
             <InlineMessage v-if="passwordStrength === 'strong'" severity="success"> Password strength: Strong </InlineMessage>
             <InlineMessage v-if="passwordStrength === 'medium'" severity="success"> Password strength: Medium </InlineMessage>
             <InlineMessage v-if="passwordStrength === 'weak'" severity="warn"> Password strength: Weak </InlineMessage>
@@ -29,12 +29,27 @@
           </div>
           <div class="field">
             <label for="passwordNew2">Confirm new password</label>
-            <InputText id="passwordNew2" type="password" v-model="passwordNew2" @blur="setShowPassword2Message" @keyup="checkKey" />
+            <InputText
+              data-testid="password-edit-password-new2"
+              id="passwordNew2"
+              type="password"
+              v-model="passwordNew2"
+              @blur="setShowPassword2Message"
+              @keyup="checkKey"
+            />
             <InlineMessage v-if="showPassword2Message" severity="error"> New passwords do not match! </InlineMessage>
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button v-if="setButtonDisabled()" class="user-edit" type="submit" label="Change password" disabled @click="handleEditSubmit" />
-            <Button v-else class="user-edit" type="submit" label="Change password" @click="handleEditSubmit" />
+            <Button
+              v-if="setButtonDisabled()"
+              data-testid="password-edit-submit-disabled"
+              class="user-edit"
+              type="submit"
+              label="Change password"
+              disabled
+              @click="handleEditSubmit"
+            />
+            <Button v-else class="user-edit" data-testid="password-edit-submit" type="submit" label="Change password" @click="handleEditSubmit" />
           </div>
         </div>
       </template>

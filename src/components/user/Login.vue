@@ -9,14 +9,14 @@
         <div class="p-fluid login-form">
           <div class="field">
             <label for="fieldUsername">Username</label>
-            <InputText id="fieldUsername" type="text" v-model="username" :placeholder="username" />
+            <InputText data-testid="login-username" id="fieldUsername" type="text" v-model="username" :placeholder="username" />
           </div>
           <div class="field">
             <label for="fieldPassword">Password</label>
-            <InputText id="fieldPassword" type="password" v-model="password" @keyup="checkKey" />
+            <InputText data-testid="login-password" id="fieldPassword" type="password" v-model="password" @keyup="checkKey" />
           </div>
           <div class="flex flex-row justify-content-center">
-            <Button class="user-submit" type="submit" label="Login" @click="handleSubmit" />
+            <Button data-testid="login-submit" class="user-submit" type="submit" label="Login" @click="handleSubmit" />
           </div>
         </div>
       </template>
