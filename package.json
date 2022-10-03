@@ -1,6 +1,6 @@
 {
   "name": "im-auth",
-  "version": "0.1.0",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,7 +17,7 @@
     "format": "prettier --write"
   },
   "dependencies": {
-    "@faker-js/faker": "^7.5.0",
+    "@faker-js/faker": "7.5.0",
     "@fortawesome/fontawesome-svg-core": "6.1.1",
     "@fortawesome/free-brands-svg-icons": "6.1.1",
     "@fortawesome/free-regular-svg-icons": "6.1.1",
@@ -48,7 +48,7 @@
     "@typescript-eslint/eslint-plugin": "5.28.0",
     "@typescript-eslint/parser": "5.28.0",
     "@vitejs/plugin-vue": "2.3.3",
-    "@vitest/coverage-c8": "^0.23.4",
+    "@vitest/coverage-c8": "0.23.4",
     "@vue/eslint-config-prettier": "7.0.0",
     "@vue/eslint-config-typescript": "11.0.0",
     "@vue/test-utils": "2.0.0",
