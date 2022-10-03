@@ -5,6 +5,8 @@ import ProgressSpinner from "primevue/progressspinner";
 import { setupServer } from "msw/node";
 import * as vuex from "vuex";
 import { vi } from "vitest";
+import PrimeVue from "primevue/config";
+import { render } from "@testing-library/vue";
 
 vi.mock("vuex", () => ({
   useStore: () => ({
@@ -14,30 +16,36 @@ vi.mock("vuex", () => ({
 
 const mockDispatch = vi.fn();
 
+const mockPush = vi.fn();
+const mockGo = vi.fn();
+const mockRoute = { name: "Concept" };
+
+vi.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: mockPush,
+    go: mockGo
+  }),
+  useRoute: () => mockRoute
+}));
+
+const mockAdd = vi.fn();
+
+vi.mock("primevue/usetoast", () => ({
+  useToast: () => ({
+    add: mockAdd
+  })
+}));
+
 describe("App.vue", () => {
-  let wrapper;
-
-  const restHandlers = [];
-  const server = setupServer(...restHandlers);
-
-  beforeAll(() => {
-    server.listen({ onUnhandledRequest: "error" });
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
-  afterEach(() => {
-    server.resetHandlers();
-  });
+  let component;
 
   beforeEach(() => {
     vi.resetAllMocks();
-    wrapper = shallowMount(App, {
+    component = render(App, {
       global: {
         components: { Toast, ProgressSpinner },
-        stubs: ["router-link", "router-view"]
+        stubs: ["router-link", "router-view", "ReleaseNotes"],
+        plugins: [PrimeVue]
       }
     });
   });
