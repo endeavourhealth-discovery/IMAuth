@@ -18,7 +18,6 @@ import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import { Services } from "im-library";
 
-
 const store = useStore();
 const router = useRouter();
 
@@ -29,7 +28,7 @@ function clickedBack(): void {
 }
 
 function homeClicked(): void {
-  window.location.href = previousAppUrl.value ? previousAppUrl.value : Services.Env.directoryUrl;
+  window.location.href = previousAppUrl.value ? previousAppUrl.value : Services.Env.DIRECTORY_URL;
 }
 </script>
 
