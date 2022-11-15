@@ -89,6 +89,6 @@ describe("ButtonBar.vue ___ no previousAppUrl", () => {
   it("should route to home on home button click", async () => {
     const homeButton = component.getByTestId("button-bar-home-button");
     await fireEvent.click(homeButton);
-    expect(window.location.href).to.equal(Services.Env.directoryUrl);
+    expect(window.location.href).to.equal(Services.Env.DIRECTORY_URL);
   });
 });
